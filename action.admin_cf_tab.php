@@ -7,20 +7,42 @@ if (!$this->CheckPermission('Ping Use'))
 	return;
 }
 */
-//require_once(dirname(__FILE__).'/include/prefs.php');
+require_once(dirname(__FILE__).'/include/preferences.php');
 $db =& $this->GetDb();
 global $themeObject;
 //debug_display($params, 'Parameters');
 $smarty->assign('add',
 		$this->CreateLink($id, 'add_edit_cf', $returnid,$contents='Ajouter une commande fournisseur', array("edit"=>"0")));
+$smarty->assign('formstart',$this->CreateFormStart($id,'defaultadmin','', 'post', '',false,'',array('active_tab'=>'equicommandesfournisseurs')));
+$smarty->assign('fournisseur', 
+		$this->CreateInputDropdown($id,'fournisseur', $items_statut_commande));
+$smarty->assign('submitfilter',
+		$this->CreateInputSubmit($id,'submitfilter',$this->Lang('filtres')));
+$smarty->assign('formend',$this->CreateFormEnd());
+$result= array();
+$query = "SELECT *  FROM ".cms_db_prefix()."module_commandes_cf WHERE date_created > '1970-01-01'";
 
-$result= array ();
-$query = "SELECT *  FROM ".cms_db_prefix()."module_commandes_cf";
-
-
-	//$query .=" ORDER BY id DESC";
-	//echo $query;
-	$dbresult= $db->Execute($query);
+	if( isset($params['submitfilter'] ))
+	{
+		if(isset($params['fournisseur']) && $params['fournisseur'] != '')
+		{
+			$query.=" AND fournisseur LIKE ?";
+			$parms['fournisseur'] = $params['fournisseur'];
+		}
+		if(isset($params['statut_CF']) && $params['statut_CF'] != '')
+		{
+			$query.=" AND statut_CF LIKE ?";
+			$parms['statut_CF'] = $params['statut_CF'];
+		}
+		$dbresult= $db->Execute($query,$parms);	
+	}
+	else
+	{
+		//$query .=" ORDER BY id DESC";
+		//echo $query;
+		$dbresult= $db->Execute($query);
+	}
+	
 	
 	//echo $query;
 	$rowarray= array();
@@ -62,7 +84,7 @@ $query = "SELECT *  FROM ".cms_db_prefix()."module_commandes_cf";
 				$onerow->total_commande = $total_commande;
 				$onerow->view= $this->createLink($id, 'view_order_cf', $returnid, $themeObject->DisplayImage('icons/system/view.gif', $this->Lang('view_results'), '', '', 'systemicon'),array('active_tab'=>'CF','fournisseur'=>$row['fournisseur'],"record_id"=>$row['id_CF'])) ;
 				$onerow->editlink= $this->CreateLink($id, 'add_edit_cf', $returnid, $themeObject->DisplayImage('icons/system/edit.gif', $this->Lang('edit'), '', '', 'systemicon'), array('record_id'=>$row['id_CF']));
-				$onerow->deletelink = $this->CreateLink($id, 'delete',$returnid, $themeObject->DisplayImage('icons/system/delete.gif', $this->Lang('delete'), '', '', 'systemicon'), array('record_id'=>$row['id_CF']));
+				$onerow->deletelink = $this->CreateLink($id, 'delete',$returnid, $themeObject->DisplayImage('icons/system/delete.gif', $this->Lang('delete'), '', '', 'systemicon'), array('record_id'=>$row['id_CF'], 'bdd'=>'cf','nb_items'=>$nb_items));
 				($rowclass == "row1" ? $rowclass= "row2" : $rowclass= "row1");
 				$rowarray[]= $onerow;
       			}

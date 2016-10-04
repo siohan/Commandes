@@ -15,7 +15,7 @@ if( !isset($gCms) ) exit;
     		return;
   	}
 
-//debug_display($params, 'Parameters');
+debug_display($params, 'Parameters');
 $db =& $this->GetDb();
 $now = date('Y-m-d');
 $designation = '';//le message final
@@ -118,7 +118,38 @@ else
 		if($dbresult3)
 		{
 			$designation.="Les articles de cette commande ont changé de statut";
+			// on met les articles dans le stock
+			$query4 = "SELECT id, fk_id, libelle_commande, categorie_produit, fournisseur, quantite, ep_manche_taille, couleur, prix_total  FROM ".cms_db_prefix()."module_commandes_cc_items WHERE fk_id = ?";
+			$dbresult4 = $db->Execute($query4, array($record_id));
+			
+			if($dbresult4 && $dbresult4->RecordCount()>0)
+			{
+				while($row4 = $dbresult4->FetchRow())
+				{
+					$id_items = $row4['id'];
+					$fk_id = $row4['fk_id'];
+					$libelle_commande = $row4['libelle_commande'];
+					$categorie_produit = $row4['categorie_produit'];
+					$fournisseur = $row4['fournisseur'];
+					$quantite = $row4['quantite'];
+					$ep_manche_taille = $row4['ep_manche_taille'];
+					$couleur = $row4['couleur'];
+					$prix_total = $row4['prix_total'];
+					//$fk_id = $row4[''];
+					
+					$query5 = "INSERT INTO ".cms_db_prefix()."module_commandes_stock (id, id_items, fk_id, libelle_commande,categorie_produit, fournisseur, quantite, ep_manche_taille, couleur, prix_total) VALUES ('', ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+					$dbresult5 = $db->Execute($query5, array($id_items,$record_id, $libelle_commande, $categorie_produit, $fournisseur, $quantite, $ep_manche_taille, $couleur, $prix_total));
+				}
+			}
 		}
+		
+	}
+	if($paiement == 'Payée et déstockée')
+	{
+		//la commande est payée et le client l'a reçue, on peut l'effacer du stock
+		$query = "DELETE FROM ".cms_db_prefix()."module_commandes_stock WHERE fk_id = ?";
+		$dbresult = $db->Execute($query, array($record_id));
+		
 		
 	}
 	$this->SetMessage($designation);

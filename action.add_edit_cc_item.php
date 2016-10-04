@@ -11,7 +11,7 @@ if( !isset($gCms) ) exit;
 */
 	if( isset($params['cancel']) )
   	{
-    		$this->RedirectToAdminTab('compets');
+    		$this->RedirectToAdminTab('commandesclients');
     		return;
   	}
 debug_display($params, 'Parameters');

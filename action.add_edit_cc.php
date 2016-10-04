@@ -129,21 +129,27 @@ else
 				$this->CreateInputText($id, 'commande_id',(isset($commande_id)?$commande_id:""),5,15));
 		$smarty->assign('nom',
 				$this->CreateInputDropdown($id,'nom',$nom,$selectedindex = $index, $selectedvalue=$nom));
+		$smarty->assign('statut_commande',
+				$this->CreateInputDropdown($id,'statut_commande',$items_statut_commande,$selectedIndex=$key2_statut_commande,$selectedvalue=$statut_commande));
+				$statut =0;
+		
 	}
 	if($edit ==1 && $statut_commande != 'Reçue')
 	{
 		$smarty->assign('statut_commande',
 				$this->CreateInputDropdown($id,'statut_commande',$items_statut_commande,$selectedIndex=$key2_statut_commande,$selectedvalue=$statut_commande));
 		$statut = 0;
-		$smarty->assign('statut', $statut);
+		
 	}
-	else
+	elseif($edit == 1 && $statut_commande == 'Reçue')
 	{
 		$smarty->assign('statut_commande',
 				$this->CreateInputHidden($id,'statut_commande',$statut_commande));
 		$statut = 1;
-		$smarty->assign('statut', $statut);
+		
 	}
+	
+	$smarty->assign('statut', $statut);
 	$smarty->assign('edit',$edit);
 	
 	$smarty->assign('edition',

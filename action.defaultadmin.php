@@ -21,6 +21,7 @@ if (FALSE === empty($params['active_tab']))
 	echo $this->SetTabHeader('commandesclients', 'Commandes adhérents', ('commandesclients' == $tab)?true:false);
 	echo $this->SetTabHeader('clients', 'Clients', ('clients' == $tab)?true:false);
 	echo $this->SetTabHeader('articles', 'Articles' , ('articles' == $tab)?true:false);
+	echo $this->SetTabHeader('stock', 'Stock' , ('stock' == $tab)?true:false);
 
 echo $this->EndTabHeaders();
 
@@ -42,6 +43,10 @@ echo $this->StartTabContent();
 	
 	echo $this->StartTab('articles', $params);
     	include(dirname(__FILE__).'/action.admin_items_tab.php');
+   	echo $this->EndTab();
+
+	echo $this->StartTab('stock', $params);
+    	include(dirname(__FILE__).'/action.admin_stock_tab.php');
    	echo $this->EndTab();
 
 
