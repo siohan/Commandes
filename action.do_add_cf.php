@@ -1,20 +1,20 @@
 <?php
 
 if( !isset($gCms) ) exit;
-/*
-	if (!$this->CheckPermission('Ping Manage'))
+
+	if (!$this->CheckPermission('Use Commandes'))
   	{
     		echo $this->ShowErrors($this->Lang('needpermission'));
 		return;
    
   	}
-*/
+
 	if( isset($params['cancel']) )
   	{
     		$this->RedirectToAdminTab('CF');
     		return;
   	}
-debug_display($params, 'Parameters');
+//debug_display($params, 'Parameters');
 $db =& $this->GetDb();
 $now = date('Y-m-d');
 $designation = '';//le message final
@@ -68,8 +68,8 @@ else
 	//il s'agit d'une mise à jour !
 	//on regarde aussi si le statut est égal à "Reçue"
 	
-	$query2 = "UPDATE ".cms_db_prefix()."module_commandes_cf SET date_created = ?, fournisseur = ?, statut_CF = ? WHERE id_CF = ?";
-	$dbresult2 = $db->Execute($query2, array($now, $fournisseur, $statut_CF, $record_id));
+	$query2 = "UPDATE ".cms_db_prefix()."module_commandes_cf SET  fournisseur = ?, statut_CF = ? WHERE id_CF = ?";
+	$dbresult2 = $db->Execute($query2, array( $fournisseur, $statut_CF, $record_id));
 	
 	
 	/*ci dessous, si la commande fournisseur est reçue, on va chercher à mettre 

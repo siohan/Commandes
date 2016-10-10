@@ -1,14 +1,14 @@
 <?php
 
 if( !isset($gCms) ) exit;
-/*
-	if (!$this->CheckPermission('Ping Manage'))
+
+	if (!$this->CheckPermission('Use Commandes'))
   	{
     		echo $this->ShowErrors($this->Lang('needpermission'));
 		return;
    
   	}
-*/
+
 	if( isset($params['cancel']) )
   	{
     		$this->RedirectToAdminTab('compets');

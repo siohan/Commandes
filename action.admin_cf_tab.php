@@ -1,21 +1,52 @@
 <?php
 
-/*
-if (!$this->CheckPermission('Ping Use'))
+
+if (!$this->CheckPermission('Use Commandes'))
 {
 	echo $this->ShowErrors($this->Lang('needpermission'));
 	return;
 }
-*/
+
 require_once(dirname(__FILE__).'/include/preferences.php');
 $db =& $this->GetDb();
 global $themeObject;
 //debug_display($params, 'Parameters');
+$items_statut_commande = array('Tous'=>'Tous')+$items_statut_commande;
+$liste_fournisseurs = array("TOUS"=>"TOUS")+$liste_fournisseurs;
+//var_dump($liste_fournisseurs);
+if(isset($params['fournisseur']))	
+{
+	$fournisseur = $params['fournisseur'];
+	$key_fournisseur = array_values($liste_fournisseurs);//$index_paiement = $paiement;
+	//var_dump($key_paiement);
+	$key2 = array_search($fournisseur,$key_fournisseur);
+	//var_dump($key2);
+}
+else
+{
+	$key2 = 0;
+	$fournisseur = 'Tous';
+}
+if(isset($params['statut_CF']))	
+{
+	$statut_CF = $params['statut_CF'];
+	$key_statut_CF = array_values($liste_statuts_commandes_fournisseurs);//$index_paiement = $paiement;
+	//var_dump($key_mode_paiement);
+	$key2_statut_CF = array_search($statut_CF,$key_statut_CF);
+	//var_dump($key2_mode_paiement);
+}
+else
+{
+	$key2_statut_CF = 0;
+	$statut_CF = "Tous";
+}
 $smarty->assign('add',
 		$this->CreateLink($id, 'add_edit_cf', $returnid,$contents='Ajouter une commande fournisseur', array("edit"=>"0")));
-$smarty->assign('formstart',$this->CreateFormStart($id,'defaultadmin','', 'post', '',false,'',array('active_tab'=>'equicommandesfournisseurs')));
+$smarty->assign('formstart',$this->CreateFormStart($id,'defaultadmin','', 'post', '',false,'',array('active_tab'=>'commandesfournisseurs')));
 $smarty->assign('fournisseur', 
-		$this->CreateInputDropdown($id,'fournisseur', $items_statut_commande));
+		$this->CreateInputDropdown($id,'fournisseur', $liste_fournisseurs,$selectedIndex=$key2,$selectedvalue=$fournisseur));
+$smarty->assign('statut_CF', 
+		$this->CreateInputDropdown($id,'statut_CF', $items_statut_commande,$selectedIndex=$key2_statut_CF,$selectedvalue=$statut_CF));
 $smarty->assign('submitfilter',
 		$this->CreateInputSubmit($id,'submitfilter',$this->Lang('filtres')));
 $smarty->assign('formend',$this->CreateFormEnd());
@@ -24,17 +55,28 @@ $query = "SELECT *  FROM ".cms_db_prefix()."module_commandes_cf WHERE date_creat
 
 	if( isset($params['submitfilter'] ))
 	{
-		if(isset($params['fournisseur']) && $params['fournisseur'] != '')
+		$nb_filter = 0;//pour savoir si la req a des paramètres
+		
+		if(isset($params['fournisseur']) && $params['fournisseur'] != '' && $params['fournisseur'] != 'TOUS')
 		{
 			$query.=" AND fournisseur LIKE ?";
 			$parms['fournisseur'] = $params['fournisseur'];
+			$nb_filter++;
 		}
-		if(isset($params['statut_CF']) && $params['statut_CF'] != '')
+		if(isset($params['statut_CF']) && $params['statut_CF'] != '' && $params['statut_CF'] != 'Tous')
 		{
 			$query.=" AND statut_CF LIKE ?";
 			$parms['statut_CF'] = $params['statut_CF'];
+			$nb_filter++;
 		}
-		$dbresult= $db->Execute($query,$parms);	
+		if($nb_filter >0)
+		{
+			$dbresult= $db->Execute($query,$parms);
+		}
+		else
+		{
+			$dbresult= $db->Execute($query);
+		}	
 	}
 	else
 	{

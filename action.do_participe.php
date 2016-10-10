@@ -1,16 +1,16 @@
 <?php
 if (!isset($gCms)) exit;
 require_once(dirname(__FILE__).'/include/preferences.php');
-debug_display($params, 'Parameters');
-/*
+//debug_display($params, 'Parameters');
 
-	if (!$this->CheckPermission('Ping Manage'))
+
+	if (!$this->CheckPermission('Use Commandes'))
 	{
 		$designation.=$this->Lang('needpermission');
 		$this->SetMessage("$designation");
-		$this->RedirectToAdminTab('situation');
+		$this->RedirectToAdminTab('clients');
 	}
-*/
+
 $annee = date('Y');
 //on récupère les valeurs
 //pour l'instant pas d'erreur

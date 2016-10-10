@@ -1,19 +1,28 @@
 <?php
 if( !isset($gCms) ) exit;
-/*
-if (!$this->CheckPermission('Ping Use'))
+
+if (!$this->CheckPermission('Use Commandes'))
 {
 	echo $this->ShowErrors($this->Lang('needpermission'));
 	return;
 }
-*/
+
 //require_once(dirname(__FILE__).'/include/prefs.php');
 $db =& $this->GetDb();
 global $themeObject;
 //debug_display($params, 'Parameters');
 $smarty->assign('add_edit_items',
 		$this->CreateLink($id, 'add_edit_item', $returnid,$contents='Ajouter un article'));
-
+//formulaire de tri
+$smarty->assign('formstart',$this->CreateFormStart($id,'defaultadmin','', 'post', '',false,'',array('active_tab'=>'commandesclients')));
+$smarty->assign('paiement', 
+		$this->CreateInputDropdown($id,'paiement', $items_paiement, $selectedIndex=$key2,$selectedvalue=$index_paiement));
+$smarty->assign('statut_commande', 
+		$this->CreateInputDropdown($id,'statut_commande', $items_statut_commande,$selectedIndex=$key2_statut_commande,$selectedvalue=$statut_commande));
+$smarty->assign('submitfilter',
+		$this->CreateInputSubmit($id,'submitfilter',$this->Lang('filtres')));
+$smarty->assign('formend',$this->CreateFormEnd());
+//fin du formulaire de tri
 $result= array ();
 $query = "SELECT id AS item_id, categorie, fournisseur, reference, libelle, marque, prix_unitaire, reduction, statut_item FROM ".cms_db_prefix()."module_commandes_items";
 
@@ -59,6 +68,16 @@ $query = "SELECT id AS item_id, categorie, fournisseur, reference, libelle, marq
 		$smarty->assign('itemsfound', $this->Lang('resultsfoundtext'));
 		$smarty->assign('itemcount', count($rowarray));
 		$smarty->assign('items', $rowarray);
+		
+		$smarty->assign('form2start',
+				$this->CreateFormStart($id,'mass_action',$returnid));
+		$smarty->assign('form2end',
+				$this->CreateFormEnd());
+		$articles = array("Changer la catégorie"=>"item_categorie","Changer le fournisseur"=>"item_fournisseur","Changer la marque"=>"item_marque","Changer le prix"=>"item_prix","Changer la réduction"=>"item_reduction","Changer le statut"=>"item_statut");
+		$smarty->assign('actiondemasse',
+				$this->CreateInputDropdown($id,'actiondemasse',$articles));
+		$smarty->assign('submit_massaction',
+				$this->CreateInputSubmit($id,'submit_massaction',$this->Lang('apply_to_selection'),'','',$this->Lang('areyousure_actionmultiple')));
 		
 
 

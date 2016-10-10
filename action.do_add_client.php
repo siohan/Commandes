@@ -1,14 +1,14 @@
 <?php
 if (!isset($gCms)) exit;
-debug_display($params, 'Parameters');
-/*
-	if (!$this->CheckPermission('Ping Manage'))
+//debug_display($params, 'Parameters');
+
+	if (!$this->CheckPermission('Use Commandes'))
 	{
 		$designation .=$this->Lang('needpermission');
 		$this->SetMessage("$designation");
-		$this->RedirectToAdminTab('compets');
+		$this->RedirectToAdminTab('clients');
 	}
-*/
+
 //on récupère les valeurs
 //pour l'instant pas d'erreur
 $aujourdhui = date('Y-m-d ');

@@ -11,7 +11,7 @@
 {if $edit == '1'}
 	{$edit}
 	{$edition}
-	record_id : {$record_id}
+	{$record_id}
 	{$commande_id}
 	{*$nom*}
 	<div class="pageoverflow">

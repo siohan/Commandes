@@ -1,14 +1,14 @@
 <?php
 
 if( !isset($gCms) ) exit;
-/*
-	if (!$this->CheckPermission('Ping Manage'))
+
+	if (!$this->CheckPermission('Use Commandes'))
   	{
     		echo $this->ShowErrors($this->Lang('needpermission'));
 		return;
    
   	}
-*/
+
 	if( isset($params['cancel']) )
   	{
     		$this->RedirectToAdminTab('compets');
@@ -73,6 +73,7 @@ if(isset($paiement))
 else
 {
 	$key2 = 0;
+	$index_paiement = "AUCUN";
 }
 if(isset($mode_paiement))	
 {
@@ -84,6 +85,7 @@ if(isset($mode_paiement))
 else
 {
 	$key2_mode_paiement = 0;
+	$mode_paiement = "Aucun";
 }
 if(isset($statut_commande))	
 {

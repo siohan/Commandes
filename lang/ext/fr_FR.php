@@ -1,19 +1,16 @@
 <?php
+$lang['apply_to_selection'] = "Appliquer à toute la sélection";
+$lang['areyousure_actionmultiple'] = "Etes-vous sûr de réaliser cette action ?";
 $lang['cancel'] = "Annuler";
-$lang['friendlyname'] = 'Commandes';
+$lang['friendlyname'] = 't2t Commandes';
+$lang['filtres'] = 'Appliquer';
 $lang['installed'] = 'Module install&eacute; en version %s.';
-$lang['long_import'] = "Cette opération peut durer plusieurs minutes !";
-$lang['link_view'] = 'Voir l&#039;enregistrement';
-$lang['lists'] = 'Listes';
 $lang['listsfoundtext'] = 'liste(s) trouv&eacute;e(s)';
 $lang['messages'] = 'messages';
 $lang['missing_parameters'] = 'Paramètre(s) manquant(s)';
 $lang['name'] = 'Nom';
 $lang['needpermission'] = 'Vous n\'avez pas la permission d\'accéder';
 $lang['no'] = 'Non';
-$lang['no_family_name'] = 'Vous devez saisir votre nom de famille';
-$lang['no_adresse'] = 'Vous devez saisir votre adresse';
-$lang['not_already_downloaded'] = 'A télécharger !';
 $lang['options'] = 'Options';
 $lang['prefsupdated'] = 'Pr&eacute;ferences du module mise &agrave; jour.';
 $lang['postinstall'] = 'Conseil : soyez sur d&#039;attribuer les permissions &quotPing&quot; pour utiliser ce module !';
@@ -22,17 +19,9 @@ $lang['really_uninstall'] = '\312tes-vous s\373r de vouloir d\351sinstaller ce s
 $lang['resultsfound'] = 'résultat(s)';
 $lang['resultsfoundtext'] = 'r&eacute;sultat(s) trouv&eacute;(s)';
 $lang['resultfoundtext'] = 'r&eacute;sultat(s) trouv&eacute;(s)';
-$lang['retrieveallpartiesspid'] = 'Récupérer toutes les parties Spid';
-$lang['retrieve_parties'] = 'Parties FFTT';
-$lang['retrieve_parties_spid'] = 'Parties SPID';
-$lang['retrieve_sit_mens'] = 'Sit mensuelle';
-$lang['retrieve_users'] = "Récupérer les joueurs";
-$lang['retrieve_users_confirm'] = 'Confirmez votre demande !';
 $lang['saved_record'] = 'Enregistrements Ok';
-$lang['score_equipe'] = 'Score Equipe';
-$lang['score_adv'] = 'Score Adversaires';
-$lang['sheetsfoundtext'] = 'rencontre(s) trouv&eacute;e(s)';
 $lang['submit'] = 'Sauvegarder';
+$lang['submitfilter'] = 'Appliquer';
 $lang['submitasnew'] = 'Ajouter comme nouveau';
 $lang['title_allow_add'] = 'Les utilisateurs peuvent ajouter des enregistrements ?';
 $lang['title_allow_add_help'] = 'Cliquez ici pour permettre aux utilisateurs d&#039;ajouter des enregistrements.';
@@ -53,10 +42,6 @@ $lang['users'] = 'utilisateurs';
 $lang['usersfoundtext'] = 'utilisateur(s) trouv&eacute;(s)';
 $lang['user_deleted'] = 'Utilisateur supprimé';
 $lang['user_updated'] = 'Utilisateur modifi&eacute;';
-$lang['vic_def'] = 'Victoire ou défaite';
-$lang['view_contacts'] = 'Voir les contacts';
-$lang['view_results'] = 'Voir les résulats';
-$lang['yes'] = 'Oui';
 $lang['help_tour'] = 'Utilez le N° de journée pour obtenir ses résultats uniquement';
 $lang['help_libelle_equipe'] = 'Ex : RP FOUESNANT 1';
 $lang['help_libdivision'] = 'Ex :Nationale 1 Messieurs Poule C';
@@ -91,12 +76,14 @@ $lang['changelog'] = '<ul>
 </ul>
 </ul>';
 $lang['help'] = '<h3>Que fait ce module ?</h3>
-<p>Ce module vous permet gérer les commandes de vos adhérents ("clients").</p>
+<p>Ce module vous permet gérer les commandes et paiements de celles-ci de vos adhérents de manière centralisée et sécurisée.</p>
 <h3>Comment l\'utiliser ?</h3>
-<ol><li>Vos clients (adhérents et plus) effectuent des commandes de matériel auprès de différents fournisseurs (Wack, Butter, etc...)L\'onglet "Clients" </li>
-<li>Dans l\'onglet "Articles", </li>
-<li>Dans l\'onglet "Commandes Clients" .</li>
-<li>Dans l\'onglet "Commandes fournisseurs" .</li></ol>
+<p>Etape 1 : Vos adhérents effectuent des commandes de matériel de différents fournisseurs (Wack, Butter, etc...) auprès de vous. Dans l\'onglet Commandes adhérents" vous reportez celles-ci.</p>
+<p>Etape 2 : Vous effectuez les commandes fournisseurs depuis l\'onglet "Commandes fournisseurs", par exemple Butterfly, les articles Butterfly que vous adhérents désirent sont prêts à être sélectionnés.</p>
+<p>Etape 3 : A réception et à vérification de la commande, vous modifiez le statut de la commande fournisseur à "Reçue". Attention ! Vous ne pourrez plus changer le statut, la commande est désormais figée (non modifiable).Les articles basculent dans le stock (onglet "Stock")</p>
+<p>Etape 4 : Vos adhérents retirent et paient leurs commandes. Dans l\'onglet "Commandes adhérents", vous changez le paiement à "Payée et déstockée", les articles s\'enlevent automatiquement du stock. </p>
+<p>L\'onglet "Articles" contient les produits de vos différents fournisseurs, vous pouvez en rajouter ou en retirer.</p>
+<p>L\'onglet "Clients" contient la liste de vos adhérents que vous pouvez exporter depuis le module Ping dûment installé.</p>
 
 ';
 

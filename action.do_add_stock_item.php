@@ -1,14 +1,14 @@
 <?php
 if (!isset($gCms)) exit;
-debug_display($params, 'Parameters');
-/*
-	if (!$this->CheckPermission('Ping Manage'))
+//debug_display($params, 'Parameters');
+
+	if (!$this->CheckPermission('Use Commandes'))
 	{
 		$designation .=$this->Lang('needpermission');
 		$this->SetMessage("$designation");
 		$this->RedirectToAdminTab('compets');
 	}
-*/
+
 //on récupère les valeurs
 //pour l'instant pas d'erreur
 $aujourdhui = date('Y-m-d ');
@@ -39,10 +39,7 @@ $edit = 0;//pour savoir si on fait un update ou un insert; 0 = insert
 			$couleur = $params['couleur'];
 		}
 		
-		if (isset($params['categorie_produit']) && $params['categorie_produit'] !='')
-		{
-			$categorie_produit = $params['categorie_produit'];
-		}
+		
 		
 		
 		$fournisseur = '';
@@ -78,6 +75,7 @@ $edit = 0;//pour savoir si on fait un update ou un insert; 0 = insert
 		
 			
 		//on calcule le nb d'erreur
+		echo "le nb erreur est : ".$error;
 		if($error>0)
 		{
 			$this->Setmessage('Parametres requis manquants !');
@@ -88,12 +86,18 @@ $edit = 0;//pour savoir si on fait un update ou un insert; 0 = insert
 			
 			//on fait le calcul du prix total de larticle
 			$prix_total = $prix_unitaire*$quantite*(1-$reduction/100);
-			$query = "INSERT INTO ".cms_db_prefix()."module_commandes_stock (id,fk_id,date_created, date_modified,libelle_commande, categorie_produit, fournisseur, quantite, ep_manche_taille, couleur, prix_total, statut_item) VALUES ('',?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-			$dbresult = $db->Execute($query, array($commande_id,$aujourdhui, $aujourdhui,$libelle_commande,$categorie_produit,$fournisseur, $quantite,$ep_manche_taille, $couleur, $prix_total, $statut_item));
-
+			$id_items = 0;
+			$fk_id = 0;
+			$query = "INSERT INTO ".cms_db_prefix()."module_commandes_stock (id, id_items, fk_id, libelle_commande, categorie_produit, fournisseur, quantite, ep_manche_taille, couleur, prix_total) VALUES ('', '', ?, ?, ?, ?, ?, ?, ?, ?)";
+			$dbresult = $db->Execute($query, array($fk_id, $libelle_commande,$categorie_produit,$fournisseur, $quantite,$ep_manche_taille, $couleur, $prix_total));
+			if(!$dbresult)
+			{
+					echo $db->ErrorMsg();
+			}
 		
 			
-		
+			$this->SetMessage('stock modifié');
+			$this->Redirect($id,'defaultadmin', $returnid, array("active_tab"=>"stock"));
 			
 		}		
 		//echo "la valeur de edit est :".$edit;
@@ -103,7 +107,6 @@ $edit = 0;//pour savoir si on fait un update ou un insert; 0 = insert
 			
 		
 
-$this->SetMessage('stock modifié');
-$this->Redirect($id,'defaultadmin', $returnid, array("activetab"=>"stock","record_id"=>$commande_id));
+
 
 ?>

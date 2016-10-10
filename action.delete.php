@@ -1,14 +1,14 @@
 <?php
 if (!isset($gCms)) exit;
 
-debug_display($params, 'Parameters');
-/*
-if (!$this->CheckPermission('Ping Delete'))
+//debug_display($params, 'Parameters');
+
+if (!$this->CheckPermission('Use Commandes'))
 	{
-	$params = array('message'=>Lang('needpermission'), 'active_tab' => 'users');
+	$params = array('message'=>Lang('needpermission'), 'active_tab' => 'commandesfournisseurs');
 	$this->Redirect($id, 'defaultadmin','', $params);
 	}
-*/	
+	
 $error = 0;
 $designation = '';
 	$record_id = '';

@@ -96,7 +96,7 @@ $flds = "
 	date_modified D,
 	reference I(8),
 	libelle_commande C(255),
-	categorie_produit C(8),
+	categorie_produit C(100),
 	fournisseur C(50),
 	quantite I(3),
 	prix_total N(6.2),
@@ -146,14 +146,41 @@ $sqlarray = $dict->CreateTableSQL( cms_db_prefix()."module_commandes_cf_items",
 $dict->ExecuteSQLArray($sqlarray);
 #
 #
+#
+#
+$dict = NewDataDictionary( $db );
+
+// table schema description
+$flds = "
+	id I(11) AUTO KEY,
+	id_items I(11),
+	fk_id I(11),
+	libelle_commande C(255),
+	categorie_produit C(255),
+	fournisseur C(100),
+	quantite I(4),
+	ep_manche_taille C(50),
+	couleur C(80),
+	prix_total N(6.2)";
+
+// create it. 
+$sqlarray = $dict->CreateTableSQL( cms_db_prefix()."module_commandes_stock",
+				   $flds, 
+				   $taboptarray);
+$dict->ExecuteSQLArray($sqlarray);
+#
+#
 #Indexes
 //on créé un index sur la table div_tours
 $idxoptarray = array('UNIQUE');
 $sqlarray = $dict->CreateIndexSQL(cms_db_prefix().'cf',
 	    cms_db_prefix().'module_commandes_CF_items', 'id_CF,id_items',$idxoptarray);
 $dict->ExecuteSQLArray($sqlarray);
-//une nouvelle table pour les points
 
+
+
+//permissions
+$this->CreatePermission('Use Commandes','Utiliser le module Commandes');
 
 // put mention into the admin log
 $this->Audit( 0, 

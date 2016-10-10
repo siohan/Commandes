@@ -1,21 +1,21 @@
 <?php
 
 if( !isset($gCms) ) exit;
-/*
-	if (!$this->CheckPermission('Ping Manage'))
+
+	if (!$this->CheckPermission('Use Commandes'))
   	{
     		echo $this->ShowErrors($this->Lang('needpermission'));
 		return;
    
   	}
-*/
+
 	if( isset($params['cancel']) )
   	{
-    		$this->RedirectToAdminTab('compets');
+    		$this->RedirectToAdminTab('commandesclients');
     		return;
   	}
 
-debug_display($params, 'Parameters');
+//debug_display($params, 'Parameters');
 $db =& $this->GetDb();
 $now = date('Y-m-d');
 $designation = '';//le message final
@@ -155,22 +155,6 @@ else
 	$this->SetMessage($designation);
 	$this->RedirectToAdminTab('commandesclients', '', 'admin_cc_tab');
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #
 # EOF
 #

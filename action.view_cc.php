@@ -1,12 +1,10 @@
 <?php
 if( !isset($gCms) ) exit;
-/*
-if (!$this->CheckPermission('Ping Use'))
+if (!$this->CheckPermission('Use Commandes'))
 {
 	echo $this->ShowErrors($this->Lang('needpermission'));
 	return;
 }
-*/
 require_once(dirname(__FILE__).'/include/preferences.php');
 $db =& $this->GetDb();
 global $themeObject;

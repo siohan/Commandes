@@ -33,17 +33,29 @@ class Commandes extends CMSModule
 
   function VisibleToAdminUser()
   {
-    	return 	$this->CheckPermission('Commandes Use');
+    	return 	$this->CheckPermission('Use Commandes');
 	
   }
  
   
-  function GetDependencies()
-  {
-	/*return array('CGCalendar'=>'1.15.8');*/
-  }
+  public function GetDependencies() {
+        return array('CGExtensions'=>'1.53.6','CGSimpleSmarty'=>'1.9','JQueryTools'=>'1.3.8');
+    }
 
-  
+  public function GetHeaderHTML()
+    {
+        $out = parent::GetHeaderHTML();
+        $obj = cms_utils::get_module('JQueryTools','1.2');
+        if( is_object($obj) ) {
+            $tmpl = <<<EOT
+{JQueryTools action='require' lib='tablesorter,jquerytools,cgform'}
+{JQueryTools action='placemarker'}
+EOT;
+            $out .= $this->ProcessTemplateFromData($tmpl);
+        }
+        return $out;
+    }
+
 
   function MinimumCMSVersion()
   {

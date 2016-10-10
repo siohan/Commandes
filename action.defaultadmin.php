@@ -1,6 +1,7 @@
 <?php
+
    if ( !isset($gCms) ) exit; 
-	if (!$this->CheckPermission('Commandes Use'))
+	if (!$this->CheckPermission('Use Commandes'))
 	{
 		echo $this->ShowErrors($this->Lang('needpermission'));
 		return;
@@ -15,7 +16,7 @@ if (FALSE === empty($params['active_tab']))
   {
     $tab = $params['active_tab'];
   } else {
-  $tab = 'CC';
+  $tab = 'commandesclients';
  }	
 	echo $this->SetTabHeader('commandesfournisseurs', 'Commandes fournisseurs', ('commandesfournisseurs' == $tab)?true:false);
 	echo $this->SetTabHeader('commandesclients', 'Commandes adhérents', ('commandesclients' == $tab)?true:false);

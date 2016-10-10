@@ -4,6 +4,11 @@ if( !isset($gCms) ) exit;
 ##                                                                ##
 ####################################################################
 //debug_display($params, 'Parameters');
+if (!$this->CheckPermission('Use Commandes'))
+{
+	echo $this->ShowErrors($this->Lang('needpermission'));
+	return;
+}
 $designation = '';
 $fournisseur = '';
 $record_id = '';
@@ -12,7 +17,7 @@ $rowarray = array();
 	if(!isset($params['fournisseur']) || $params['fournisseur'] == '')
 	{
 		$this->SetMessage("parametres manquants");
-		$this->RedirectToAdminTab('CF');
+		$this->RedirectToAdminTab('commandesfournisseurs');
 	}
 	else
 	{
@@ -21,7 +26,7 @@ $rowarray = array();
 	if(!isset($params['record_id']) || $params['record_id'] == '')
 	{
 		$this->SetMessage("parametres manquants");
-		$this->RedirectToAdminTab('CF');
+		$this->RedirectToAdminTab('commandesfournisseurs');
 	}
 	else
 	{
@@ -32,7 +37,7 @@ $rowarray = array();
 	
 $db = $this->GetDb();
 //la requete pour aller chercher tous les articles commandés par les clients dont le fournisseur est ...
-$query = "SELECT id AS items_id, fk_id, CONCAT_WS(' - ',quantite, libelle_commande,ep_manche_taille, couleur) AS commande, prix_total FROM ".cms_db_prefix()."module_commandes_cc_items AS it  WHERE fournisseur LIKE  ? AND commande = '0' ";
+$query = "SELECT id AS items_id, fk_id, CONCAT_WS(' - ',quantite, libelle_commande,ep_manche_taille, couleur) AS commande, prix_total FROM ".cms_db_prefix()."module_commandes_cc_items AS it  WHERE it.fournisseur =  ? AND it.commande = '0' ";
 //echo $query;
 $dbresult = $db->Execute($query,array($fournisseur));
 

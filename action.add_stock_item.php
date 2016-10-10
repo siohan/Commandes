@@ -1,14 +1,14 @@
 <?php
 
 if( !isset($gCms) ) exit;
-/*
-	if (!$this->CheckPermission('Ping Manage'))
+
+	if (!$this->CheckPermission('Use Commandes'))
   	{
     		echo $this->ShowErrors($this->Lang('needpermission'));
 		return;
    
   	}
-*/
+
 	if( isset($params['cancel']) )
   	{
     		$this->RedirectToAdminTab('commandesclients');
@@ -61,11 +61,6 @@ $index = 0;
 	$smarty->assign('couleur',
 			$this->CreateInputText($id,'couleur',(isset($couleur)?$couleur:""),50,200));
 			
-
-			
-			
-	$smarty->assign('categorie_produit',
-			$this->CreateInputText($id,'categorie_produit',(isset($categorie_produit)?$categorie_produit:""),30,150));
 	$smarty->assign('quantite',
 			$this->CreateInputText($id,'quantite',(isset($quantite)?$quantite:""),5,10));
 	
