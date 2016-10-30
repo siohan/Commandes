@@ -1,16 +1,6 @@
-{literal}
-<script>
- $(function() {
-   $( "#m1_date_debut" ).datepicker({ dateFormat: "yy-mm-dd" });
- });
- </script>
-{/literal}
 <div class="pageoverflow">
 {$formstart}
 {$record_id}
-
-
-
 <div class="pageoverflow">
   <p class="pagetext">Catégorie </p>
   <p class="pageinput">{$categorie}</p>
@@ -32,11 +22,11 @@
 	<p class="pageinput">{$marque}</p>
 </div>
 <div class="pageoverflow">
-	<p class="pagetext">Prix unitaire :</p>
-	<p class="pageinput">{$prix_unitaire}</p>
+	<p class="pagetext">Prix unitaire : (utilisez le point(.) comme séparateur décimal ex : 99.99)</p>
+	<p class="pageinput">{$prix_unitaire}€</p>
 </div>
 <div class="pageoverflow">
-	<p class="pagetext">Réduction :</p>
+	<p class="pagetext">Réduction (en %) :</p>
 	<p class="pageinput">{$reduction}</p>
 </div>
 <div class="pageoverflow">

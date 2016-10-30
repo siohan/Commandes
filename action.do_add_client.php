@@ -42,16 +42,14 @@ $edit = 0;//pour savoir si on fait un update ou un insert; 0 = insert
 		
 		
 		$email = '';
-		if (isset($params['email']) && $params['email'] !='')
+		if (isset($params['email']) && $params['email'] !='' && True === is_email($params['email']))
 		{
 			$email = $params['email'];
 		}
-		/*
 		else
 		{
 			$error++;
 		}
-		*/
 		$tel = '';
 		if (isset($params['tel']) && $params['tel'] !='')
 		{

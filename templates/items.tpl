@@ -25,6 +25,20 @@ $(document).ready(function(){
 //]]>
 </script><div class="pageoptions"><p><span class="pageoptions warning">{$add_edit_items} </span></p></div>
 <div class="pageoptions"><p class="pageoptions">{$itemcount}&nbsp;{$itemsfound}</p></div>
+{if isset($formstart) }
+<fieldset>
+  <legend>Filtres</legend>
+  {$formstart}
+  <div class="pageoverflow">
+	<p class="pagetext">Catégorie</p>
+    <p class="pageinput">{$categorie} </p>
+	<p class="pagetext">Fournisseur :</p>
+	<p class="pageinput">{$fournisseur} </p>
+    <p class="pageinput">{$submitfilter}{$hidden|default:''}</p>
+  </div>
+  {$formend}
+</fieldset>
+{/if}
 {if $itemcount > 0}
 {$form2start}
 <table border="0" cellspacing="0" cellpadding="0" class="pagetable">

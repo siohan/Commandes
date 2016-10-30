@@ -85,8 +85,8 @@ $designation = '';
 					$query = "DELETE FROM ".cms_db_prefix()."module_commandes_clients WHERE id = ?";
 					$db->Execute($query, array($record_id));
 
-					$this->SetMessage('Résultat supprimé');
-					$this->RedirectToAdminTab('cc');
+					$this->SetMessage('Client supprimé');
+					$this->RedirectToAdminTab('clients');
 				break;
 				case "item" :
 
@@ -108,6 +108,15 @@ $designation = '';
 					$designation = "Commande supprimée - articles en attente de commande";
 					$this->SetMessage("$designation");
 					$this->RedirectToAdminTab('commandesfournisseurs');
+					
+				break;
+				case "stock" :
+					$query = "DELETE FROM ".cms_db_prefix()."module_commandes_stock WHERE id = ?";
+					$db->Execute($query, array($record_id));
+					
+					$designation = "Stock modifié";
+					$this->SetMessage("$designation");
+					$this->RedirectToAdminTab('stock');
 					
 				break;
 				

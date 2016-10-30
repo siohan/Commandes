@@ -65,11 +65,11 @@ $query = "SELECT  id AS client_id, date_created, date_maj, nom, prenom, club, em
 				$onerow->portable = $row['portable'];
 				if($nb_commandes >0)
 				{
-					$onerow->view= $this->createLink($id, 'view_client', $returnid, $themeObject->DisplayImage('icons/system/view.gif', $this->Lang('view_results'), '', '', 'systemicon'),array('active_tab'=>'commandesclients',"record_id"=>$row['client_id'])) ;
+					$onerow->view= $this->createLink($id, 'view_client_orders', $returnid, $themeObject->DisplayImage('icons/system/view.gif', $this->Lang('view_results'), '', '', 'systemicon'),array('active_tab'=>'commandesclients',"record_id"=>$row['client_id'])) ;
 				}
 				
 				$onerow->editlink= $this->CreateLink($id, 'add_edit_client', $returnid, $themeObject->DisplayImage('icons/system/edit.gif', $this->Lang('edit'), '', '', 'systemicon'), array('record_id'=>$row['client_id']));
-				$onerow->deletelink = $this->CreateLink($id, 'delete',$returnid, $themeObject->DisplayImage('icons/system/delete.gif', $this->Lang('delete'), '', '', 'systemicon'), array('record_id'=>$row['client_id']));
+				$onerow->deletelink = $this->CreateLink($id, 'delete',$returnid, $themeObject->DisplayImage('icons/system/delete.gif', $this->Lang('delete'), '', '', 'systemicon'), array('record_id'=>$row['client_id'],"bdd"=>"clients"));
 				
 				($rowclass == "row1" ? $rowclass= "row2" : $rowclass= "row1");
 				$rowarray[]= $onerow;

@@ -74,14 +74,14 @@ $edit = 0;//pour savoir si on fait un update ou un insert; 0 = insert
 			$error++;
 		}
 		$reduction = '';
-		if (isset($params['marque']) && $params['marque'] !='')
-		{
-			$marque = $params['marque'];
-		}
-		$marque = '';
 		if (isset($params['reduction']) && $params['reduction'] !='')
 		{
 			$reduction = $params['reduction'];
+		}
+		$marque = '';
+		if (isset($params['marque']) && $params['marque'] !='')
+		{
+			$marque = strtoupper($params['marque']);
 		}
 		$statut_item = 1;
 		if (isset($params['statut_item']) && $params['statut_item'] !='')
@@ -129,7 +129,7 @@ $edit = 0;//pour savoir si on fait un update ou un insert; 0 = insert
 			
 		
 
-$this->SetMessage('Article modifié');
-$this->RedirectToAdminTab('articles');
+$this->SetMessage('Article modifié ou ajouté');
+$this->RedirectToAdminTab('articles',$params='');
 
 ?>

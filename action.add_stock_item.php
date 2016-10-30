@@ -22,7 +22,7 @@ $index = 0;
 
 	
 	//on fait une requete pour completer l'input dropdown du formulaire
-	$query = "SELECT CONCAT_WS('-', categorie, libelle) AS libelle_form,libelle  FROM ".cms_db_prefix()."module_commandes_items ORDER BY categorie ASC, libelle ASC";
+	$query = "SELECT CONCAT_WS('-', categorie, libelle) AS libelle_form,libelle,id  FROM ".cms_db_prefix()."module_commandes_items ORDER BY categorie ASC, libelle ASC";
 	$dbresult = $db->Execute($query);
 
 		if($dbresult && $dbresult->RecordCount() >0)
@@ -33,10 +33,7 @@ $index = 0;
 				$a++;
 				//$libelle = $row['libelle_form'];
 				$libelle[$row['libelle_form']] = $row['libelle'];
-				/*
-				$type_compet[$row['name']] = $row['idepreuve'];
-				$indivs = $row['indivs'];
-				*/
+				$id_items = $row['id'];
 				//echo $a;
 				if(isset($libelle_commande) && $row['libelle'] == $libelle_commande)
 				{
@@ -51,7 +48,8 @@ $index = 0;
 	//on construit le formulaire
 	$smarty->assign('formstart',
 			    $this->CreateFormStart( $id, 'do_add_stock_item', $returnid ) );
-	;
+	$smarty->assign('id_items',
+			$this->CreateInputHidden($id,'id_items',$id_items));
 	$smarty->assign('libelle_commande',
 			$this->CreateInputDropdown($id,'libelle_commande',$libelle,$selectedindex = $index, $selectedvalue=$libelle));
 			

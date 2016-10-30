@@ -2,18 +2,24 @@
 if (!isset($gCms)) exit;
 //debug_display($params, 'Parameters');
 
-	if (!$this->CheckPermission('Use Commandes'))
-	{
-		$designation .=$this->Lang('needpermission');
-		$this->SetMessage("$designation");
-		$this->RedirectToAdminTab('commandesclients');
-	}
+if (!$this->CheckPermission('Use Commandes'))
+{
+	$designation .=$this->Lang('needpermission');
+	$this->SetMessage("$designation");
+	$this->RedirectToAdminTab('commandesclients');
+}
+if( isset($params['cancel']) )
+{
+	$this->RedirectToAdminTab('commandesclients');
+	return;
+}
 
 //on récupère les valeurs
 //pour l'instant pas d'erreur
 $aujourdhui = date('Y-m-d ');
 $error = 0;
 $edit = 0;//pour savoir si on fait un update ou un insert; 0 = insert
+$alert = 0;//pour savoir si certains champs doivent contenir une valeur ou non
 	
 		
 		
@@ -34,12 +40,34 @@ $edit = 0;//pour savoir si on fait un update ou un insert; 0 = insert
 		}
 		
 		
+		//on va faire le calcul du prix de la ligne
+		//on va d'abord chercher le prix unitaire de l'article
+		
+			$query2 = "SELECT prix_unitaire, reduction, categorie, fournisseur FROM ".cms_db_prefix()."module_commandes_items WHERE libelle LIKE ?";
+			$dbresult2 = $db->Execute($query2, array($libelle_commande));
+			if($dbresult2)
+			{
+				$row2 = $dbresult2->FetchRow();
+				$reduction = $row2['reduction'];
+				$prix_unitaire = $row2['prix_unitaire'];
+			//	echo $prix_unitaire;
+				$fournisseur = $row2['fournisseur'];
+				$categorie_produit = $row2['categorie'];
+			}
+	
+		
+		if($categorie_produit == "BOIS" || $categorie_produit == "REVETEMENTS" || $categorie_produit == "TEXTILES")
+		{
+			$alert = 1;
+		}
+		
+		
 		$ep_manche_taille = '';
 		if (isset($params['ep_manche_taille']) && $params['ep_manche_taille'] !='')
 		{
 			$ep_manche_taille = $params['ep_manche_taille'];
 		}
-		else
+		elseif($params['ep_manche_taille'] =='' && $alert == "1")
 		{
 			$error++;
 		}
@@ -47,16 +75,13 @@ $edit = 0;//pour savoir si on fait un update ou un insert; 0 = insert
 		$couleur = '';
 		if (isset($params['couleur']) && $params['couleur'] !='')
 		{
-			$couleur = $params['couleur'];
+			$couleur = strtoupper($params['couleur']);
 		}
-		else
+		elseif($params['couleur'] =='' && ($categorie_produit== "REVETEMENTS" || $categorie_produit =="TEXTILES"))
 		{
 			$error++;
 		}
-		if (isset($params['categorie_produit']) && $params['categorie_produit'] !='')
-		{
-			$categorie_produit = $params['categorie_produit'];
-		}
+		
 		
 		
 		$fournisseur = '';
@@ -79,20 +104,7 @@ $edit = 0;//pour savoir si on fait un update ou un insert; 0 = insert
 		{
 			$error++;
 		}
-		//on va faire le calcul du prix de la ligne
-		//on va d'abord chercher le prix unitaire de l'article
 		
-			$query2 = "SELECT prix_unitaire, reduction, categorie, fournisseur FROM ".cms_db_prefix()."module_commandes_items WHERE libelle LIKE ?";
-			$dbresult2 = $db->Execute($query2, array($libelle_commande));
-			if($dbresult2)
-			{
-				$row2 = $dbresult2->FetchRow();
-				$reduction = $row2['reduction'];
-				$prix_unitaire = $row2['prix_unitaire'];
-			//	echo $prix_unitaire;
-				$fournisseur = $row2['fournisseur'];
-				$categorie_produit = $row2['categorie'];
-			}
 		
 		
 		$statut_item = '1';
@@ -117,7 +129,7 @@ $edit = 0;//pour savoir si on fait un update ou un insert; 0 = insert
 		if($error>0)
 		{
 			$this->Setmessage('Parametres requis manquants !');
-			$this->RedirectToAdminTab('CC');
+			$this->Redirect($id, 'add_edit_cc_item',$returnid, array("commande_id"=>$commande_id, "edit"=>$edit));//ToAdminTab('commandesclients');
 		}
 		else // pas d'erreurs on continue
 		{
@@ -128,8 +140,9 @@ $edit = 0;//pour savoir si on fait un update ou un insert; 0 = insert
 			
 			if($edit == 0)
 			{
-				$query = "INSERT INTO ".cms_db_prefix()."module_commandes_cc_items (id,fk_id,date_created, date_modified,libelle_commande, categorie_produit, fournisseur, quantite, ep_manche_taille, couleur, prix_total, statut_item) VALUES ('',?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-				$dbresult = $db->Execute($query, array($commande_id,$aujourdhui, $aujourdhui,$libelle_commande,$categorie_produit,$fournisseur, $quantite,$ep_manche_taille, $couleur, $prix_total, $statut_item));
+				$commande = 0;
+				$query = "INSERT INTO ".cms_db_prefix()."module_commandes_cc_items (id,fk_id,date_created, date_modified,libelle_commande, categorie_produit, fournisseur, quantite, ep_manche_taille, couleur, prix_total, statut_item, commande) VALUES ('',?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				$dbresult = $db->Execute($query, array($commande_id,$aujourdhui, $aujourdhui,$libelle_commande,$categorie_produit,$fournisseur, $quantite,$ep_manche_taille, $couleur, $prix_total, $statut_item,$commande));
 
 			}
 			else

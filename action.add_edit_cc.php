@@ -14,7 +14,7 @@ if( !isset($gCms) ) exit;
     		$this->RedirectToAdminTab('compets');
     		return;
   	}
-//debug_display($params, 'Parameters');
+debug_display($params, 'Parameters');
 require_once(dirname(__FILE__).'/include/preferences.php');
 $db =& $this->GetDb();
 $now = date('Y-m-d');
@@ -40,7 +40,7 @@ if(isset($params['record_id']) && $params['record_id'] !="")
 		$record_id = $params['record_id'];
 		$edit = 1;//on est bien en trai d'éditer un enregistrement
 		//ON VA CHERCHER l'enregistrement en question
-		$query = "SELECT cc.id as index1, cc.date_created,cc.client,cc.prix_total, cc.libelle_commande,cc.statut_commande,cc.date_modified,cc.paiement, cc.mode_paiement,cc.remarques FROM ".cms_db_prefix()."module_commandes_cc AS cc, ".cms_db_prefix()."module_commandes_clients AS cl WHERE cc.client = cl.id AND cc.id = ?";
+		$query = "SELECT cc.id as index1, cc.date_created,cc.client,cc.prix_total, cc.libelle_commande,cc.fournisseur,cc.statut_commande,cc.date_modified,cc.paiement, cc.mode_paiement,cc.remarques FROM ".cms_db_prefix()."module_commandes_cc AS cc, ".cms_db_prefix()."module_commandes_clients AS cl WHERE cc.client = cl.id AND cc.id = ?";
 		$dbresult = $db->Execute($query, array($record_id));
 		while ($dbresult && $row = $dbresult->FetchRow())
 		{
@@ -50,6 +50,7 @@ if(isset($params['record_id']) && $params['record_id'] !="")
 			$date_modified = $row['date_modified'];
 			$client = $row['client'];
 			$libelle_commande = $row['libelle_commande'];
+			$fournisseur = $row['fournisseur'];
 			$prix_total = $row['prix_total'];
 			$statut_commande = $row['statut_commande'];
 			$paiement = $row['paiement'];
@@ -97,6 +98,19 @@ if(isset($statut_commande))
 else
 {
 	$key2_statut_commande = 0;
+}
+
+if(isset($fournisseur))	
+{
+	$key_fournisseur = array_values($liste_fournisseurs);//$index_paiement = $paiement;
+	//var_dump($key_mode_paiement);
+	$key2_fournisseur = array_search($fournisseur,$key_fournisseur);
+	//var_dump($key2_mode_paiement);
+}
+else
+{
+	$key2_fournisseur = 0;
+	$fournisseur = "AUCUN";
 }
 	//on fait une requete pour completer l'input dropdown du formulaire
 	$query = "SELECT id as client_id, CONCAT_WS(' ',nom, prenom) AS joueur FROM ".cms_db_prefix()."module_commandes_clients ORDER BY nom ASC, prenom ASC";
@@ -164,6 +178,8 @@ else
 			$this->CreateInputDate($id, 'date_created',(isset($date_created)?$date_created:$now)));
 	$smarty->assign('libelle_commande',
 			$this->CreateInputText($id,'libelle_commande',(isset($libelle_commande)?$libelle_commande: ""),50,100));
+	$smarty->assign('fournisseur',
+			$this->CreateInputDropdown($id,'fournisseur',$liste_fournisseurs, $selectedIndex=$key2_fournisseur,$selectedvalue=$fournisseur));
 	
 	$smarty->assign('paiement',
 			$this->CreateInputDropdown($id,'paiement',$items_paiement, $selectedIndex=$key2,$selectedvalue=$index_paiement));

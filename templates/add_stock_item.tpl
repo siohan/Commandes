@@ -10,7 +10,7 @@
   <p class="pageinput">{$libelle_commande}</p>
 </div>
 <div class="pageoverflow">
-  <p class="pagetext">Epaisseur Manche Taille:</p>
+  <p class="pagetext">Epaisseur Manche Taille:{cms_help key='help_ep_manche_taille'}</p>
   <p class="pageinput">{$ep_manche_taille}</p>
 </div>
 <div class="pageoverflow">

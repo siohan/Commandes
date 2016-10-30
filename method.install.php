@@ -73,6 +73,7 @@ $flds = "
 	date_modified D,
 	client C(50),
 	libelle_commande C(255),
+	fournisseur C(50),
 	prix_total N(6.2),
 	statut_commande C(55),
 	paiement C(50),
@@ -136,7 +137,7 @@ $flds = "
 	id I(20) AUTO KEY,
 	id_CF I(20) ,
 	id_items I(20),
-	prix_total N(6,2)";
+	prix_total N(6.2)";
 	
 
 // create it. 
@@ -174,10 +175,11 @@ $dict->ExecuteSQLArray($sqlarray);
 //on créé un index sur la table div_tours
 $idxoptarray = array('UNIQUE');
 $sqlarray = $dict->CreateIndexSQL(cms_db_prefix().'cf',
-	    cms_db_prefix().'module_commandes_CF_items', 'id_CF,id_items',$idxoptarray);
+	    cms_db_prefix().'module_commandes_cf_items', 'id_items',$idxoptarray);
 $dict->ExecuteSQLArray($sqlarray);
-
-
+#
+# Les préférences 
+$this->SetPreference('installation', '0');
 
 //permissions
 $this->CreatePermission('Use Commandes','Utiliser le module Commandes');

@@ -18,7 +18,7 @@
 	<p class="pageinput">{$date_created}</p>
 	</div>
 	<div class="pageoverflow">
-	<p class="pagetext">Statut de la commande :</p>
+	<p class="pagetext">Statut de la commande :{cms_help key='help_statut_recue'}</p>
 	<p class="pageinput">{$statut_CF}</p>
 	</div>
 	<div class="pageoverflow">
@@ -34,7 +34,7 @@
 		<p class="pageinput">{$date_created}</p>
 	</div>
 	<div class="pageoverflow">
-		<p class="pagetext">Statut de la commande :</p>
+		<p class="pagetext">Statut de la commande :{cms_help key='help_statut_recue'}</p>
 		<p class="pageinput">{$statut_CF}</p>
 	</div>
 

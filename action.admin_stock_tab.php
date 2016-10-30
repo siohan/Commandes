@@ -10,6 +10,9 @@ if (!$this->CheckPermission('Use Commandes'))
 //require_once(dirname(__FILE__).'/include/prefs.php');
 $db =& $this->GetDb();
 global $themeObject;
+$service = new commandes_ops();
+$montant = $service->montant_stock();
+$smarty->assign('montant', $montant);
 //debug_display($params, 'Parameters');
 $smarty->assign('add',
 		$this->CreateLink($id, 'add_stock_item', $returnid,$contents='Ajouter un article dans le stock'));
@@ -35,7 +38,7 @@ $query = "SELECT  id, id_items, fk_id, libelle_commande, categorie_produit, four
 				$onerow->rowclass= $rowclass;
 
 				//les champs disponibles : 
-				
+			
 				
 				//on va chercher le nb d'articles de chq commande client
 				
@@ -57,16 +60,19 @@ $query = "SELECT  id, id_items, fk_id, libelle_commande, categorie_produit, four
 				$onerow->fk_id = $row['fk_id'];
 				$onerow->libelle_commande = $row['libelle_commande'];
 				$onerow->categorie_produit = $row['categorie_produit'];
-				$onerow->fournisseur = $fournisseur;
+				$onerow->fournisseur = $row['fournisseur'];
 				$onerow->quantite = $row['quantite'];				
 				$onerow->ep_manche_taille = $row['ep_manche_taille'];
 				$onerow->couleur = $row['couleur'];
 				$onerow->prix_total = $row['prix_total'];
+				
+				
+				$onerow->plus= $this->createLink($id, 'change_stock', $returnid, $themeObject->DisplayImage('icons/system/arrow-u.gif', $this->Lang('addtostock'), '', '', 'systemicon'),array('active_tab'=>'commandesclients',"id_items"=>$row['id_items'],"record_id"=>$row['id'],"credit"=>"plus", "qte"=>$row['quantite']));
+				$onerow->moins= $this->createLink($id, 'change_stock', $returnid, $themeObject->DisplayImage('icons/system/arrow-d.gif', $this->Lang('subtracttostock'), '', '', 'systemicon'),array('active_tab'=>'commandesclients',"id_items"=>$row['id_items'],"record_id"=>$row['id'],"credit"=>"moins", "qte"=>$row['quantite']));				
 				/*
-				$onerow->view= $this->createLink($id, 'view_client', $returnid, $themeObject->DisplayImage('icons/system/view.gif', $this->Lang('view_results'), '', '', 'systemicon'),array('active_tab'=>'commandesclients',"record_id"=>$row['client_id']));				
 				$onerow->editlink= $this->CreateLink($id, 'add_edit_stock_item', $returnid, $themeObject->DisplayImage('icons/system/edit.gif', $this->Lang('edit'), '', '', 'systemicon'), array('record_id'=>$row['client_id']));
 				*/
-				$onerow->deletelink = $this->CreateLink($id, 'delete',$returnid, $themeObject->DisplayImage('icons/system/delete.gif', $this->Lang('delete'), '', '', 'systemicon'), array('record_id'=>$row['client_id'], 'bdd'=>'stock'));
+				$onerow->deletelink = $this->CreateLink($id, 'delete',$returnid, $themeObject->DisplayImage('icons/system/delete.gif', $this->Lang('delete'), '', '', 'systemicon'), array('record_id'=>$row['id'], 'bdd'=>'stock'));
 				
 				($rowclass == "row1" ? $rowclass= "row2" : $rowclass= "row1");
 				$rowarray[]= $onerow;

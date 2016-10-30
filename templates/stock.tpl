@@ -26,9 +26,11 @@
 	<td>{$entry->ep_manche_taille}</td>
 	<td>{$entry->couleur}</td>
 	<td>{$entry->prix_total}</td>
+	<td>{$entry->moins} {$entry->plus}</td>
     <td>{$entry->deletelink}</td>
   </tr>
 {/foreach}
+ <tr><td>Montant total du stock : {$montant} €</td></tr>
  </tbody>
 </table>
 {/if}

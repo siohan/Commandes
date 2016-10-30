@@ -4,7 +4,7 @@
 
 
 <div class="pageoverflow">
-    <p class="pagetext">Nouvelle réduction pour la sélection<br />(Format 00.00)</p>
+    <p class="pagetext">Nouvelle réduction pour la sélection</p>
 	
     <p class="pageinput">{$item_reduction}</p>
 </div>

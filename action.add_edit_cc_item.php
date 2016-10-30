@@ -30,6 +30,12 @@ else
 if(isset($params['commande_id']) && $params['commande_id'] != '')
 {
 	$commande_id = $params['commande_id'];
+
+}
+if(isset($params['fournisseur']) && $params['fournisseur'] != '')
+{
+	$fournisseur = $params['fournisseur'];
+
 }
 
 if(isset($params['record_id']) && $params['record_id'] !="")
@@ -37,7 +43,7 @@ if(isset($params['record_id']) && $params['record_id'] !="")
 		$record_id = $params['record_id'];
 		$edit = 1;//on est bien en trai d'éditer un enregistrement
 		//ON VA CHERCHER l'enregistrement en question
-		$query = "SELECT it.id AS item_id,items.id AS index1, it.fk_id , it.date_created,it.libelle_commande,it.couleur, it.ep_manche_taille, it.categorie_produit, it.fournisseur,it.quantite, it.prix_total, it.statut_item FROM ".cms_db_prefix()."module_commandes_cc_items AS it, ".cms_db_prefix()."module_commandes_items AS items  WHERE it.libelle_commande LIKE items.libelle  AND it.id = ?  ORDER BY items.categorie, items.libelle ASC";
+		$query = "SELECT it.id AS item_id,items.id AS index1, it.fk_id , it.date_created,it.libelle_commande,it.fournisseur,it.couleur, it.ep_manche_taille, it.categorie_produit, it.fournisseur,it.quantite, it.prix_total, it.statut_item FROM ".cms_db_prefix()."module_commandes_cc_items AS it, ".cms_db_prefix()."module_commandes_items AS items  WHERE it.libelle_commande LIKE items.libelle  AND it.id = ?  ORDER BY items.categorie, items.libelle ASC";
 		$dbresult = $db->Execute($query, array($record_id));
 		$compt = 0;
 		while ($dbresult && $row = $dbresult->FetchRow())
@@ -47,6 +53,7 @@ if(isset($params['record_id']) && $params['record_id'] !="")
 			$commande_id = $row['fk_id'];
 			$date_created = $row['date_created'];
 			$libelle_commande = $row['libelle_commande'];
+			$fournisseur = $row['fournisseur'];
 			$categorie_produit = $row['categorie_produit'];
 			$fournisseur = $row['fournisseur'];
 			$quantite = $row['quantite'];
@@ -61,8 +68,8 @@ if(isset($params['record_id']) && $params['record_id'] !="")
 	}
 	
 	//on fait une requete pour completer l'input dropdown du formulaire
-	$query = "SELECT CONCAT_WS('-', categorie, libelle) AS libelle_form,libelle  FROM ".cms_db_prefix()."module_commandes_items WHERE statut_item = '1' ORDER BY categorie ASC, libelle ASC";
-	$dbresult = $db->Execute($query);
+	$query = "SELECT CONCAT_WS('-', categorie, libelle) AS libelle_form,libelle  FROM ".cms_db_prefix()."module_commandes_items WHERE statut_item = '1' AND fournisseur = ? ORDER BY categorie ASC,fournisseur ASC, libelle ASC";
+	$dbresult = $db->Execute($query, array($fournisseur));
 
 		if($dbresult && $dbresult->RecordCount() >0)
 		{
@@ -105,7 +112,8 @@ if(isset($params['record_id']) && $params['record_id'] !="")
 			$this->CreateInputDate($id, 'date_created',(isset($date_created)?$date_created:"")));
 	$smarty->assign('libelle_commande',
 			$this->CreateInputDropdown($id,'libelle_commande',$libelle,$selectedindex = $index, $selectedvalue=$libelle));
-			
+	$smarty->assign('fournisseur',
+			$this->CreateInputHidden($id, 'fournisseur',(isset($fournisseur)?$fournisseur:"")));		
 	$smarty->assign('ep_manche_taille',
 			$this->CreateInputText($id,'ep_manche_taille',(isset($ep_manche_taille)?$ep_manche_taille:""),50,200));
 			
@@ -123,9 +131,10 @@ if(isset($params['record_id']) && $params['record_id'] !="")
 			$this->CreateInputText($id,'prix_unitaire',(isset($prix_unitaire)?$prix_unitaire:""),5,10));		
 	$smarty->assign('reduction',
 			$this->CreateInputText($id,'reduction',(isset($reduction)?$reduction:""),5,10));			
+	/*
 	$smarty->assign('statut_item',
 			$this->CreateInputText($id,'statut_item',(isset($statut_item)?$statut_item:""),5,10));	
-				
+	*/			
 	$smarty->assign('submit',
 			$this->CreateInputSubmit($id, 'submit', $this->Lang('submit'), 'class="button"'));
 	$smarty->assign('cancel',

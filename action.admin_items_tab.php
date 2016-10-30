@@ -7,18 +7,48 @@ if (!$this->CheckPermission('Use Commandes'))
 	return;
 }
 
-//require_once(dirname(__FILE__).'/include/prefs.php');
+require_once(dirname(__FILE__).'/include/preferences.php');
 $db =& $this->GetDb();
 global $themeObject;
 //debug_display($params, 'Parameters');
+$liste_categories = array('Tous'=>'Tous')+$liste_categories;
+//
+if(isset($params['categorie']))	
+{
+	$categorie = $params['categorie'];
+	$key_categorie = array_values($liste_categories);//$index_paiement = $paiement;
+	//var_dump($key_paiement);
+	$key2 = array_search($categorie,$key_categorie);
+	//var_dump($key2);
+}
+else
+{
+	$key2 = 0;
+	$index_category = 'Tous';
+}
+
+if(isset($params['fournisseur']))	
+{
+	$fournisseur = $params['fournisseur'];
+	$key_fournisseur = array_values($liste_fournisseurs);//$index_paiement = $paiement;
+	//var_dump($key_statut_commande);
+	$key2_fournisseur = array_search($fournisseur,$key_fournisseur);
+	//var_dump($key2_statut_commande);
+}
+else
+{
+	$key2_fournisseur = 0;
+	$fournisseur = 'Tous';
+}
+//
 $smarty->assign('add_edit_items',
 		$this->CreateLink($id, 'add_edit_item', $returnid,$contents='Ajouter un article'));
 //formulaire de tri
-$smarty->assign('formstart',$this->CreateFormStart($id,'defaultadmin','', 'post', '',false,'',array('active_tab'=>'commandesclients')));
-$smarty->assign('paiement', 
-		$this->CreateInputDropdown($id,'paiement', $items_paiement, $selectedIndex=$key2,$selectedvalue=$index_paiement));
-$smarty->assign('statut_commande', 
-		$this->CreateInputDropdown($id,'statut_commande', $items_statut_commande,$selectedIndex=$key2_statut_commande,$selectedvalue=$statut_commande));
+$smarty->assign('formstart',$this->CreateFormStart($id,'defaultadmin','', 'post', '',false,'',array('active_tab'=>'articles')));
+$smarty->assign('categorie', 
+		$this->CreateInputDropdown($id,'categorie', $liste_categories, $selectedIndex=$key2,$selectedvalue=$index_categorie));
+$smarty->assign('fournisseur', 
+		$this->CreateInputDropdown($id,'fournisseur', $liste_fournisseurs,$selectedIndex=$key2_fournisseur,$selectedvalue=$fournisseur));
 $smarty->assign('submitfilter',
 		$this->CreateInputSubmit($id,'submitfilter',$this->Lang('filtres')));
 $smarty->assign('formend',$this->CreateFormEnd());
@@ -26,11 +56,58 @@ $smarty->assign('formend',$this->CreateFormEnd());
 $result= array ();
 $query = "SELECT id AS item_id, categorie, fournisseur, reference, libelle, marque, prix_unitaire, reduction, statut_item FROM ".cms_db_prefix()."module_commandes_items";
 
-
+if( isset($params['submitfilter'] ))
+{
+	$nb_filter = 0;//pour savoir si la req a des paramètres
+	
+	if(isset($params['categorie']) && $params['categorie'] != '' && $params['categorie'] != 'Tous')
+	{
+		$nb_filter++;
+		
+		$query.=" WHERE categorie LIKE ?";
+		$parms['categorie'] = $params['categorie'];
+		
+	}
+	if(isset($params['fournisseur']) && $params['fournisseur'] != '' && $params['fournisseur'] != 'TOUS')
+	{
+		$nb_filter++;
+		if($nb_filter > 1)
+		{
+			$query.=" AND fournisseur LIKE ?";
+		}
+		else
+		{
+			$query.=" WHERE fournisseur LIKE ?";
+		}
+		
+		$parms['fournisseur'] = $params['fournisseur'];
+		
+		
+	}
+	//on met de l'ordre qd même !
+	$query.=" ORDER BY categorie ASC, fournisseur ASC, libelle ASC";
+	
+	if($nb_filter >0)
+	{
+		$dbresult= $db->Execute($query,$parms);
+	}
+	else
+	{
+		$dbresult= $db->Execute($query);
+	}	
+}
+else
+{
 	$query .=" ORDER BY categorie ASC, fournisseur ASC, libelle ASC";
 	//echo $query;
 	$dbresult= $db->Execute($query);
-	
+}
+
+/*
+	$query .=" ORDER BY categorie ASC, fournisseur ASC, libelle ASC";
+	//echo $query;
+	$dbresult= $db->Execute($query);
+*/	
 	//echo $query;
 	$rowarray= array();
 	$rowclass = '';

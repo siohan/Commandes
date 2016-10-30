@@ -48,10 +48,17 @@ if(isset($params['nom']) && $params['nom'] != '')
 {
 	$client = $params['nom'];
 }
+
 $libelle_commande = '';
 if(isset($params['libelle_commande']) && $params['libelle_commande'] != '')
 {
 	$libelle_commande = $params['libelle_commande'];
+}
+
+$fournisseur = '';
+if(isset($params['fournisseur']) && $params['fournisseur'] != '')
+{
+	$fournisseur = $params['fournisseur'];
 }
 
 $prix_total = 0;
@@ -76,7 +83,7 @@ if(isset($params['paiement']) && $params['paiement'] != '')
 }
 else
 {
-	$paiement = 'Non payé';
+	$paiement = 'Non payée';
 }
 
 if(isset($params['mode_paiement']) && $params['mode_paiement'] != '')
@@ -97,61 +104,88 @@ if(isset($params['remarques']) && $params['remarques'] != '')
 if($edit ==0)
 {
 	//on fait d'abord l'insertion 
-	$query1 = "INSERT INTO ".cms_db_prefix()."module_commandes_cc (id, date_created, date_modified, client, libelle_commande, prix_total, statut_commande, paiement, mode_paiement, remarques) VALUES ('', ?, ?, ?, ?, ?, ?, ?, ? ,?)";
-	$dbresult1 = $db->Execute($query1, array($date_created,$date_created,$client, $libelle_commande,$prix_total, $statut_commande,$paiement, $mode_paiement, $remarques));
-	$this->RedirectToAdminTab('commandesclients',array("nom"=>$client, "date_created"=>$date_created),'view_cc');
+	$query1 = "INSERT INTO ".cms_db_prefix()."module_commandes_cc (id, date_created, date_modified, client, libelle_commande,fournisseur, prix_total, statut_commande, paiement, mode_paiement, remarques) VALUES ('', ?, ?, ?, ?, ?, ?, ?, ?, ? ,?)";
+	$dbresult1 = $db->Execute($query1, array($date_created,$date_created,$client, $libelle_commande,$fournisseur,$prix_total, $statut_commande,$paiement, $mode_paiement, $remarques));
+	$this->RedirectToAdminTab('commandesclients',array("nom"=>$client, "date_created"=>$date_created,"fournisseur"=>$fournisseur),'view_cc');
 }
 else
 {
 	//il s'agit d'une mise à jour !
-	$query2 = "UPDATE ".cms_db_prefix()."module_commandes_cc SET date_modified = ?, libelle_commande = ?, statut_commande = ?, paiement = ?, mode_paiement = ?, remarques = ? WHERE id = ?";
-	$dbresult2 = $db->Execute($query2, array($now, $libelle_commande, $statut_commande, $paiement, $mode_paiement, $remarques, $record_id));
-	
-	if($statut_commande == "Reçue")
+	//on récupère les éléments d'origine des articles de cette commande
+	$query4 = "SELECT id, fk_id, libelle_commande, categorie_produit, fournisseur, quantite, ep_manche_taille, couleur, prix_total,commande  FROM ".cms_db_prefix()."module_commandes_cc_items WHERE fk_id = ?";
+	$dbresult4 = $db->Execute($query4, array($record_id));
+
+	if($dbresult4 && $dbresult4->RecordCount()>0)
 	{
-		//Commande reçue, 
-		//on change l'aspect (couleur)
-		//les boutons de suppression disparaissent
-		//Les items ne sont plus disponibles (statut = 0)
-		$query3 = "UPDATE ".cms_db_prefix()."module_commandes_cc_items SET commande = '1' WHERE fk_id = ?";
-		$dbresult3 = $db->Execute($query3, array($record_id));
-		if($dbresult3)
+		while($row4 = $dbresult4->FetchRow())
 		{
-			$designation.="Les articles de cette commande ont changé de statut";
-			// on met les articles dans le stock
-			$query4 = "SELECT id, fk_id, libelle_commande, categorie_produit, fournisseur, quantite, ep_manche_taille, couleur, prix_total  FROM ".cms_db_prefix()."module_commandes_cc_items WHERE fk_id = ?";
-			$dbresult4 = $db->Execute($query4, array($record_id));
+			$id_items = $row4['id'];
+			$fk_id = $row4['fk_id'];
+			$libelle_commande = $row4['libelle_commande'];
+			$categorie_produit = $row4['categorie_produit'];
+			$fournisseur = $row4['fournisseur'];
+			$quantite = $row4['quantite'];
+			$ep_manche_taille = $row4['ep_manche_taille'];
+			$couleur = $row4['couleur'];
+			$prix_total = $row4['prix_total'];
+			$commande = $row4['commande'];
+			//$fk_id = $row4[''];
 			
-			if($dbresult4 && $dbresult4->RecordCount()>0)
+			if ($commande == 0)//les articles ne sont pas en stock
 			{
-				while($row4 = $dbresult4->FetchRow())
+				if($statut_commande == "Reçue")
 				{
-					$id_items = $row4['id'];
-					$fk_id = $row4['fk_id'];
-					$libelle_commande = $row4['libelle_commande'];
-					$categorie_produit = $row4['categorie_produit'];
-					$fournisseur = $row4['fournisseur'];
-					$quantite = $row4['quantite'];
-					$ep_manche_taille = $row4['ep_manche_taille'];
-					$couleur = $row4['couleur'];
-					$prix_total = $row4['prix_total'];
-					//$fk_id = $row4[''];
+			
+					$service = new commandes_ops();
+					$en_stock = $service->en_stock($libelle_commande,$ep_manche_taille,$couleur);
+					//var_dump($en_stock);
 					
-					$query5 = "INSERT INTO ".cms_db_prefix()."module_commandes_stock (id, id_items, fk_id, libelle_commande,categorie_produit, fournisseur, quantite, ep_manche_taille, couleur, prix_total) VALUES ('', ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-					$dbresult5 = $db->Execute($query5, array($id_items,$record_id, $libelle_commande, $categorie_produit, $fournisseur, $quantite, $ep_manche_taille, $couleur, $prix_total));
+					if($en_stock === FALSE)
+					{
+						$query5 = "INSERT INTO ".cms_db_prefix()."module_commandes_stock (id, id_items, fk_id, libelle_commande,categorie_produit, fournisseur, quantite, ep_manche_taille, couleur, prix_total) VALUES ('', ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+						$dbresult5 = $db->Execute($query5, array($id_items,$record_id, $libelle_commande, $categorie_produit, $fournisseur, $quantite, $ep_manche_taille, $couleur, $prix_total));
+					}
+					else //le type d'article est déjà en stock, on incrémente le stock
+					{
+						$increment = $service->incremente_stock($libelle_commande, $quantite, $ep_manche_taille, $couleur);
+					}
+					$query3 = "UPDATE ".cms_db_prefix()."module_commandes_cc_items SET commande = '1' WHERE fk_id = ?";
+					$dbresult3 = $db->Execute($query3, array($record_id));
+				}
+			}
+			elseif($commande == 1)
+			{
+				if($paiement == 'Payée et déstockée')
+				{
+					/*
+					//la commande est payée et le client l'a reçue, on peut l'effacer du stock
+					$query = "DELETE FROM ".cms_db_prefix()."module_commandes_stock WHERE fk_id = ?";
+					$dbresult = $db->Execute($query, array($record_id));
+					*/
+					//$new_quantite = $qua
+					$service = new commandes_ops();
+					$en_stock = $service->en_stock($libelle_commande,$ep_manche_taille,$couleur);
+					$decrement = $service->decremente_stock($libelle_commande, $quantite, $ep_manche_taille, $couleur);
+					$refresh = $service->refresh_stock();
+
+
 				}
 			}
 		}
-		
+
 	}
-	if($paiement == 'Payée et déstockée')
-	{
-		//la commande est payée et le client l'a reçue, on peut l'effacer du stock
-		$query = "DELETE FROM ".cms_db_prefix()."module_commandes_stock WHERE fk_id = ?";
-		$dbresult = $db->Execute($query, array($record_id));
+		//les articles sont en stock
+			
+	$query2 = "UPDATE ".cms_db_prefix()."module_commandes_cc SET date_modified = ?, libelle_commande = ?, statut_commande = ?, paiement = ?, mode_paiement = ?, remarques = ? WHERE id = ?";
+	$dbresult2 = $db->Execute($query2, array($now, $libelle_commande, $statut_commande, $paiement, $mode_paiement, $remarques, $record_id));
+	
+	
+	
 		
 		
-	}
+		
+	
+	
 	$this->SetMessage($designation);
 	$this->RedirectToAdminTab('commandesclients', '', 'admin_cc_tab');
 }

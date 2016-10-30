@@ -26,7 +26,7 @@ $query = "SELECT  nom, prenom FROM ".cms_db_prefix()."module_ping_joueurs WHERE 
 	$compt = 0; //compteur d'insertion
 
 	
-		if ($dbresult && $dbresult->RecordCount() > 0)
+		if($dbresult && $dbresult->RecordCount() > 0)
   		{
     			while ($row= $dbresult->FetchRow())
       			{
@@ -52,6 +52,15 @@ $query = "SELECT  nom, prenom FROM ".cms_db_prefix()."module_ping_joueurs WHERE 
       			}
 			
   		}
+		elseif(!$dbresult)
+		{
+			$message = $db->ErrorMsg();
+			echo $message;
+		}
+		else
+		{
+			echo "pas de résultats !";
+		}
 $designation = $compt." joueur(s) inséré(s)";
 $this->SetMessage($designation);
 $this->RedirectToAdminTab('clients');

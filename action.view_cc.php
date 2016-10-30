@@ -23,18 +23,25 @@ if(isset($params['nom']) && isset($params['date_created']) )
 {
 	$nom = $params['nom'];
 	$date_created = $params['date_created'];
+	$fournisseur = $params['fournisseur'];
 	//on va chercher la commande
-	$query3 = "SELECT id, statut_commande FROM ".cms_db_prefix()."module_commandes_cc WHERE client = ? AND date_created = ? ";
-	$dbresult3 = $db->Execute($query3, array($nom, $date_created));
-	$row = $dbresult3->FetchRow();
-	$record_id = $row['id'];
+	$query3 = "SELECT id, statut_commande, fournisseur FROM ".cms_db_prefix()."module_commandes_cc WHERE client = ? AND date_created = ? AND fournisseur = ?";
+	$dbresult3 = $db->Execute($query3, array($nom, $date_created,$fournisseur));
+	
+	if($dbresult3 && $dbresult3->RecordCount() >0)
+	{
+		$row3 = $dbresult3->FetchRow();
+		$record_id = $row3['id'];
+		$fournisseur = $row3['fournisseur'];
+	}
+	
 	
 	
 }
 //echo "le record_id est :".$record_id;
 //on va afficher le nom du oropriétaire de la commande
 $rowclass2 = '';
-$query2 =  "SELECT cl.nom, cc.statut_commande,cl.prenom,cc.date_created FROM ".cms_db_prefix()."module_commandes_cc AS cc, ".cms_db_prefix()."module_commandes_clients AS cl WHERE cl.id = cc.client AND cc.id = ?";
+$query2 =  "SELECT cl.nom, cc.statut_commande,cl.prenom,cc.date_created,cc.fournisseur FROM ".cms_db_prefix()."module_commandes_cc AS cc, ".cms_db_prefix()."module_commandes_clients AS cl WHERE cl.id = cc.client AND cc.id = ?";
 $dbresult2 = $db->Execute($query2, array($record_id));
 	
 	
@@ -44,6 +51,7 @@ $dbresult2 = $db->Execute($query2, array($record_id));
 		{
 			$statut_commande = $row2['statut_commande'];
 			$nom= $row2['nom'];
+			$fournisseur = $row2['fournisseur'];
 			$prenom= $row2['prenom'];
 			$date_created= $row2['date_created'];
 			$smarty->assign('nom',$nom);
@@ -55,7 +63,7 @@ $dbresult2 = $db->Execute($query2, array($record_id));
 	
 $smarty->assign('status', $statut_commande);	
 $smarty->assign('add_edit_cc_item',
-		$this->CreateLink($id, 'add_edit_cc_item', $returnid,$contents='Ajouter un article à cette commande', array("commande_id"=>$record_id,"edit"=>"0")));
+		$this->CreateLink($id, 'add_edit_cc_item', $returnid,$contents='Ajouter un article à cette commande', array("commande_id"=>$record_id,"edit"=>"0","fournisseur"=>$fournisseur)));
 
 $result= array ();
 $query1 = "SELECT cc.id,it.id AS item_id, it.fk_id , it.date_created,it.libelle_commande,it.ep_manche_taille, it.couleur, it.categorie_produit, it.fournisseur,it.quantite, it.prix_total, it.statut_item,it.commande FROM ".cms_db_prefix()."module_commandes_cc as cc, ".cms_db_prefix()."module_commandes_cc_items AS it WHERE cc.id = it.fk_id AND cc.id = ? ";

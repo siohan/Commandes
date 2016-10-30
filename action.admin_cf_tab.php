@@ -99,6 +99,7 @@ $query = "SELECT *  FROM ".cms_db_prefix()."module_commandes_cf WHERE date_creat
 				$onerow->rowclass= $rowclass;
 
 				$id_cf = $row['id_CF'];
+				$statut_CF = $row['statut_CF'];
 				//on va chercher le nb d'articles et le prix total de la CF
 				$onerow->id_cf= $row['id_CF'];
 				$onerow->date_created= $row['date_created'];
@@ -124,9 +125,16 @@ $query = "SELECT *  FROM ".cms_db_prefix()."module_commandes_cf WHERE date_creat
 				
 				$onerow->nb_items = $nb_items;
 				$onerow->total_commande = $total_commande;
-				$onerow->view= $this->createLink($id, 'view_order_cf', $returnid, $themeObject->DisplayImage('icons/system/view.gif', $this->Lang('view_results'), '', '', 'systemicon'),array('active_tab'=>'CF','fournisseur'=>$row['fournisseur'],"record_id"=>$row['id_CF'])) ;
-				$onerow->editlink= $this->CreateLink($id, 'add_edit_cf', $returnid, $themeObject->DisplayImage('icons/system/edit.gif', $this->Lang('edit'), '', '', 'systemicon'), array('record_id'=>$row['id_CF']));
-				$onerow->deletelink = $this->CreateLink($id, 'delete',$returnid, $themeObject->DisplayImage('icons/system/delete.gif', $this->Lang('delete'), '', '', 'systemicon'), array('record_id'=>$row['id_CF'], 'bdd'=>'cf','nb_items'=>$nb_items));
+				$onerow->view= $this->createLink($id, 'view_order_cf2', $returnid, $themeObject->DisplayImage('icons/system/view.gif', $this->Lang('view_results'), '', '', 'systemicon'),array('__active_tab'=>'commandesfournisseurs','fournisseur'=>$row['fournisseur'],"record_id"=>$row['id_CF'])) ;
+				
+				if($statut_CF != "Reçue")
+				{
+					$onerow->view= $this->createLink($id, 'view_order_cf', $returnid, $themeObject->DisplayImage('icons/system/view.gif', $this->Lang('view_results'), '', '', 'systemicon'),array('__active_tab'=>'commandesfournisseurs','fournisseur'=>$row['fournisseur'],"record_id"=>$row['id_CF'])) ;
+					$onerow->editlink= $this->CreateLink($id, 'add_edit_cf', $returnid, $themeObject->DisplayImage('icons/system/edit.gif', $this->Lang('edit'), '', '', 'systemicon'), array('record_id'=>$row['id_CF']));
+					$onerow->deletelink = $this->CreateLink($id, 'delete',$returnid, $themeObject->DisplayImage('icons/system/delete.gif', $this->Lang('delete'), '', '', 'systemicon'), array('record_id'=>$row['id_CF'], 'bdd'=>'cf','nb_items'=>$nb_items));
+				}
+				
+				
 				($rowclass == "row1" ? $rowclass= "row2" : $rowclass= "row1");
 				$rowarray[]= $onerow;
       			}

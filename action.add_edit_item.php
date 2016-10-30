@@ -20,6 +20,8 @@ require_once(dirname(__file__).'/include/preferences.php');
 $liste_fournisseurs = array("WACK SPORT"=>"WACK SPORT", "BUTTERFLY"=>"BUTTERFLY", "AUTRES"=>"AUTRES");
 $liste_categories = array("BOIS"=>"BOIS","REVETEMENTS"=>"REVETEMENTS","AUTRES"=>"AUTRES");
 */
+$liste_dispo = array("DISPONIBLE"=>"1","NON DISPONIBLE"=>"0");
+
 $db =& $this->GetDb();
 //s'agit-il d'une modif ou d'une créa ?
 $record_id = '';
@@ -86,6 +88,14 @@ if(isset($params['record_id']) && $params['record_id'] !="")
 		$key2_categorie = 0;
 		$categorie = "REVETEMENTS"; //par défaut
 	}
+	if(isset($statut_item))
+	{
+		$key_statut_item = array_values($liste_dispo);
+	}
+	else
+	{
+		$statut_item = 1;
+	}
 	//$key = array_values($liste_fournisseur);
 	 
 	//on construit le formulaire
@@ -114,11 +124,11 @@ if(isset($params['record_id']) && $params['record_id'] !="")
 	$smarty->assign('marque',
 			$this->CreateInputText($id,'marque',(isset($marque)?$marque:""),30,150));
 	$smarty->assign('prix_unitaire',
-			$this->CreateInputText($id,'prix_unitaire',(isset($prix_unitaire)?$prix_unitaire:""),5,10));
+			$this->CreateInputText($id,'prix_unitaire',(isset($prix_unitaire)?$prix_unitaire:""),7,15));
 	$smarty->assign('reduction',
 			$this->CreateInputText($id,'reduction',(isset($reduction)?$reduction:""),5,10));					
 	$smarty->assign('statut_item',
-			$this->CreateInputText($id,'statut_item',(isset($statut_item)?$statut_item:""),5,10));	
+			$this->CreateInputDropdown($id,'statut_item',$liste_dispo,$selectedindex='',$selectedalue=$statut_item));	
 				
 	$smarty->assign('submit',
 			$this->CreateInputSubmit($id, 'submit', $this->Lang('submit'), 'class="button"'));

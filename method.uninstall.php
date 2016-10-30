@@ -42,21 +42,25 @@ $dict->ExecuteSQLArray($sqlarray);
 $sqlarray = $dict->DropTableSQL( cms_db_prefix()."module_commandes_items" );
 $dict->ExecuteSQLArray($sqlarray);
 
-$sqlarray = $dict->DropTableSQL(  cms_db_prefix()."module_commandes_CC" );
+$sqlarray = $dict->DropTableSQL(  cms_db_prefix()."module_commandes_cc" );
 $dict->ExecuteSQLArray($sqlarray);
 
-$sqlarray = $dict->DropTableSQL(  cms_db_prefix()."module_commandes_CC_items" );
+$sqlarray = $dict->DropTableSQL(  cms_db_prefix()."module_commandes_cc_items" );
 $dict->ExecuteSQLArray($sqlarray);
 
-$sqlarray = $dict->DropTableSQL(  cms_db_prefix()."module_commandes_CF" );
+$sqlarray = $dict->DropTableSQL(  cms_db_prefix()."module_commandes_cf" );
 $dict->ExecuteSQLArray($sqlarray);
 
-$sqlarray = $dict->DropTableSQL(  cms_db_prefix()."module_commandes_CF_items" );
+$sqlarray = $dict->DropTableSQL(  cms_db_prefix()."module_commandes_cf_items" );
 $dict->ExecuteSQLArray($sqlarray);
-/*
+
+$sqlarray = $dict->DropTableSQL(  cms_db_prefix()."module_commandes_stock" );
+$dict->ExecuteSQLArray($sqlarray);
+
 
 // remove the permissions
-$this->RemovePermission('Ping Use');
+$this->RemovePermission('Use Commandes');
+/*
 $this->RemovePermission('Ping Set Prefs');
 $this->RemovePermission('Ping Manage user');
 $this->RemovePermission('Ping Delete');

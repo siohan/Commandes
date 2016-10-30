@@ -50,31 +50,35 @@
 {else}	
 {$edit}{$edition}
 	<div class="pageoverflow">
-	<p class="pagetext">Date Commande :</p>
-	<p class="pageinput">{$date_created}</p>
+		<p class="pagetext">Date Commande :</p>
+		<p class="pageinput">{$date_created}</p>
 	</div>
 	<div class="pageoverflow">
-	<p class="pagetext">Client :</p>
-	<p class="pageinput">{$nom}</p>
+		<p class="pagetext">Client :</p>
+		<p class="pageinput">{$nom}</p>
 	</div>
 
-		<div class="pageoverflow">
+	<div class="pageoverflow">
 	  <p class="pagetext">Libellé:</p>
 	  <p class="pageinput">{$libelle_commande}</p>
 	</div>
 	<div class="pageoverflow">
-	<p class="pagetext">Statut de la commande :</p>
-	<p class="pageinput">{$statut_commande}</p>
+	  <p class="pagetext">Fournisseur:</p>
+	  <p class="pageinput">{$fournisseur}</p>
+	</div>
+	<div class="pageoverflow">
+		<p class="pagetext">Statut de la commande :{cms_help key='help_statut_recue'}</p>
+		<p class="pageinput">{$statut_commande}</p>
 	</div>
 
 	<div class="pageoverflow">
-	<p class="pagetext">Remarques :</p>
-	<p class="pageinput">{$remarques}</p>
+		<p class="pagetext">Remarques :</p>
+		<p class="pageinput">{$remarques}</p>
 	</div>
 {/if}
 <div class="pageoverflow">
     <p class="pagetext">&nbsp;</p>
     <p class="pageinput">{$submit}{$cancel}</p>
-  </div>
+</div>
 {$formend}
 </div>

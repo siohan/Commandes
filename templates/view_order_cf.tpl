@@ -5,8 +5,8 @@
 <div class="pageoverflow">
     <p class="pagetext">Commande Fournisseur N°:</p>
     <p class="pageinput">{$record_id}</p>
-  </div>
-
+</div>
+<p>Qté- libellé commande</p>
 
 {foreach from=$rowarray key=key item=entry}
 <div class="pageoverflow">
