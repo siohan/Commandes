@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<!--<script type="text/javascript">
 //<![CDATA[
 $(document).ready(function(){
   $('#selectall').click(function(){
@@ -23,7 +23,9 @@ $(document).ready(function(){
   {/if}
 });
 //]]>
-</script><div class="pageoptions"><p><span class="pageoptions warning">{$add_edit_items} </span></p></div>
+</script>
+-->
+<div class="pageoptions"><p><span class="pageoptions warning">{$add_edit_items} </span></p></div>
 <div class="pageoptions"><p class="pageoptions">{$itemcount}&nbsp;{$itemsfound}</p></div>
 {if isset($formstart) }
 <fieldset>
@@ -41,7 +43,7 @@ $(document).ready(function(){
 {/if}
 {if $itemcount > 0}
 {$form2start}
-<table border="0" cellspacing="0" cellpadding="0" class="pagetable">
+<table cellpadding="0" class="pagetable cms_sortable tablesorter" id="articlelist">
  <thead>
 	<tr>
 		<th>Article N°</th>

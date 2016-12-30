@@ -19,59 +19,48 @@ if(isset($params['record_id']) && $params['record_id'] !='')
 {
 	$record_id = $params['record_id'];
 }
-if(isset($params['nom']) && isset($params['date_created']) )
+if(isset($params['commande_number']) && $params['commande_number'] !='')
 {
-	$nom = $params['nom'];
-	$date_created = $params['date_created'];
-	$fournisseur = $params['fournisseur'];
-	//on va chercher la commande
-	$query3 = "SELECT id, statut_commande, fournisseur FROM ".cms_db_prefix()."module_commandes_cc WHERE client = ? AND date_created = ? AND fournisseur = ?";
-	$dbresult3 = $db->Execute($query3, array($nom, $date_created,$fournisseur));
-	
-	if($dbresult3 && $dbresult3->RecordCount() >0)
-	{
-		$row3 = $dbresult3->FetchRow();
-		$record_id = $row3['id'];
-		$fournisseur = $row3['fournisseur'];
-	}
-	
-	
-	
+	$commande_number = $params['commande_number'];
+	$query2 =  "SELECT cl.nom, cc.statut_commande,cl.prenom,cc.date_created,cc.fournisseur FROM ".cms_db_prefix()."module_commandes_cc AS cc, ".cms_db_prefix()."module_commandes_clients AS cl WHERE cl.id = cc.client AND cc.commande_number = ?";
+	$dbresult2 = $db->Execute($query2, array($commande_number));
+
+
+		if($dbresult2 && $dbresult2->RecordCount()>0)
+		{
+			while($row2 = $dbresult2->FetchRow())
+			{
+				$statut_commande = $row2['statut_commande'];
+				$nom= $row2['nom'];
+				$fournisseur = $row2['fournisseur'];
+				$prenom= $row2['prenom'];
+				$date_created= $row2['date_created'];
+				$statut_commande = $row2['statut_commande'];
+				$smarty->assign('nom',$nom);
+				$smarty->assign('prenom',$prenom);
+				$smarty->assign('date_created',$date_created);
+			}
+		}
+
 }
+
 //echo "le record_id est :".$record_id;
 //on va afficher le nom du oropriétaire de la commande
 $rowclass2 = '';
-$query2 =  "SELECT cl.nom, cc.statut_commande,cl.prenom,cc.date_created,cc.fournisseur FROM ".cms_db_prefix()."module_commandes_cc AS cc, ".cms_db_prefix()."module_commandes_clients AS cl WHERE cl.id = cc.client AND cc.id = ?";
-$dbresult2 = $db->Execute($query2, array($record_id));
-	
-	
-	if($dbresult2 && $dbresult2->RecordCount()>0)
-	{
-		while($row2 = $dbresult2->FetchRow())
-		{
-			$statut_commande = $row2['statut_commande'];
-			$nom= $row2['nom'];
-			$fournisseur = $row2['fournisseur'];
-			$prenom= $row2['prenom'];
-			$date_created= $row2['date_created'];
-			$smarty->assign('nom',$nom);
-			$smarty->assign('prenom',$prenom);
-			$smarty->assign('date_created',$date_created);
-		}
-	}
+
 	
 	
 $smarty->assign('status', $statut_commande);	
 $smarty->assign('add_edit_cc_item',
-		$this->CreateLink($id, 'add_edit_cc_item', $returnid,$contents='Ajouter un article à cette commande', array("commande_id"=>$record_id,"edit"=>"0","fournisseur"=>$fournisseur)));
+		$this->CreateLink($id, 'add_edit_cc_item', $returnid,$contents='Ajouter un article à cette commande', array("commande_number"=>$commande_number,"edit"=>"0","fournisseur"=>$fournisseur)));
 
 $result= array ();
-$query1 = "SELECT cc.id,it.id AS item_id, it.fk_id , it.date_created,it.libelle_commande,it.ep_manche_taille, it.couleur, it.categorie_produit, it.fournisseur,it.quantite, it.prix_total, it.statut_item,it.commande FROM ".cms_db_prefix()."module_commandes_cc as cc, ".cms_db_prefix()."module_commandes_cc_items AS it WHERE cc.id = it.fk_id AND cc.id = ? ";
+$query1 = "SELECT cc.id,it.id AS item_id, it.fk_id , it.date_created,it.libelle_commande,it.ep_manche_taille, it.couleur, it.categorie_produit, it.fournisseur,it.quantite, it.prix_total, it.statut_item,it.commande,it.commande_number FROM ".cms_db_prefix()."module_commandes_cc as cc, ".cms_db_prefix()."module_commandes_cc_items AS it WHERE cc.commande_number = it.commande_number AND cc.commande_number = ? ";
 
 
 	//$query .=" ORDER BY id DESC";
 	//echo $query;
-	$dbresult= $db->Execute($query1,array($record_id));
+	$dbresult= $db->Execute($query1,array($commande_number));
 	
 	//echo $query;
 	$rowarray= array();
@@ -89,6 +78,7 @@ $query1 = "SELECT cc.id,it.id AS item_id, it.fk_id , it.date_created,it.libelle_
 				$id_commandes = $row['fk_id'];
 				$commande = $row['commande']; //gère si l'item doit être modifiable ou non
 				$onerow->commande_id= $row['fk_id'];
+				$onerow->commande_number= $row['commande_number'];
 				$onerow->date_created = $row['date_created'];
 				$onerow->libelle_commande = $row['libelle_commande'];
 				$onerow->categorie_produit = $row['categorie_produit'];

@@ -1,18 +1,7 @@
 <?php
 if (!isset($gCms)) exit;
-debug_display($params, 'Parameters');
+//debug_display($params, 'Parameters');
 
-if (!$this->CheckPermission('Use Commandes'))
-{
-	$designation .=$this->Lang('needpermission');
-	$this->SetMessage("$designation");
-	$this->RedirectToAdminTab('commandesclients');
-}
-if( isset($params['cancel']) )
-{
-	$this->RedirectToAdminTab('commandesclients');
-	return;
-}
 
 //on récupère les valeurs
 //pour l'instant pas d'erreur
@@ -33,10 +22,11 @@ $alert = 0;//pour savoir si certains champs doivent contenir une valeur ou non
 			$error++;
 		}
 		
-		$libelle_commande = '';
-		if (isset($params['libelle_commande']) && $params['libelle_commande'] !='')
+		$produits = '';
+		if (isset($params['produits']) && $params['produits'] !='')
 		{
-			$libelle_commande = $params['libelle_commande'];
+			$prod = explode('-',$params['produits']);
+			$produits = $prod[1];
 		}
 		
 		
@@ -44,7 +34,7 @@ $alert = 0;//pour savoir si certains champs doivent contenir une valeur ou non
 		//on va d'abord chercher le prix unitaire de l'article
 		
 			$query2 = "SELECT prix_unitaire, reduction, categorie, fournisseur FROM ".cms_db_prefix()."module_commandes_items WHERE libelle LIKE ?";
-			$dbresult2 = $db->Execute($query2, array($libelle_commande));
+			$dbresult2 = $db->Execute($query2, array($produits));
 			if($dbresult2)
 			{
 				$row2 = $dbresult2->FetchRow();
@@ -105,13 +95,9 @@ $alert = 0;//pour savoir si certains champs doivent contenir une valeur ou non
 			$error++;
 		}
 		
+		$libelle_commande = $produits;
 		
-		
-		$statut_item = '1';
-		if (isset($params['statut_item']) && $params['statut_item'] !='')
-		{
-			$statut_item = $params['statut_item'];
-		}
+
 		
 		
 	
@@ -124,12 +110,12 @@ $alert = 0;//pour savoir si certains champs doivent contenir une valeur ou non
 			$edit = 1;//c'est un update
 		}
 		
-		
+		echo "le nb erreurs est : ".$error;
 		//on calcule le nb d'erreur
 		if($error>0)
 		{
 			$this->Setmessage('Parametres requis manquants !');
-			$this->Redirect($id, 'add_edit_cc_item',$returnid, array("commande_number"=>$commande_number, "edit"=>$edit));//ToAdminTab('commandesclients');
+			$this->Redirect($id, 'default',$returnid, array("display"=>"add_cc_items","commande_number"=>$commande_number, "edit"=>$edit));//ToAdminTab('commandesclients');
 		}
 		else // pas d'erreurs on continue
 		{
@@ -141,14 +127,14 @@ $alert = 0;//pour savoir si certains champs doivent contenir une valeur ou non
 			if($edit == 0)
 			{
 				$commande = 0;
-				$query = "INSERT INTO ".cms_db_prefix()."module_commandes_cc_items (id,date_created, date_modified,libelle_commande, categorie_produit, fournisseur, quantite, ep_manche_taille, couleur, prix_total, statut_item, commande,commande_number) VALUES ('',?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-				$dbresult = $db->Execute($query, array($aujourdhui, $aujourdhui,$libelle_commande,$categorie_produit,$fournisseur, $quantite,$ep_manche_taille, $couleur, $prix_total, $statut_item,$commande, $commande_number));
+				$query = "INSERT INTO ".cms_db_prefix()."module_commandes_cc_items (id,date_created, date_modified,libelle_commande, categorie_produit, fournisseur, quantite, ep_manche_taille, couleur, prix_total, statut_item, commande, commande_number) VALUES ('',?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				$dbresult = $db->Execute($query, array($aujourdhui, $aujourdhui,$produits,$categorie_produit,$fournisseur, $quantite,$ep_manche_taille, $couleur, $prix_total, $statut_item,$commande,$commande_number));
 
 			}
 			else
 			{
 				$query = "UPDATE ".cms_db_prefix()."module_commandes_cc_items SET libelle_commande = ?, date_modified =?, quantite = ?,ep_manche_taille = ?, couleur = ?, prix_total = ?,statut_item = ? WHERE id = ?";
-				$dbresult = $db->Execute($query, array($libelle_commande,$aujourdhui, $quantite,$ep_manche_taille, $couleur, $prix_total,$statut_item,$record_id));
+				$dbresult = $db->Execute($query, array($produits,$aujourdhui, $quantite,$ep_manche_taille, $couleur, $prix_total,$statut_item,$record_id));
 				
 				
 			}
@@ -179,7 +165,7 @@ $alert = 0;//pour savoir si certains champs doivent contenir une valeur ou non
 			
 		
 
-$this->SetMessage('Article modifié');
-$this->Redirect($id,'view_cc', $returnid, array("commande_number"=>$commande_number));
+$this->SetMessage('Article ajouté/modifié');
+$this->Redirect($id,'default', $returnid, array("display"=>"view_cc","commande_number"=>$commande_number,"record_id"=>$commande_id));
 
 ?>

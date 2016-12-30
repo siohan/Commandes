@@ -1,5 +1,5 @@
 <?php
-$lang['friendlyname'] = 'Table Tennis';
+$lang['friendlyname'] = 'T2T Commandes';
 $lang['postinstall'] = 'Post Install Message, e.g., Be sure to set "Use Skeletons" permissions to use this module!';
 $lang['postuninstall'] = 'Post Uninstall Message, e.g., "Curses! Foiled Again!"';
 $lang['really_uninstall'] = 'Really? You\'re sure you want to uninstall this fine module?';
@@ -14,9 +14,11 @@ $lang['link_view'] = 'View Record';
 $lang['edit'] = 'Edit Record';
 $lang['title_num_records'] = '%s records found.';
 $lang['add_record'] = 'Add a Record';
+$lang['resultsfoundtext'] = ' record(s) found';
 $lang['saved_record'] = 'Add a Record';
 $lang['added_record'] = 'Added record.';
 $lang['updated_record'] = 'Record updated.';
+$lang['submitAndContinue'] = 'Submit and go on';
 $lang['upgraded'] = 'Module upgraded to version %s.';
 $lang['title_allow_add'] = 'Users may add records?';
 $lang['title_allow_add_help'] = 'Click here to allow users to add records.';

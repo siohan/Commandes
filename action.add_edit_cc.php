@@ -35,13 +35,13 @@ $edit = 0;//pour savoir si on édite ou on créé, 0 par défaut c'est une créa
 
 
 
-if(isset($params['record_id']) && $params['record_id'] !="")
-	{
-		$record_id = $params['record_id'];
+if(isset($params['commande_number']) && $params['commande_number'] !="")
+{
+		$commande_number = $params['commande_number'];
 		$edit = 1;//on est bien en trai d'éditer un enregistrement
 		//ON VA CHERCHER l'enregistrement en question
-		$query = "SELECT cc.id as index1, cc.date_created,cc.client,cc.prix_total, cc.libelle_commande,cc.fournisseur,cc.statut_commande,cc.date_modified,cc.paiement, cc.mode_paiement,cc.remarques FROM ".cms_db_prefix()."module_commandes_cc AS cc, ".cms_db_prefix()."module_commandes_clients AS cl WHERE cc.client = cl.id AND cc.id = ?";
-		$dbresult = $db->Execute($query, array($record_id));
+		$query = "SELECT cc.id as index1, cc.date_created,cc.client,cc.prix_total, cc.libelle_commande,cc.fournisseur,cc.statut_commande,cc.date_modified,cc.paiement, cc.mode_paiement,cc.remarques FROM ".cms_db_prefix()."module_commandes_cc AS cc, ".cms_db_prefix()."module_commandes_clients AS cl WHERE cc.client = cl.id AND cc.commande_number = ?";
+		$dbresult = $db->Execute($query, array($commande_number));
 		while ($dbresult && $row = $dbresult->FetchRow())
 		{
 			
@@ -63,7 +63,11 @@ if(isset($params['record_id']) && $params['record_id'] !="")
 			
 			
 		}
-	}
+}
+else
+{
+	$commande_number = $this->random(15);
+}
 if(isset($paiement))	
 {
 	$key_paiement = array_values($items_paiement);//$index_paiement = $paiement;
@@ -112,6 +116,7 @@ else
 	$key2_fournisseur = 0;
 	$fournisseur = "AUCUN";
 }
+
 	//on fait une requete pour completer l'input dropdown du formulaire
 	$query = "SELECT id as client_id, CONCAT_WS(' ',nom, prenom) AS joueur FROM ".cms_db_prefix()."module_commandes_clients ORDER BY nom ASC, prenom ASC";
 	$dbresult = $db->Execute($query);
@@ -135,14 +140,14 @@ else
 	{
 		$smarty->assign('record_id',
 				$this->CreateInputHidden($id,'record_id',$record_id));
-		$smarty->assign('commande_id',
-				$this->CreateInputHidden($id, 'commande_id',(isset($commande_id)?$commande_id:"")));
+		$smarty->assign('commande_number',
+				$this->CreateInputHidden($id, 'commande_number',(isset($commande_number)?$commande_number:"")));
 		
 	}
 	else
 	{
-		$smarty->assign('commande_id',
-				$this->CreateInputText($id, 'commande_id',(isset($commande_id)?$commande_id:""),5,15));
+		$smarty->assign('commande_number',
+				$this->CreateInputText($id, 'commande_number',(isset($commande_number)?$commande_number:""),5,15));
 		$smarty->assign('nom',
 				$this->CreateInputDropdown($id,'nom',$nom,$selectedindex = $index, $selectedvalue=$nom));
 		$smarty->assign('statut_commande',

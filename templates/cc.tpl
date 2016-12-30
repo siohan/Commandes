@@ -60,7 +60,7 @@ $(document).ready(function(){
  <tbody>
 {foreach from=$items item=entry}
   <tr class="{$entry->rowclass}">
-	<td>{$entry->commande_id} - {$entry->fournisseur}</td>
+	<td>{$entry->commande_number}({$entry->commande_id}) - {$entry->fournisseur}</td>
     <td>{$entry->nom} {$entry->prenom}-({$entry->club})</td>
     <td>{$entry->date_created|date_format:"d/m/Y"}</td>
 	<td>{$entry->nb_items}</td>

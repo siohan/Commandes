@@ -13,7 +13,7 @@ global $themeObject;
 //debug_display($params, 'Parameters');
 
 $result= array();
-$query = "SELECT  nom, prenom FROM ".cms_db_prefix()."module_ping_joueurs WHERE actif = '1' ";
+$query = "SELECT  nom, prenom, licence FROM ".cms_db_prefix()."module_ping_joueurs WHERE actif = '1' ";
 
 
 	//$query .=" ORDER BY id DESC";
@@ -33,17 +33,18 @@ $query = "SELECT  nom, prenom FROM ".cms_db_prefix()."module_ping_joueurs WHERE 
 				//les champs
 				$nom = $row['nom'];
 				$prenom = $row['prenom'];
+				$licence = $row['licence'];
 				//
 				
-				$query2 = "SELECT * FROM ".cms_db_prefix()."module_commandes_clients WHERE nom LIKE ? AND prenom LIKE ?";
-				$dbresult2 = $db->Execute($query2, array($nom, $prenom));
+				$query2 = "SELECT * FROM ".cms_db_prefix()."module_commandes_clients WHERE nom LIKE ? AND prenom LIKE ? AND licence = ?";
+				$dbresult2 = $db->Execute($query2, array($nom, $prenom, $licence));
 				
 				if($dbresult2 && $dbresult2->RecordCount()== 0)
 				{
 					//on fait une requete d'insertion
 					$compt++;
-					$query3 = "INSERT INTO ".cms_db_prefix()."module_commandes_clients (id, nom, prenom) VALUES ('', ?, ?)";
-					$dbresult3 = $db->Execute($query3, array($nom, $prenom));
+					$query3 = "INSERT INTO ".cms_db_prefix()."module_commandes_clients (id, nom, prenom,licence) VALUES ('', ?, ?, ?)";
+					$dbresult3 = $db->Execute($query3, array($nom, $prenom, $licence));
 				}
 				else
 				{

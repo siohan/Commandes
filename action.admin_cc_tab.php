@@ -55,7 +55,7 @@ $smarty->assign('submitfilter',
 $smarty->assign('formend',$this->CreateFormEnd());
 $result= array();
 $parms = array();
-$query = "SELECT  cl.id,cc.id AS commande_id,cl.nom, cl.prenom, cl.club, cc.date_created, cc.prix_total, cc.statut_commande,cc.paiement,cc.fournisseur, cc.mode_paiement FROM ".cms_db_prefix()."module_commandes_cc as cc, ".cms_db_prefix()."module_commandes_clients AS cl WHERE cl.id = cc.client ";
+$query = "SELECT  cl.id,cc.id AS commande_id,cc.commande_number,cl.nom, cl.prenom, cl.club, cc.date_created, cc.prix_total, cc.statut_commande,cc.paiement,cc.fournisseur, cc.mode_paiement FROM ".cms_db_prefix()."module_commandes_cc as cc, ".cms_db_prefix()."module_commandes_clients AS cl WHERE cl.id = cc.client AND cc.user_validation = 1 ";
 
 if( isset($params['submitfilter'] ))
 {
@@ -105,10 +105,11 @@ else
 
 				$id_commandes = $row['commande_id'];
 				$paiement = $row['paiement'];
+				$commande_number = $row['commande_number'];
 				
 				//on va chercher le nb d'articles de chq commande client
-				$query2 = " SELECT count(*) AS nb_items, SUM(prix_total) AS prix FROM ".cms_db_prefix()."module_commandes_cc_items WHERE fk_id = ?";
-				$dbresult2 = $db->Execute($query2, array($id_commandes));
+				$query2 = " SELECT count(*) AS nb_items, SUM(prix_total) AS prix FROM ".cms_db_prefix()."module_commandes_cc_items WHERE commande_number = ?";
+				$dbresult2 = $db->Execute($query2, array($commande_number));
 				if($dbresult2)
 				{
 					while($row2 = $dbresult2->FetchRow())
@@ -127,7 +128,7 @@ else
 				}
 				
 				
-				
+				$onerow->commande_number= $row['commande_number'];
 				$onerow->commande_id= $row['commande_id'];
 				$onerow->fournisseur = $row['fournisseur'];
 				$onerow->nom = $row['nom'];
@@ -138,12 +139,12 @@ else
 				$onerow->statut = $row['statut_commande'];
 				$onerow->paiement = $row['paiement'];
 				$onerow->mode_paiement = $row['mode_paiement'];
-				$onerow->view= $this->createLink($id, 'view_cc', $returnid, $themeObject->DisplayImage('icons/system/view.gif', $this->Lang('view_results'), '', '', 'systemicon'),array('active_tab'=>'commandesclients',"record_id"=>$row['commande_id'])) ;
+				$onerow->view= $this->createLink($id, 'view_cc', $returnid, $themeObject->DisplayImage('icons/system/view.gif', $this->Lang('view_results'), '', '', 'systemicon'),array('active_tab'=>'commandesclients',"commande_number"=>$row['commande_number'])) ;
 				
 				if($paiement !="Payée et déstockée")
 				{
-					$onerow->editlink= $this->CreateLink($id, 'add_edit_cc', $returnid, $themeObject->DisplayImage('icons/system/edit.gif', $this->Lang('edit'), '', '', 'systemicon'), array('active_tab'=>'commandesclients','record_id'=>$row['commande_id']));
-					$onerow->deletelink = $this->CreateLink($id, 'delete',$returnid, $themeObject->DisplayImage('icons/system/delete.gif', $this->Lang('delete'), '', '', 'systemicon'), array('record_id'=>$row['commande_id'], "bdd"=>"cc"));
+					$onerow->editlink= $this->CreateLink($id, 'add_edit_cc', $returnid, $themeObject->DisplayImage('icons/system/edit.gif', $this->Lang('edit'), '', '', 'systemicon'), array('active_tab'=>'commandesclients','commande_number'=>$row['commande_number']));
+					$onerow->deletelink = $this->CreateLink($id, 'delete',$returnid, $themeObject->DisplayImage('icons/system/delete.gif', $this->Lang('delete'), '', '', 'systemicon'), array('commande_number'=>$row['commande_number'], "bdd"=>"cc"));
 				}
 				
 				

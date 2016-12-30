@@ -12,7 +12,7 @@
 	{$edit}
 	{$edition}
 	{$record_id}
-	{$commande_id}
+	{$commande_number}
 	{*$nom*}
 	<div class="pageoverflow">
 		<p class="pagetext">Date Commande :</p>
@@ -48,7 +48,7 @@
 	</div>
   
 {else}	
-{$edit}{$edition}
+{$edit}{$edition}{$commande_number}
 	<div class="pageoverflow">
 		<p class="pagetext">Date Commande :</p>
 		<p class="pageinput">{$date_created}</p>

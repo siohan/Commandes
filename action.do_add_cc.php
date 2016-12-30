@@ -30,9 +30,13 @@ else
 	$edit = 0;//il s'agit d'un ajout de commande
 }
 
-if(isset($params['commande_id']) && $params['commande_id'] != '')
+if(isset($params['commande_number']) && $params['commande_number'] != '')
 {
-	$commande_id = $params['commande_id'];
+	$commande_number = $params['commande_number'];
+}
+else
+{
+	exit;
 }
 
 if(isset($params['date_created']) && $params['date_created'] != '')
@@ -104,16 +108,17 @@ if(isset($params['remarques']) && $params['remarques'] != '')
 if($edit ==0)
 {
 	//on fait d'abord l'insertion 
-	$query1 = "INSERT INTO ".cms_db_prefix()."module_commandes_cc (id, date_created, date_modified, client, libelle_commande,fournisseur, prix_total, statut_commande, paiement, mode_paiement, remarques) VALUES ('', ?, ?, ?, ?, ?, ?, ?, ?, ? ,?)";
-	$dbresult1 = $db->Execute($query1, array($date_created,$date_created,$client, $libelle_commande,$fournisseur,$prix_total, $statut_commande,$paiement, $mode_paiement, $remarques));
-	$this->RedirectToAdminTab('commandesclients',array("nom"=>$client, "date_created"=>$date_created,"fournisseur"=>$fournisseur),'view_cc');
+	$user_validation = 1;
+	$query1 = "INSERT INTO ".cms_db_prefix()."module_commandes_cc (id, date_created, date_modified, client, libelle_commande,fournisseur, prix_total, statut_commande, paiement, mode_paiement, remarques, commande_number) VALUES ('', ?, ?, ?, ?, ?, ?, ?, ?, ? ,?, ?)";
+	$dbresult1 = $db->Execute($query1, array($date_created,$date_created,$client, $libelle_commande,$fournisseur,$prix_total, $statut_commande,$paiement, $mode_paiement, $remarques, $commande_number));
+	$this->RedirectToAdminTab('commandesclients',array("nom"=>$client, "date_created"=>$date_created,"commande_number"=>$commande_number,"fournisseur"=>$fournisseur),'add_edit_cc_item');
 }
 else
 {
 	//il s'agit d'une mise à jour !
 	//on récupère les éléments d'origine des articles de cette commande
-	$query4 = "SELECT id, fk_id, libelle_commande, categorie_produit, fournisseur, quantite, ep_manche_taille, couleur, prix_total,commande  FROM ".cms_db_prefix()."module_commandes_cc_items WHERE fk_id = ?";
-	$dbresult4 = $db->Execute($query4, array($record_id));
+	$query4 = "SELECT id, fk_id, libelle_commande, categorie_produit, fournisseur, quantite, ep_manche_taille, couleur, prix_total,commande,commande_number  FROM ".cms_db_prefix()."module_commandes_cc_items WHERE commande_number = ?";
+	$dbresult4 = $db->Execute($query4, array($commande_number));
 
 	if($dbresult4 && $dbresult4->RecordCount()>0)
 	{
@@ -129,6 +134,7 @@ else
 			$couleur = $row4['couleur'];
 			$prix_total = $row4['prix_total'];
 			$commande = $row4['commande'];
+			//$commande_number = $row4['commande_number'];
 			//$fk_id = $row4[''];
 			
 			if ($commande == 0)//les articles ne sont pas en stock
@@ -149,8 +155,8 @@ else
 					{
 						$increment = $service->incremente_stock($libelle_commande, $quantite, $ep_manche_taille, $couleur);
 					}
-					$query3 = "UPDATE ".cms_db_prefix()."module_commandes_cc_items SET commande = '1' WHERE fk_id = ?";
-					$dbresult3 = $db->Execute($query3, array($record_id));
+					$query3 = "UPDATE ".cms_db_prefix()."module_commandes_cc_items SET commande = '1' WHERE commande_number = ?";
+					$dbresult3 = $db->Execute($query3, array($commande_number));
 				}
 			}
 			elseif($commande == 1)
@@ -176,8 +182,8 @@ else
 	}
 		//les articles sont en stock
 			
-	$query2 = "UPDATE ".cms_db_prefix()."module_commandes_cc SET date_modified = ?, libelle_commande = ?, statut_commande = ?, paiement = ?, mode_paiement = ?, remarques = ? WHERE id = ?";
-	$dbresult2 = $db->Execute($query2, array($now, $libelle_commande, $statut_commande, $paiement, $mode_paiement, $remarques, $record_id));
+	$query2 = "UPDATE ".cms_db_prefix()."module_commandes_cc SET date_modified = ?, libelle_commande = ?, statut_commande = ?, paiement = ?, mode_paiement = ?, remarques = ? WHERE commande_number = ?";
+	$dbresult2 = $db->Execute($query2, array($now, $libelle_commande, $statut_commande, $paiement, $mode_paiement, $remarques, $commande_number));
 	
 	
 	
