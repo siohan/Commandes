@@ -1,7 +1,7 @@
 <?php
 if( !isset($gCms) ) exit;
 //echo "Cool !";
-debug_display($params, 'Parameters');
+//debug_display($params, 'Parameters');
 
 //$this->RedirectForFrontEnd($id, $returnid, 'default', array("nom"=>$client, "date_created"=>$date_created,"fournisseur"=>$fournisseur));
 
@@ -9,7 +9,7 @@ $feu = cms_utils::get_module('FrontEndUsers');
 $userid = $feu->LoggedInId();
 $properties = $feu->GetUserProperties($userid);
 $email = $feu->LoggedInEmail();
-var_dump($email);
+//var_dump($email);
 if($email == '')
 {
 	//echo "pas de résultats, on fait quoi ?";

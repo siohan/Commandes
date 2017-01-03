@@ -1,6 +1,6 @@
 <div class="pageoptions"><p class="pageoptions">{$itemcount}&nbsp;{$itemsfound}</p></div>
-{$lienRetour}
-{if $user_validation ==0}{$new_command}{/if}
+<div class="pageoptions"><p class="pageoptions">{$lienRetour}</p></div>
+{if $user_validation ==0}<div class="pageoptions"><p class="pageoptions">{$new_command}</p></div>{/if}
 {if $itemcount > 0}
 
 <h3> Détails de ma commande {$commande_num}</h3>
@@ -22,12 +22,13 @@
     <td>{$entry->libelle_commande} {$entry->ep_manche_taille} {$entry->couleur}</td>
 	<td>{$entry->quantite}</td>
 	<td>{$entry->prix_total}</td>
+	<td>{$entry->edit}</td>
 	<td>{$entry->delete}</td>	
 	
   </tr>
 {/foreach}
  </tbody>
 </table>
-{if $user_validation ==0}{$validate}{/if}
+<p class="search-button">{if $user_validation ==0}{$validate}{/if}</p>
 {/if}
 

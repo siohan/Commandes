@@ -58,6 +58,10 @@ if($username == '')
 				$onerow->mode_paiement = $row['mode_paiement'];
 				//$onerow->view = $this->CreateFrontendLink($id, $returnid,'feViewCc', $contents='Détails',array("record_id"=>$row['commande_id']),$warn_message='',$onlyhref='',$inline='true');
 				$onerow->view = $this->CreateLink($id, 'feViewCc', $returnid,'Détails',array("record_id"=>$row['commande_id'],"commande_number"=>$commande_number,"fournisseur"=>$row['fournisseur']),$warn_message='',$onlyhref='',$inline='true');
+				if($user_validation==0)
+				{
+					$onerow->fe_delete = $this->CreateLink($id, 'default', $returnid,'Supprimer',array("display"=>"delete","commande_number"=>$row['commande_number']),$warn_message='Tous les articles de cette commande seront également supprimés',$onlyhref='',$inline='true');
+				}
 				
 				
 				($rowclass == "row1" ? $rowclass= "row2" : $rowclass= "row1");

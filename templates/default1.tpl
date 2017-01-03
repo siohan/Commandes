@@ -22,6 +22,7 @@
 	<td>{$entry->paiement}</td>
 	<td>{$entry->mode_paiement}</td>		
 	<td>{$entry->view}</td>
+	<td>{$entry->fe_delete}</td>
   </tr>
 {/foreach}
  </tbody>

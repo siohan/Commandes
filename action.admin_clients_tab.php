@@ -17,7 +17,7 @@ $smarty->assign('import_from_ping',
 		$this->CreateLink($id, 'import_from_ping', $returnid,$contents='Importer les joueurs du module Ping'));
 
 $result= array ();
-$query = "SELECT  id AS client_id, date_created, date_maj, nom, prenom, club, email, tel, portable FROM ".cms_db_prefix()."module_commandes_clients as cl";//", ".cms_db_prefix()."module_commandes_cc ";
+$query = "SELECT  id AS client_id, date_created, date_maj, nom, prenom,licence, club, email, tel, portable FROM ".cms_db_prefix()."module_commandes_clients as cl";//", ".cms_db_prefix()."module_commandes_cc ";
 
 
 	$query .=" ORDER BY nom ASC";
@@ -58,6 +58,7 @@ $query = "SELECT  id AS client_id, date_created, date_maj, nom, prenom, club, em
 				$onerow->date_maj = $row['date_maj'];
 				$onerow->nom = $row['nom'];
 				$onerow->prenom = $row['prenom'];
+				$onerow->licence =$row['licence'];
 				$onerow->nb_commandes = $nb_commandes;
 				$onerow->club = $row['club'];				
 				$onerow->email = $row['email'];
@@ -67,7 +68,7 @@ $query = "SELECT  id AS client_id, date_created, date_maj, nom, prenom, club, em
 				{
 					$onerow->view= $this->createLink($id, 'view_client_orders', $returnid, $themeObject->DisplayImage('icons/system/view.gif', $this->Lang('view_results'), '', '', 'systemicon'),array('active_tab'=>'commandesclients',"record_id"=>$row['client_id'])) ;
 				}
-				
+				$onerow->push_customer= $this->CreateLink($id, 'push_customer', $returnid, $themeObject->DisplayImage('icons/system/groupassign.gif', $this->Lang('edit'), '', '', 'systemicon'), array('record_id'=>$row['client_id'], "licence"=>$row['licence'], "email"=>$row['email'], "nom"=>$row['nom'], "prenom"=>$row['prenom']));
 				$onerow->editlink= $this->CreateLink($id, 'add_edit_client', $returnid, $themeObject->DisplayImage('icons/system/edit.gif', $this->Lang('edit'), '', '', 'systemicon'), array('record_id'=>$row['client_id']));
 				$onerow->deletelink = $this->CreateLink($id, 'delete',$returnid, $themeObject->DisplayImage('icons/system/delete.gif', $this->Lang('delete'), '', '', 'systemicon'), array('record_id'=>$row['client_id'],"bdd"=>"clients"));
 				

@@ -104,6 +104,7 @@ EOT;
 	$this->SetParameterType('page', CLEAN_INT);
 	$this->SetParameterType('detailpage',CLEAN_STRING);
 	$this->SetParameterType('display',CLEAN_STRING);
+	$this->SetParameterType('email', CLEAN_STRING);
 	
 
 }

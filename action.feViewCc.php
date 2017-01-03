@@ -80,6 +80,7 @@ $query1 = "SELECT cc.id,cc.user_validation,cc.commande_number,it.id AS item_id, 
 				
 				if($user_validation == 0)
 				{
+					$onerow->edit = $this->CreateLink($id, 'default', $returnid,'Modifier', array("display"=>"add_cc_items","record_id"=>$row['item_id'], "commande_number"=>$commande_number,"edit"=>"1" ));
 					$onerow->delete = $this->CreateLink($id, 'default', $returnid,'Supprimer', array("display"=>"delete","record_id"=>$row['item_id'], "commande_number"=>$commande_number ));
 				}
 				

@@ -19,7 +19,7 @@
 	<td>{$entry->client_id}</td>
     <td>{$entry->nom} {$entry->prenom}-({$entry->club})</td>
 	<td>{$entry->nb_commandes}</td>
-	<td>{$entry->email}</td>
+	<td>{if $entry->email !=''}{$entry->email}{$entry->push_customer}{/if}</td>
 	<td>{$entry->tel}</td>
 	<td>{$entry->portable}</td>
 	<td>{$entry->view}</td>

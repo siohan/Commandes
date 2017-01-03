@@ -1,15 +1,15 @@
 <div class="pageoverflow">
 {form_start}
-
+<input type="hidden" name="{$actionid}libelle_selected" value="{$actionid}{$libelle_selected}"/>
 <input type="hidden" name="{$actionid}commande_number" value="{$commande_number}"/>
 
-<input type="text" name="{$actionid}fournisseur" value="{$fournisseur}"/>
-<input type="text" name="{$actionid}display" value="{$display}"/>
-<input type="text" name="{$actionid}record_id" value="{$record_id}"/>
+<input type="hidden" name="{$actionid}fournisseur" value="{$fournisseur}"/>
+<input type="hidden" name="{$actionid}display" value="{$display}"/>
+<input type="hidden" name="{$actionid}record_id" value="{$record_id}"/>
 <p class="pagetext">Produits:</p>
         <p class="pageinput">
 <select id="{$actionid}produits" name="{$actionid}produits">
-	{html_options options=$produits}
+	{html_options options=$produits selected=$libelle_selected}
 </select>
 <p class="pagetext">Epaisseur -Manche-Taille:</p>
         <p class="pageinput">
