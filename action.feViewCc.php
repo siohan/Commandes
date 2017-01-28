@@ -91,7 +91,7 @@ $query1 = "SELECT cc.id,cc.user_validation,cc.commande_number,it.id AS item_id, 
   		}
 		$smarty->assign('user_validation', $user_validation);
 		$smarty->assign('validate',
-			$this->CreateLink($id, 'default',$returnid, 'Terminer ma commande', array("display"=>"validate", "commande_number"=>$commande_number)));
+			$this->CreateLink($id, 'default',$returnid, 'Terminer ma commande', array("display"=>"validate", "commande_number"=>$commande_number),$warn_message="Votre commande va devenir définitive : vous ne pourrez plus la modifier."));
 		$smarty->assign('new_command', 
 			$this->CreateLink($id, 'default', $returnid, 'Ajouter un article',array("display"=>"add_cc_items","commande_number"=>$commande_number, "commande_id"=>$row['fk_id'],"fournisseur"=>$fournisseur)));
 		$smarty->assign('itemsfound', $this->Lang('resultsfoundtext'));

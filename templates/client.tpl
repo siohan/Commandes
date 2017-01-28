@@ -8,9 +8,10 @@
 		<th>Nom (club)</th>
 		<th>Nb commandes</th>
 		<th>email</th>
+		<th>Compte activé ?</th>
 		<th>Tél</th>
 		<th>Portable</th>
-		<th colspan="3">Actions</th>
+		<th colspan="4">Actions</th>
 	</tr>
  </thead>
  <tbody>
@@ -19,7 +20,8 @@
 	<td>{$entry->client_id}</td>
     <td>{$entry->nom} {$entry->prenom}-({$entry->club})</td>
 	<td>{$entry->nb_commandes}</td>
-	<td>{if $entry->email !=''}{$entry->email}{$entry->push_customer}{/if}</td>
+	<td>{$entry->email}</td>
+	<td>{$entry->push_customer}</td>
 	<td>{$entry->tel}</td>
 	<td>{$entry->portable}</td>
 	<td>{$entry->view}</td>

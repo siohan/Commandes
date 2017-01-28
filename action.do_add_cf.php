@@ -88,7 +88,7 @@ else
 	le statut reçue également aux commandes clients avec le même fournisseur
 	*/
 	$service = new commandes_ops();
-	if($statut_CF == 'Reçue')
+	if($statut_CF != 'Non envoyée')
 	{
 		$query6 = "SELECT id, id_CF, id_items FROM ".cms_db_prefix()."module_commandes_cf_items WHERE id_CF = ?";
 		//echo $query6."<br />";
@@ -100,7 +100,7 @@ else
 			{
 				$id_items = $row['id_items'];
 				
-				$query2 = "SELECT id AS id_items, fk_id, libelle_commande, categorie_produit, fournisseur, quantite, ep_manche_taille, couleur, prix_total  FROM ".cms_db_prefix()."module_commandes_cc_items WHERE id = ?";
+				$query2 = "SELECT id AS id_items, fk_id, libelle_commande,commande_number, categorie_produit, fournisseur, quantite, ep_manche_taille, couleur, prix_total  FROM ".cms_db_prefix()."module_commandes_cc_items WHERE id = ?";
 				$dbresult2 = $db->Execute($query2, array($id_items));
 				//echo $query2."<br />";
 				
@@ -112,6 +112,7 @@ else
 					$row3 = $dbresult2->FetchRow();
 					$id_items = $row3['id_items'];
 					$fk_id = $row3['fk_id'];
+					$commande_number = $row3['commande_number'];
 					$libelle_commande = $row3['libelle_commande'];
 					$categorie_produit = $row3['categorie_produit'];
 					$fournisseur = $row3['fournisseur'];
@@ -125,11 +126,11 @@ else
 					
 					
 					//on change le statut de la commandes clients				
-					$query3 = "UPDATE ".cms_db_prefix()."module_commandes_cc SET statut_commande = 'Reçue' WHERE id = ?";
+					$query3 = "UPDATE ".cms_db_prefix()."module_commandes_cc SET statut_commande = ? WHERE commande_number = ?";
 					//echo $query3;
-					$dbresult3 = $db->Execute($query3, array($fk_id));
+					$dbresult3 = $db->Execute($query3, array($statut_CF,$commande_number));
 					
-					if($dbresult3)
+					if($dbresult3 && $statut_CF =='Reçue')
 					{
 						$designation.= "Statut mis à Reçue";
 						//echo $designation."<br />";

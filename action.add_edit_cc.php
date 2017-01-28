@@ -14,7 +14,7 @@ if( !isset($gCms) ) exit;
     		$this->RedirectToAdminTab('compets');
     		return;
   	}
-debug_display($params, 'Parameters');
+//debug_display($params, 'Parameters');
 require_once(dirname(__FILE__).'/include/preferences.php');
 $db =& $this->GetDb();
 $now = date('Y-m-d');

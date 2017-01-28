@@ -1,7 +1,7 @@
 <?php
 if (!isset($gCms)) exit;
 
-//debug_display($params, 'Parameters');
+debug_display($params, 'Parameters');
 
 if (!$this->CheckPermission('Use Commandes'))
 	{
@@ -11,14 +11,15 @@ if (!$this->CheckPermission('Use Commandes'))
 	
 $error = 0;
 $designation = '';
+	$commande_number = '';
+	if (isset($params['commande_number']) && $params['commande_number'] != '')
+	{
+		$commande_number = $params['commande_number'];
+	}
 	$record_id = '';
 	if (isset($params['record_id']) && $params['record_id'] != '')
 	{
 		$record_id = $params['record_id'];
-	}
-	else
-	{
-			$error++;
 	}
 	$bdd = '';
 	if(isset($params['bdd']) && $params['bdd'] !='')
@@ -36,8 +37,8 @@ $designation = '';
 			{
 				case  "cc_items" :
 
-					$query = "DELETE FROM ".cms_db_prefix()."module_commandes_cc_items WHERE id = ?";
-					$dbresult = $db->Execute($query, array($record_id));
+					$query = "DELETE FROM ".cms_db_prefix()."module_commandes_cc_items WHERE commande_number = ?";
+					$dbresult = $db->Execute($query, array($commande_number));
 					
 					if(!$dbresult)
 					{
@@ -55,8 +56,8 @@ $designation = '';
 				
 				case  "cc" :
 
-					$query = "DELETE FROM ".cms_db_prefix()."module_commandes_cc WHERE id = ?";
-					$dbresult = $db->Execute($query, array($record_id));
+					$query = "DELETE FROM ".cms_db_prefix()."module_commandes_cc WHERE commande_number = ?";
+					$dbresult = $db->Execute($query, array($commande_number));
 					
 					if(!$dbresult)
 					{
@@ -68,8 +69,8 @@ $designation = '';
 						
 						$designation.= "Commande supprimée. ";
 						//on supprime aussi les items de cette commande
-						$query = "DELETE FROM ".cms_db_prefix()."module_commandes_CC_items WHERE fk_id = ?";
-						$dbresult = $db->Execute($query, array($record_id));
+						$query = "DELETE FROM ".cms_db_prefix()."module_commandes_CC_items WHERE commande_number = ?";
+						$dbresult = $db->Execute($query, array($commande_number));
 						$designation.= "Articles de la commande supprimés ";
 					}
 					//$designation.="Résultat supprimé";

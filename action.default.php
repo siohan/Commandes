@@ -104,8 +104,12 @@ switch($display)
 		require(__DIR__.'/action.fe_delete.php');
 	break;
 	
-	case 'validate':
+	case 'validate' :
 		require(__DIR__.'/action.fe_validate.php');
+	break;
+	
+	case 'validation_message' :
+		require(__DIR__.'/action.validate_message.php');
 	break;
 	
 	case 'default' :

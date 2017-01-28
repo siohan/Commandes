@@ -34,7 +34,7 @@ if(isset($params['record_id']) && $params['record_id'] !="")
 		$record_id = $params['record_id'];
 		$edit = 1;//on est bien en trai d'éditer un enregistrement
 		//ON VA CHERCHER l'enregistrement en question
-		$query = "SELECT date_created, date_maj,nom, prenom, club, email, portable, tel FROM ".cms_db_prefix()."module_commandes_clients WHERE id = ?";
+		$query = "SELECT date_created, date_maj,nom, prenom, club, email, portable, tel, licence, account_validation, email_sent FROM ".cms_db_prefix()."module_commandes_clients WHERE id = ?";
 		$dbresult = $db->Execute($query, array($record_id));
 		while ($dbresult && $row = $dbresult->FetchRow())
 		{
@@ -47,6 +47,9 @@ if(isset($params['record_id']) && $params['record_id'] !="")
 			$email = $row['email'];
 			$tel = $row['tel'];
 			$portable = $row['portable'];
+			$licence = $row['licence'];
+			$account_validation = $row['account_validation'];
+			$email_sent = $row['email_sent'];
 					
 		}
 	}
@@ -68,6 +71,8 @@ if(isset($params['record_id']) && $params['record_id'] !="")
 			$this->CreateInputText($id,'nom',(isset($nom)?$nom:""),50,200));
 	$smarty->assign('prenom',
 			$this->CreateInputText($id,'prenom',(isset($prenom)?$prenom:""),50,200));
+	$smarty->assign('licence',
+			$this->CreateInputText($id,'licence',(isset($licence)?$licence:""),50,200));
 	$smarty->assign('club',
 			$this->CreateInputText($id,'club',(isset($club)?$club:""),50,200));
 			

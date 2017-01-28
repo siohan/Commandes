@@ -37,7 +37,9 @@ $flds = "
 	club C(255),
 	email C(200),
 	tel C(15),
-	portable C(15)";
+	portable C(15),
+	account_validation I(1) DEFAULT 0,
+	email_sent I(1) DEFAULT 0";
 			
 // create it. 
 $sqlarray = $dict->CreateTableSQL( cms_db_prefix()."module_commandes_clients",
@@ -107,7 +109,8 @@ $flds = "
 	statut_item C(55),
 	commande I(1),
 	ep_manche_taille C(50),
-	couleur C(80)";
+	couleur C(80),
+	commande_number C(15)";
 
 // create it. 
 $sqlarray = $dict->CreateTableSQL( cms_db_prefix()."module_commandes_cc_items",
@@ -478,10 +481,19 @@ catch( \Exception $e ) {
     debug_to_log($e->GetTraceAsString());
     audit('',$this->GetName(),'Installation Error: '.$e->GetMessage());
 }
-
+//mails templates
+# Mails templates
+$fn = cms_join_path(dirname(__FILE__),'templates','orig_activationemailtemplate.tpl');
+if( file_exists( $fn ) )
+{
+	$template = file_get_contents( $fn );
+	$this->SetTemplate('newactivationemail_Sample',$template);
+}
 # Les préférences 
 $this->SetPreference('installation', '0');
-
+$this->SetPreference('admin_email', 'root@localhost.com');
+$this->SetPreference('email_activation_subject', 'Votre compte T2T Commandes est activé');
+//$this->SetPreference('mail_activation_body', )
 //permissions
 $this->CreatePermission(Commandes::MANAGE_PERM,'Utiliser le module Commandes');
 

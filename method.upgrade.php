@@ -39,6 +39,11 @@ switch($current_version)
 		$sqlarray = $dict->AddColumnSQL(cms_db_prefix()."module_commandes_cc_items", "commande_number C(15)");
 		$dict->ExecuteSQLArray( $sqlarray );
 		
+		//rajout de deux champs ds la table commandes_clients
+		$dict = NewDataDictionary( $db );
+		$sqlarray = $dict->AddColumnSQL(cms_db_prefix()."module_commandes_clients", "account_validation I(1) DEFAULT 0, email_sent I(1) DEFAULT 0");
+		$dict->ExecuteSQLArray( $sqlarray );
+		
 		//on ajoute un index sur cette nouvelle colonne
 		$idxoptarray = array('UNIQUE');
 		$sqlarray = $dict->CreateIndexSQL(cms_db_prefix().'cc',
@@ -71,6 +76,24 @@ switch($current_version)
 			}
 		}
 		
+		//emails
+		$this->SetPreference('admin_email', 'root@localhost.com');
+		$this->SetPreference('email_activation_subject','Ton compte T2T Commandes est activé');
+		//pour les nouvelles commandes
+		$this->SetPreference('new_command_subject','[T2T] Nouvelle commande !');
+		# Mails templates
+		$fn = cms_join_path(dirname(__FILE__),'templates','orig_newcommandemailtemplate.tpl');
+		if( file_exists( $fn ) )
+		{
+			$template = file_get_contents( $fn );
+			$this->SetTemplate('newcommandemail_Sample',$template);
+		}
+		$fn = cms_join_path(dirname(__FILE__),'templates','orig_activationemailtemplate.tpl');
+		if( file_exists( $fn ) )
+		{
+			$template = file_get_contents( $fn );
+			$this->SetTemplate('newactivationemail_Sample',$template);
+		}
 	}
    
  }

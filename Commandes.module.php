@@ -41,7 +41,7 @@ class Commandes extends CMSModule
  
   
   public function GetDependencies() {
-        return array('CGExtensions'=>'1.53.6','CGSimpleSmarty'=>'1.9','JQueryTools'=>'1.3.8','Ping'=>'0.5.4');
+        return array('CGExtensions'=>'1.53.15','CGSimpleSmarty'=>'2.1.5','JQueryTools'=>'1.3.9');
     }
 
   public function GetHeaderHTML()
@@ -84,6 +84,11 @@ EOT;
 	$this->SetParameterType('ep_manche_taille', CLEAN_STRING);
 	$this->SetParameterType('couleur', CLEAN_STRING);
 	$this->SetParameterType('quantite', CLEAN_INT);
+	$this->SetParameterType('nom_joueur', CLEAN_STRING);
+	$this->SetParameterType('prenom', CLEAN_STRING);
+	$this->SetParameterType('email', CLEAN_STRING);
+	$this->SetParameterType('motdepasse', CLEAN_STRING);
+	$this->SetParameterType('licence', CLEAN_INT);
 	
   }
 
@@ -105,6 +110,11 @@ EOT;
 	$this->SetParameterType('detailpage',CLEAN_STRING);
 	$this->SetParameterType('display',CLEAN_STRING);
 	$this->SetParameterType('email', CLEAN_STRING);
+	$this->SetParameterType('commande_number', CLEAN_STRING);
+	$this->SetParameterType('nom_joueur', CLEAN_STRING);
+	$this->SetParameterType('prenom', CLEAN_STRING);
+	$this->SetParameterType('motdepasse', CLEAN_STRING);
+	$this->SetParameterType('licence', CLEAN_INT);
 	
 
 }
@@ -205,6 +215,15 @@ return $obj;
   function random($car) {
 $string = "";
 $chaine = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+srand((double)microtime()*1000000);
+for($i=0; $i<$car; $i++) {
+$string .= $chaine[rand()%strlen($chaine)];
+}
+return $string;
+}
+function random_string($car) {
+$string = "";
+$chaine = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 srand((double)microtime()*1000000);
 for($i=0; $i<$car; $i++) {
 $string .= $chaine[rand()%strlen($chaine)];

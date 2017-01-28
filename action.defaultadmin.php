@@ -38,6 +38,7 @@ else
 		echo $this->SetTabHeader('clients', 'Clients', ('clients' == $tab)?true:false);
 		echo $this->SetTabHeader('articles', 'Articles' , ('articles' == $tab)?true:false);
 		echo $this->SetTabHeader('stock', 'Stock' , ('stock' == $tab)?true:false);
+		echo $this->SetTabHeader('notifications','Notifications', ('notifications' == $tab)?true:false);
 
 	echo $this->EndTabHeaders();
 
@@ -64,8 +65,11 @@ else
 		echo $this->StartTab('stock', $params);
 	    	include(dirname(__FILE__).'/action.admin_stock_tab.php');
 	   	echo $this->EndTab();
-
-
+		/**/
+		echo $this->StartTab('notifications', $params);
+	    	include(dirname(__FILE__).'/action.admin_emails_tab.php');
+	   	echo $this->EndTab();
+	/**/
 	echo $this->EndTabContent();
 	//on a refermé les onglets
 

@@ -28,3 +28,7 @@
  </tbody>
 </table>
 {/if}
+{if isset($url_logout)}
+<p><a href="{$url_logout}" title="{$mod->Lang('info_logout')}">{$mod->Lang('logout')}</a></p>
+{/if}
+{*$deconn*}

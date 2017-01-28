@@ -94,7 +94,7 @@ $query1 = "SELECT cc.id,it.id AS item_id, it.fk_id , it.date_created,it.libelle_
 				if($commande != '1')
 				{
 					//$onerow->view= $this->createLink($id, 'view_order', $returnid, $themeObject->DisplayImage('icons/system/view.gif', $this->Lang('view_results'), '', '', 'systemicon'),array('active_tab'=>'CC',"record_id"=>$row['fk_id'])) ;
-					$onerow->editlink= $this->CreateLink($id, 'add_edit_cc_item', $returnid, $themeObject->DisplayImage('icons/system/edit.gif', $this->Lang('edit'), '', '', 'systemicon'), array('record_id'=>$row['item_id'],"edit"=>"1"));
+					$onerow->editlink= $this->CreateLink($id, 'add_edit_cc_item', $returnid, $themeObject->DisplayImage('icons/system/edit.gif', $this->Lang('edit'), '', '', 'systemicon'), array('commande_number'=>$row['commande_number'],'record_id'=>$row['item_id'],"edit"=>"1"));
 					$onerow->deletelink = $this->CreateLink($id, 'delete',$returnid, $themeObject->DisplayImage('icons/system/delete.gif', $this->Lang('delete'), '', '', 'systemicon'), array('record_id'=>$row['item_id'], "bdd"=>"cc_items"));
 				}
 				

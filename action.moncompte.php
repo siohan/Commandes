@@ -81,6 +81,12 @@ if($username == '')
 			$smarty->assign('items', $rowarray);
 			$smarty->assign('fe_add_cc',
 			$this->CreateLink($id, 'default', $returnid, 'Ajouter une nouvelle commande', array("client"=>$client,"display"=>"add_cc")));
+			//un lien de déconnexion ?
+			//Why not !
+			$deconn = $feu->CreateLink($id, 'logout', $returnid, array("uid"=>$uid));
+			$url = $feu->create_url($id,'logout',$returnid,$parms);
+			$smarty->assign('url_logout',$url);
+		
 		
 	echo $this->ProcessTemplate('default1.tpl');
 	}

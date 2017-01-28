@@ -89,7 +89,51 @@ class commandes_ops
 		$row = $dbresult->FetchRow();
 		$montant =$row['montant'];
 		return $montant;
-	}	
+	}
+/**/	
+public function send_mail_alerts($email)
+	{
+		// See if we have to send something
+		
+
+	
+
+			// Process with the mails
+			$ping = cms_utils::get_module('Commandes');
+			$cmsmailer = cms_utils::get_module('CMSMailer');
+			if (!$cmsmailer) return false;
+
+			$cmsmailer->reset();
+			$cmsmailer->IsHTML(true);
+
+			// Get the subject
+			$subject = $ping->GetPreference('email_activation_subject');
+			// The body
+			$body = $ping->GetTemplate('newactivationemail_Sample');
+			$body = $ping->ProcessTemplateFromData($body);
+			
+			$cmsmailer->SetSubject($subject);
+			$cmsmailer->SetBody($body);
+
+			// Add the addresses
+			// Try to find an e-mail
+			
+				$cmsmailer->AddAddress($email);
+
+			
+
+			$cmsmailer->Send();
+			$res = true;
+			if ($cmsmailer->IsError())
+			{
+				$res = false;
+				@trigger_error('Problem sending email: '.$cmsmailer->GetErrorInfo());
+			}
+			$cmsmailer->reset();
+
+			return $res;
+	}
+	
 #
 #End of class
 #

@@ -2,6 +2,7 @@
 if( !isset($gCms) ) exit;
 //echo "Cool !";
 //debug_display($params, 'Parameters');
+$designation = '';//le message de fin....
 $feu = cms_utils::get_module('FrontEndUsers');
 //$feu = new FrontEndUsers();
 $error = 0;//on instancie un compteur d'erreurs
@@ -25,19 +26,19 @@ else
 }
 if(isset($params['email']) && $params['email'] !='')
 {
-	$email = $params['email'];
+	$user_email = $params['email'];
 }
 else
 {
 	$error++;
 }
-echo $error;
+//echo $error;
 if($error<1)
 {
 	//on fait le job
 	//on ajoute le groupe
 	$group_exists = $feu->GroupExistsByName('adherents');
-	
+	$feu->SetPreference('username_is_email',0);
 	if(FALSE === $group_exists)
 	{
 		$feu->AddGroup('adherents', 'les adhérents du club');
@@ -83,8 +84,19 @@ if($error<1)
 	$month = date('n');
 	$year = date('Y')+5;
 	$expires = mktime(0,0,0,$month, $day,$year);
+	//on créé un mot de passe
+	$mot1 = $this->random_string(8);
+	$motdepasse = $mot1.'1';
+	//qqs variables pour le mail
+	$smarty->assign('prenom_joueur', $prenom);
+	$smarty->assign('nom_joueur' , $nom);
+	$smarty->assign('licence', $licence);
+	//$motdepasse = 'UxzqsUIM1';
+	$smarty->assign('motdepasse', $motdepasse);
 	
-	$feu->AddUser($licence, 'UxzqsUIM1',$expires);
+	//$add_user = $feu->AddUser($licence, $motdepasse,$expires);
+	$add_user = $feu->AddUser($licence, $motdepasse,$expires);
+	
 	//on récupère le userid ($uid)
 	$uid = $feu->GetUserId($licence);
 	$feu->ForcePasswordChange($uid, $flag = TRUE);	
@@ -92,30 +104,35 @@ if($error<1)
 	/* on peut maintenant assigner cet utilisateur au groupe */
 	$feu->AssignUserToGroup($uid,$gid);
 	/* on remplit les propriétés de lutilisateur */
-	$feu->SetUserPropertyFull('email',$email, $uid);
+	$feu->SetUserPropertyFull('email',$user_email, $uid);
 	$feu->SetUserPropertyFull('nom', $nom_complet,$uid);
 	
 	/* On essaie d'envoyer un message à l'utilisateur pour lui dire qu'il est enregistré */
 	
-	
-	$subject = "Ping : ton accès pour commander en ligne";
-	$body = "<p>".$nom_complet.",</p>
-	<p>Notre club possède </p>
-	<p>identifiant : ton numéro de licence</p>
-	<p>Ton mdp provisoire : UxzqsUIM1</p>
-	<p>Important : lors de ta prochaine connexion, le système te demandera de changer de mot de passe : celui-ci devra contenir entre 6 et 20 caractères et au moins un chiffre</p>";
-
-	# Send the mail
-		$to      = 'claude.siohan@gmail.com';
-		     $subject = 'le sujet';
-		     $message = 'Bonjour !';
-		     $headers = 'From: claude@agi-webconseil.fr' . "\r\n" .
-		     'Reply-To: claude@agi-webconseil.fr' . "\r\n" .
-		     'X-Mailer: PHP/' . phpversion();
-
-		     mail($to, $subject, $message, $headers);
-		$this->SetMessage('adhérent ajouté !');
-		$this->Redirect($id, 'defaultadmin', $returnid);
+	//$mail_alert = $this->send_mail_alerts($email);
+	//echo $mail_alert;
+	$query = "UPDATE ".cms_db_prefix()."module_commandes_clients SET account_validation = 1";
+	$admin_email = $this->GetPreference('admin_email'); 
+	//echo $to;
+	$subject = $this->GetPreference('email_activation_subject');
+	$message = $this->GetTemplate('newactivationemail_Sample');
+	$body = $this->ProcessTemplateFromData($message);
+	$headers = "From: ".$admin_email."\n";
+	$headers .= "Reply-To: ".$admin_email."\n";
+	$headers .= "Content-Type: text/html; charset=\"utf-8\"";
+	/*
+	$headers = 'From: claude.siohan@gmail.com' . "\r\n" . 'Reply-To: claude.siohan@gmail.com' . "\r\n" . 'X-Mailer: PHP/' . phpversion(); 
+	*/
+	$designation.= 'Compte activé ! '.$prenom. ' peut commander en ligne !';
+	if(mail($user_email, utf8_encode($subject), $body, $headers))
+	{
+		$query.=" , email_sent = 1";
+		$designation.= ' Email envoyé !';
+	}
+	$query.=" WHERE email = ?";
+	$dbresult = $db->Execute($query,array($user_email));
+		$this->SetMessage($designation);
+		$this->RedirectToAdminTab('clients');
 	
 }
 else

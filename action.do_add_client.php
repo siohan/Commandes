@@ -26,6 +26,15 @@ $edit = 0;//pour savoir si on fait un update ou un insert; 0 = insert
 		{
 			$error++;
 		}
+		$licence = '';
+		if (isset($params['licence']) && $params['licence'] !='')
+		{
+			$licence = $params['licence'];
+		}
+		else
+		{
+			$error++;
+		}
 		
 		$prenom = '';
 		if (isset($params['prenom']) && $params['prenom'] !='')
@@ -88,14 +97,14 @@ $edit = 0;//pour savoir si on fait un update ou un insert; 0 = insert
 			
 			if($edit == 0)
 			{
-				$query = "INSERT INTO ".cms_db_prefix()."module_commandes_clients (id,date_created, date_maj, nom, prenom, club, email, tel, portable) VALUES ('', ?, ?, ?, ?, ?, ?, ?, ?)";
-				$dbresult = $db->Execute($query, array($aujourdhui, $aujourdhui,$nom,$prenom,$club, $email, $tel, $portable));
+				$query = "INSERT INTO ".cms_db_prefix()."module_commandes_clients (id,date_created, date_maj, nom, prenom, club, email, tel, portable, licence) VALUES ('', ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				$dbresult = $db->Execute($query, array($aujourdhui, $aujourdhui,$nom,$prenom,$club, $email, $tel, $portable,$licence));
 
 			}
 			else
 			{
-				$query = "UPDATE ".cms_db_prefix()."module_commandes_clients SET nom = ?, prenom = ?, date_maj = ?, club = ?, email = ?,tel = ? , portable = ? WHERE id = ?";
-				$dbresult = $db->Execute($query, array($nom,$prenom, $aujourdhui, $club,$email,$tel,$portable,$record_id));
+				$query = "UPDATE ".cms_db_prefix()."module_commandes_clients SET nom = ?, prenom = ?, licence = ?, date_maj = ?, club = ?, email = ?,tel = ? , portable = ? WHERE id = ?";
+				$dbresult = $db->Execute($query, array($nom,$prenom, $licence, $aujourdhui, $club,$email,$tel,$portable,$record_id));
 				
 				
 			}

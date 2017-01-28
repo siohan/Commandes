@@ -3,17 +3,17 @@
  
 <input type="hidden" name="{$actionid}client" value="{$client}"/>
 <input type="hidden" name="{$actionid}display" value="{$display}"/>
-<input type="text" name="{$actionid}commande_number" value="{$commande_number}"/>
+<input type="hidden" name="{$actionid}commande_number" value="{$commande_number}"/>
     
 <div class="pageoverflow">
 
-<p class="pagetext">Fournisseur:</p>
+
         <p class="pageinput">
            <select id="{$actionid}fournisseur" name="{$actionid}fournisseur">
 			{html_options options=$fournisseur}{* selected=$fournisseur*}
 			</select>
         </p>
-</p>
+
 </div>
 <div class="pageoverflow">
      <p class="pageinput">
