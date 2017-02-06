@@ -489,13 +489,20 @@ if( file_exists( $fn ) )
 	$template = file_get_contents( $fn );
 	$this->SetTemplate('newactivationemail_Sample',$template);
 }
+$fn = cms_join_path(dirname(__FILE__),'templates','orig_newcommandemailtemplate.tpl');
+if( file_exists( $fn ) )
+{
+	$template = file_get_contents( $fn );
+	$this->SetTemplate('newcommandemail_Sample',$template);
+}
 # Les préférences 
 $this->SetPreference('installation', '0');
 $this->SetPreference('admin_email', 'root@localhost.com');
 $this->SetPreference('email_activation_subject', 'Votre compte T2T Commandes est activé');
+$this->SetPreference('new_command_subject','[T2T] Nouvelle commande !');
 //$this->SetPreference('mail_activation_body', )
 //permissions
-$this->CreatePermission(Commandes::MANAGE_PERM,'Utiliser le module Commandes');
+$this->CreatePermission('Use Commandes','Utiliser le module Commandes');
 
 // put mention into the admin log
 $this->Audit( 0, 

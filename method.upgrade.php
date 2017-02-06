@@ -95,6 +95,20 @@ switch($current_version)
 			$this->SetTemplate('newactivationemail_Sample',$template);
 		}
 	}
+	case "0.2" :
+	{
+		$this->RemovePermission('manage_commandes');
+		$this->CreatePermission('Use Commandes', 'Utiliser le module Commandes');
+		
+		$this->SetPreference('new_command_subject','[T2T] Nouvelle commande !');
+		# Mails templates
+		$fn = cms_join_path(dirname(__FILE__),'templates','orig_newcommandemailtemplate.tpl');
+		if( file_exists( $fn ) )
+		{
+			$template = file_get_contents( $fn );
+			$this->SetTemplate('newcommandemail_Sample',$template);
+		}
+	}//end case 0.2
    
  }
 
