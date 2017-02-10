@@ -16,6 +16,9 @@ if( !isset($gCms) ) exit;
   	}
 //debug_display($params, 'Parameters');
 require_once(dirname(__FILE__).'/include/preferences.php');
+$service = new commandes_ops();
+$liste_fournisseurs = $service->liste_fournisseurs();
+
 $db =& $this->GetDb();
 $now = date('Y-m-d');
 $statut_commande = 'En cours de traitement';//valeur par défaut

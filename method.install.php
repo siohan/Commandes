@@ -414,6 +414,11 @@ $idxoptarray = array('UNIQUE');
 $sqlarray = $dict->CreateIndexSQL(cms_db_prefix().'cc',
 	    cms_db_prefix().'module_commandes_cc', 'commande_number',$idxoptarray);
 $dict->ExecuteSQLArray($sqlarray);
+#
+$idxoptarray = array('UNIQUE');
+$sqlarray = $dict->CreateIndexSQL(cms_db_prefix().'items',
+		    cms_db_prefix().'module_commandes_items', 'libelle, fournisseur',$idxoptarray);
+$dict->ExecuteSQLArray($sqlarray);
 	#
 #
 	//

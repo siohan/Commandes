@@ -64,7 +64,7 @@ if($edit ==0)
 	$dbresult1 = $db->Execute($query1, array($date_created,$fournisseur, $statut_CF));
 	$designation.=" Commande ajoutée";
 	$this->SetMessage($designation);
-	$this->RedirectToAdminTab('commandesfournisseurs',array("active_tab"=>"commandesfournisseurs","fournisseur"=>$fournisseur, "date_created"=>$date_created),'view_order_CF');
+	$this->RedirectToAdminTab('commandesfournisseurs',array("active_tab"=>"commandesfournisseurs","fournisseur"=>$fournisseur, "date_created"=>$date_created),'view_order_cf');
 }
 else
 {

@@ -133,6 +133,21 @@ public function send_mail_alerts($email)
 
 			return $res;
 	}
+	function liste_fournisseurs()
+	{
+		$db = cmsms()->GetDb();
+		$query = "SELECT CONCAT_WS(' : ', nom_fournisseur, description) AS boutique, nom_fournisseur FROM ".cms_db_prefix()."module_commandes_fournisseurs WHERE actif = 1";
+		$dbresult = $db->Execute($query);
+		if($dbresult && $dbresult->RecordCount()>0)
+		{
+			while($row = $dbresult->FetchRow())
+			{
+				$retour[$row['boutique']] = $row['nom_fournisseur'];				
+				
+			}
+			return $retour;
+		}
+	}
 	
 #
 #End of class

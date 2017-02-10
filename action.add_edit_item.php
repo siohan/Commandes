@@ -16,6 +16,11 @@ if( !isset($gCms) ) exit;
   	}
 //debug_display($params, 'Parameters');
 require_once(dirname(__file__).'/include/preferences.php');
+//on va chercher les différents fournisseurs disponibles
+$service = new commandes_ops();
+$liste_fournisseurs = $service->liste_fournisseurs();
+
+//var_dump($liste_fournisseurs);
 /*
 $liste_fournisseurs = array("WACK SPORT"=>"WACK SPORT", "BUTTERFLY"=>"BUTTERFLY", "AUTRES"=>"AUTRES");
 $liste_categories = array("BOIS"=>"BOIS","REVETEMENTS"=>"REVETEMENTS","AUTRES"=>"AUTRES");

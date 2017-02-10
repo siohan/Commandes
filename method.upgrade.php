@@ -109,6 +109,15 @@ switch($current_version)
 			$this->SetTemplate('newcommandemail_Sample',$template);
 		}
 	}//end case 0.2
+	case "0.2.1" :
+	{
+		#
+		$idxoptarray = array('UNIQUE');
+		$sqlarray = $dict->CreateIndexSQL(cms_db_prefix().'items',
+				    cms_db_prefix().'module_commandes_items', 'libelle, fournisseur',$idxoptarray);
+		$dict->ExecuteSQLArray($sqlarray);
+		#
+	}
    
  }
 
