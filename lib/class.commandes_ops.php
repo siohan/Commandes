@@ -149,6 +149,37 @@ public function send_mail_alerts($email)
 		}
 	}
 	
+	function get_record_id($licence)
+	{
+		$db = cmsms()->GetDb();
+		$query = "SELECT id FROM ".cms_db_prefix()."module_commandes_clients WHERE licence = ?";
+		$dbresult = $db->Execute($query, array($licence));
+		$row = $dbresult->FetchRow();
+		$record_id = $row['id'];
+		return $record_id;
+	}
+	function nb_commandes_per_user($licence)
+	{
+		$db = cmsms()->GetDb();
+		$query = "SELECT count(*) AS nb_commandes  FROM ".cms_db_prefix()."module_commandes_cc WHERE client = ?";
+		$dbresult = $db->Execute($query, array($client_id));
+		$row2 = $dbresult2->FetchRow();
+		$nb_commandes = $row['nb_commandes'];
+		return $nb_commandes;
+	}
+	function details_commande($commande_number)
+	{
+		$db = cmsms()->GetDb();
+		$query = "SELECT client,libelle_commande, fournisseur,prix_total  FROM ".cms_db_prefix()."module_commandes_cc WHERE commande_number = ?";
+		$dbresult = $db->Execute($query, array($commande_number));
+		$row = $dbresult->FetchRow();
+		$details['client'] = $row['client'];
+		$details['libelle_commande'] = $row['libelle_commande'];
+		$details['fournisseur'] = $row['fournisseur'];
+		$details['prix_total'] = $row['prix_total'];
+		return $details;
+	}
+	
 #
 #End of class
 #

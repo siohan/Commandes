@@ -7,7 +7,7 @@ if (!$this->CheckPermission('Use Commandes'))
 	return;
 }
 
-require_once(dirname(__FILE__).'/include/preferences.php');
+//require_once(dirname(__FILE__).'/include/preferences.php');
 $service = new commandes_ops();
 $liste_fournisseurs = $service->liste_fournisseurs();
 $liste_fournisseurs = array("TOUS"=>"TOUS")+$liste_fournisseurs;

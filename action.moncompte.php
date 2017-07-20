@@ -24,15 +24,15 @@ if($username == '')
 	//mais surtout les commandes passées s'il y en a
 	//echo "on continue";
 	//echo $email;
-	$query = "SELECT id AS client, nom, email, tel, portable FROM ".cms_db_prefix()."module_commandes_clients WHERE licence LIKE ?";
+	$query = "SELECT  nom, prenom,licence FROM ".cms_db_prefix()."module_adherents_adherents WHERE licence LIKE ?";
 	$dbresult = $db->Execute($query, array($username));
 	
 	if($dbresult && $dbresult->recordCount() >0)
 	{
 		$row = $dbresult->FetchRow();
-		$client = $row['client'];
+		$client = $row['licence'];
 		$nom = $row['nom'];
-		echo "Bonjour ".$nom;
+		echo "Salut ".$row['prenom'];
 		//le id est : ".$id_client;
 		//deuxième requete pour trouver les commandes
 		$query2 = "SELECT id AS commande_id, date_created, libelle_commande, user_validation, commande_number,fournisseur, prix_total, statut_commande, paiement, mode_paiement FROM ".cms_db_prefix()."module_commandes_cc WHERE client = ?";

@@ -34,14 +34,7 @@
 	{/if}
 	
 	
-	<div class="pageoverflow">
-	<p class="pagetext">Paiement :</p>
-	<p class="pageinput">{$paiement}</p>
-	</div>
-	<div class="pageoverflow">
-	<p class="pagetext">Mode paiement :</p>
-	<p class="pageinput">{$mode_paiement}</p>
-	</div>
+
 	<div class="pageoverflow">
 	<p class="pagetext">Remarques :</p>
 	<p class="pageinput">{$remarques}</p>

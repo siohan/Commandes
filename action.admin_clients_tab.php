@@ -11,13 +11,9 @@ if (!$this->CheckPermission('Use Commandes'))
 $db =& $this->GetDb();
 global $themeObject;
 //debug_display($params, 'Parameters');
-$smarty->assign('add',
-		$this->CreateLink($id, 'add_edit_client', $returnid,$contents='Ajouter un client'));
-$smarty->assign('import_from_ping',
-		$this->CreateLink($id, 'import_from_ping', $returnid,$contents='Importer les joueurs du module Ping'));
 
 $result= array ();
-$query = "SELECT  id AS client_id, account_validation, email_sent,date_created, date_maj, nom, prenom,licence, club, email, tel, portable FROM ".cms_db_prefix()."module_commandes_clients as cl";//", ".cms_db_prefix()."module_commandes_cc ";
+$query = "SELECT licence, CONCAT_WS(' ',nom, prenom) AS joueur FROM ".cms_db_prefix()."module_adherents_adherents WHERE actif = 1";
 
 
 	$query .=" ORDER BY nom ASC";
@@ -35,58 +31,39 @@ $query = "SELECT  id AS client_id, account_validation, email_sent,date_created, 
       			{
 				$onerow= new StdClass();
 				$onerow->rowclass= $rowclass;
-
-				//les champs disponibles : 
-				
-				
-				//on va chercher le nb d'articles de chq commande client
-				
-				
-				$client_id = $row['client_id'];
-			//	echo "le client_id est : ".$client_id;
-				$account_validation = $row['account_validation'];
-				$email = $row['email'];
-				
-				$onerow->client_id= $row['client_id'];
+				$onerow->client_id= $row['licence'];
 				
 				//on va chercher le nombre de commandes toutes confondues de chq client
 				$query2 = "SELECT count(*) AS nb_commandes  FROM ".cms_db_prefix()."module_commandes_cc WHERE client = ?";
-				$dbresult2 = $db->Execute($query2, array($client_id));
+				$dbresult2 = $db->Execute($query2, array($row['licence']));
 				$row2 = $dbresult2->FetchRow();
 				$nb_commandes = $row2['nb_commandes'];
 				
 				
 				
-				$onerow->date_created = $row['date_created'];
-				$onerow->date_maj = $row['date_maj'];
-				$onerow->nom = $row['nom'];
-				$onerow->prenom = $row['prenom'];
+				$onerow->joueur = $row['joueur'];
 				$onerow->licence =$row['licence'];
 				$onerow->nb_commandes = $nb_commandes;
-				$onerow->club = $row['club'];				
-				$onerow->email = $row['email'];
-				$onerow->tel = $row['tel'];
-				$onerow->portable = $row['portable'];
+						
+				
 				if($nb_commandes >0)
 				{
-					$onerow->view= $this->createLink($id, 'view_client_orders', $returnid, $themeObject->DisplayImage('icons/system/view.gif', $this->Lang('view_results'), '', '', 'systemicon'),array('active_tab'=>'commandesclients',"record_id"=>$row['client_id'])) ;
-				}
-				if($account_validation == '0' && $email !='')
-				{
-					$onerow->push_customer= $this->CreateLink($id, 'push_customer', $returnid, $themeObject->DisplayImage('icons/system/groupassign.gif', $this->Lang('push'), '', '', 'systemicon'), array('record_id'=>$row['client_id'], "licence"=>$row['licence'], "email"=>$row['email'], "nom"=>$row['nom'], "prenom"=>$row['prenom']));
-				}
-				elseif($account_validation == '1')
-				{
-					$onerow->push_customer=  $themeObject->DisplayImage('icons/system/true.gif', $this->Lang('compte_actif'), '', '', 'systemicon');
+					$onerow->view= $this->createLink($id, 'view_client_orders', $returnid, $themeObject->DisplayImage('icons/system/view.gif', $this->Lang('view_results'), '', '', 'systemicon'),array('active_tab'=>'commandesclients',"record_id"=>$row['licence'])) ;
 				}				
-				$onerow->editlink= $this->CreateLink($id, 'add_edit_client', $returnid, $themeObject->DisplayImage('icons/system/edit.gif', $this->Lang('edit'), '', '', 'systemicon'), array('record_id'=>$row['client_id']));
-				$onerow->deletelink = $this->CreateLink($id, 'delete',$returnid, $themeObject->DisplayImage('icons/system/delete.gif', $this->Lang('delete'), '', '', 'systemicon'), array('record_id'=>$row['client_id'],"bdd"=>"clients"));
+				$onerow->editlink= $this->CreateLink($id, 'add_edit_client', $returnid, $themeObject->DisplayImage('icons/system/edit.gif', $this->Lang('edit'), '', '', 'systemicon'), array('record_id'=>$row['licence']));
+				$onerow->deletelink = $this->CreateLink($id, 'delete',$returnid, $themeObject->DisplayImage('icons/system/delete.gif', $this->Lang('delete'), '', '', 'systemicon'), array('record_id'=>$row['licence'],"bdd"=>"clients"));
 				
 				($rowclass == "row1" ? $rowclass= "row2" : $rowclass= "row1");
 				$rowarray[]= $onerow;
       			}
 			
   		}
+/*
+		else
+		{
+			echo $this->ErrorMsg();
+		}
+*/
 
 		$smarty->assign('itemsfound', $this->Lang('resultsfoundtext'));
 		$smarty->assign('itemcount', count($rowarray));

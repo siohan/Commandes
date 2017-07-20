@@ -14,21 +14,8 @@ global $themeObject;
 $tablesorter = '[[3,1]]';
 
 $items_statut_commande = array('Tous'=>'Tous')+$items_statut_commande;
-
-$items_paiement = array('Tous'=>'Tous')+$items_paiement;
-if(isset($params['paiement']))	
-{
-	$paiement = $params['paiement'];
-	$key_paiement = array_values($items_paiement);//$index_paiement = $paiement;
-	//var_dump($key_paiement);
-	$key2 = array_search($paiement,$key_paiement);
-	//var_dump($key2);
-}
-else
-{
-	$key2 = 0;
-	$index_paiement = 'Tous';
-}
+$shopping = '<img src="../modules/Paiements/images/paiement.png" class="systemicon" alt="Réglez" title="Réglez">';
+$smarty->assign('shopping', $shopping);
 
 if(isset($params['statut_commande']))	
 {
@@ -46,8 +33,7 @@ else
 $smarty->assign('add',
 		$this->CreateLink($id, 'add_edit_cc', $returnid,$contents='Ajouter une commande client'));
 $smarty->assign('formstart',$this->CreateFormStart($id,'defaultadmin','', 'post', '',false,'',array('active_tab'=>'commandesclients')));
-$smarty->assign('paiement', 
-		$this->CreateInputDropdown($id,'paiement', $items_paiement, $selectedIndex=$key2,$selectedvalue=$index_paiement));
+
 $smarty->assign('statut_commande', 
 		$this->CreateInputDropdown($id,'statut_commande', $items_statut_commande,$selectedIndex=$key2_statut_commande,$selectedvalue=$statut_commande));
 $smarty->assign('submitfilter',
@@ -55,18 +41,13 @@ $smarty->assign('submitfilter',
 $smarty->assign('formend',$this->CreateFormEnd());
 $result= array();
 $parms = array();
-$query = "SELECT  cl.id,cc.id AS commande_id,cc.commande_number,cl.nom, cl.prenom, cl.club, cc.date_created, cc.prix_total, cc.statut_commande,cc.paiement,cc.fournisseur, cc.mode_paiement FROM ".cms_db_prefix()."module_commandes_cc as cc, ".cms_db_prefix()."module_commandes_clients AS cl WHERE cl.id = cc.client AND cc.user_validation = 1 ";
+$query = "SELECT  cl.licence,cc.id AS commande_id,cc.commande_number,cl.nom, cl.prenom, cc.date_created, cc.prix_total, cc.statut_commande,cc.fournisseur FROM ".cms_db_prefix()."module_commandes_cc as cc, ".cms_db_prefix()."module_adherents_adherents AS cl WHERE cl.licence = cc.client AND cc.user_validation = 1 ";
 
 if( isset($params['submitfilter'] ))
 {
 	$nb_filter = 0;//pour savoir si la req a des paramètres
 	
-	if(isset($params['paiement']) && $params['paiement'] != '' && $params['paiement'] != 'Tous')
-	{
-		$query.=" AND paiement LIKE ?";
-		$parms['paiement'] = $params['paiement'];
-		$nb_filter++;
-	}
+	
 	if(isset($params['statut_commande']) && $params['statut_commande'] != '' && $params['statut_commande'] != 'Tous')
 	{
 		$query.=" AND cc.statut_commande LIKE ?";
@@ -84,16 +65,14 @@ if( isset($params['submitfilter'] ))
 }
 else
 {
-	$query.=" AND cc.statut_commande = ?";
-	$parms['statut_commande'] = "En cours de traitement";
-	//$query .=" ORDER BY id DESC";
-	//echo $query;
-	$dbresult= $db->Execute($query,$parms);
+	
+	$dbresult= $db->Execute($query);
 }
 	
 	//echo $query;
 	$rowarray= array();
 	$rowclass = '';
+	$paiements_ops = new paiementsbis();
 
 	
 		if ($dbresult && $dbresult->RecordCount() > 0)
@@ -104,8 +83,9 @@ else
 				$onerow->rowclass= $rowclass;
 
 				$id_commandes = $row['commande_id'];
-				$paiement = $row['paiement'];
+				$statut = $row['statut_commande'];
 				$commande_number = $row['commande_number'];
+				//$paiement = $row['paiement'];
 				
 				//on va chercher le nb d'articles de chq commande client
 				$query2 = " SELECT count(*) AS nb_items, SUM(prix_total) AS prix FROM ".cms_db_prefix()."module_commandes_cc_items WHERE commande_number = ?";
@@ -117,6 +97,7 @@ else
 						$onerow->nb_items = $row2['nb_items'];
 						
 						if($row2['nb_items'] == 0 || is_null($row2['prix']))
+				//	include '../Paiements/action.admin_paiements_tab.php';
 						{
 							$onerow->prix = '0.00';
 						}
@@ -133,15 +114,33 @@ else
 				$onerow->fournisseur = $row['fournisseur'];
 				$onerow->nom = $row['nom'];
 				$onerow->prenom = $row['prenom'];
-				$onerow->club = $row['club'];
 				$onerow->date_created = $row['date_created'];
-				//$onerow->prix_total = $row['prix_total'];
+				if($statut == "Reçue")
+				{
+					$is_paid = $paiements_ops->is_paid($row['commande_number']);
+					//var_dump($is_paid);
+					if(true === $is_paid)
+					{
+						$onerow->is_paid = $themeObject->DisplayImage('icons/system/true.gif', $this->Lang('true'), '', '', 'systemicon');
+					}
+					else
+					{
+							$false = false;
+							$onerow->is_paid = $false;
+					}
+				
+				}
+				else
+				{
+					$onerow->is_paid = $themeObject->DisplayImage('icons/system/false.gif', $this->Lang('false'), '', '', 'systemicon');
+				}
+				
 				$onerow->statut = $row['statut_commande'];
-				$onerow->paiement = $row['paiement'];
-				$onerow->mode_paiement = $row['mode_paiement'];
+				//$onerow->paiement = $row['paiement'];
+				//$onerow->mode_paiement = $row['mode_paiement'];
 				$onerow->view= $this->createLink($id, 'view_cc', $returnid, $themeObject->DisplayImage('icons/system/view.gif', $this->Lang('view_results'), '', '', 'systemicon'),array('active_tab'=>'commandesclients',"commande_number"=>$row['commande_number'])) ;
 				
-				if($paiement !="Payée et déstockée")
+				if($statut !="Payée et déstockée")
 				{
 					$onerow->editlink= $this->CreateLink($id, 'add_edit_cc', $returnid, $themeObject->DisplayImage('icons/system/edit.gif', $this->Lang('edit'), '', '', 'systemicon'), array('active_tab'=>'commandesclients','commande_number'=>$row['commande_number']));
 					$onerow->deletelink = $this->CreateLink($id, 'delete',$returnid, $themeObject->DisplayImage('icons/system/delete.gif', $this->Lang('delete'), '', '', 'systemicon'), array('commande_number'=>$row['commande_number'], "bdd"=>"cc"));

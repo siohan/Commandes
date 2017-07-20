@@ -18,17 +18,29 @@ global $themeObject;
 if(isset($params['record_id']) && $params['record_id'] !='')
 {
 	$record_id = $params['record_id'];
+	$case = 1;
 }
 else
 {
-	// pas de record_id, tu dégages !!
+	if(isset($params['licence']) && $params['licence'] !='')
+	{
+		$licence = $params['licence'];
+		$service = new commandes_ops();
+		$record_id = $service->get_record_id($licence);
+	
+	}// pas de record_id, tu dégages !!
 }
+$smarty->assign('redirection',
+	$this->CreateLink($id, 'add_edit_cc',$returnid, $contents="Nouvelle commande"));
 $rowarray= array();
 $rowclass = '';
 $rowclass2 = '';
-$query =  "SELECT cl.nom, cc.statut_commande,cc.id AS commande_id,cc.libelle_commande,cc.prix_total,cc.paiement, cc.mode_paiement,cc.remarques,cl.prenom,cc.date_created FROM ".cms_db_prefix()."module_commandes_cc AS cc, ".cms_db_prefix()."module_commandes_clients AS cl WHERE cl.id = cc.client AND cl.id = ?";
-$dbresult = $db->Execute($query, array($record_id));
+
+	$query =  "SELECT cl.nom, cc.statut_commande,cc.id AS commande_id,cc.commande_number,cc.libelle_commande,cc.prix_total,cc.paiement, cc.mode_paiement,cc.remarques,cl.prenom,cc.date_created FROM ".cms_db_prefix()."module_commandes_cc AS cc, ".cms_db_prefix()."module_adherents_adherents AS cl WHERE cl.licence = cc.client AND cl.licence = ?";
+	$dbresult = $db->Execute($query, array($record_id));
 	
+
+
 	
 	if($dbresult && $dbresult->RecordCount()>0)
 	{
@@ -37,6 +49,7 @@ $dbresult = $db->Execute($query, array($record_id));
 			$onerow= new StdClass();
 			$onerow->rowclass= $rowclass;
 			$onerow->commande_id = $row['commande_id'];
+			$onerow->commande_number = $row['commande_number'];
 			$onerow->date_created = $row['date_created'];
 			$onerow->libelle_commande = $row['libelle_commande'];
 			$onerow->statut_commande = $row['statut_commande'];
@@ -44,7 +57,7 @@ $dbresult = $db->Execute($query, array($record_id));
 			$onerow->paiement = $row['paiement'];
 			$onerow->mode_paiement = $row['mode_paiement'];
 			$onerow->remarques = $row['remarques'];
-			$onerow->view= $this->createLink($id, 'view_cc', $returnid, $themeObject->DisplayImage('icons/system/view.gif', $this->Lang('view_results'), '', '', 'systemicon'),array('active_tab'=>'commandesclients',"record_id"=>$row['commande_id'])) ;
+			$onerow->view= $this->createLink($id, 'view_cc', $returnid, $themeObject->DisplayImage('icons/system/view.gif', $this->Lang('view_results'), '', '', 'systemicon'),array('active_tab'=>'commandesclients',"record_id"=>$row['commande_number'])) ;
 			
 			$smarty->assign('nom', $row['nom']);
 			$smarty->assign('prenom', $row['prenom']);
@@ -54,8 +67,10 @@ $dbresult = $db->Execute($query, array($record_id));
 	}
 	
 		
-	$smarty->assign('add_edit_cc_item',
+	/*
+		$smarty->assign('add_edit_cc_item',
 			$this->CreateLink($id, 'add_edit_cc_item', $returnid,$contents='Ajouter un article à cette commande', array("commande_id"=>$record_id,"edit"=>"0")));
+			*/
 	$smarty->assign('itemsfound', $this->Lang('resultsfoundtext'));
 	$smarty->assign('itemcount', count($rowarray));
 	$smarty->assign('items', $rowarray);

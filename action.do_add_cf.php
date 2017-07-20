@@ -135,13 +135,13 @@ else
 						$designation.= "Statut mis à Reçue";
 						//echo $designation."<br />";
 							
-							
+							// un produit similaire est en stock, on incrémente la quantité
 							$en_stock = $service->en_stock($libelle_commande,$ep_manche_taille,$couleur);
 							if($en_stock == "True")
 							{
 								$increment = $service->incremente_stock($libelle_commande,$quantite,$ep_manche_taille,$couleur);
 							}
-							else
+							else //produit pas existant en stock, on le crée...
 							{
 								//on incrémente différemment
 								$query5 = "INSERT INTO ".cms_db_prefix()."module_commandes_stock (id, id_items, fk_id, libelle_commande,categorie_produit, fournisseur, quantite, ep_manche_taille, couleur, prix_total) VALUES ('', ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -149,6 +149,11 @@ else
 								
 							}
 							$designation.=" Stock modifié";
+							
+							//On passe un mail à tous les utilisateurs de la commande
+							//on ajoute la commande au module Paiements
+						
+							
 							
 					}
 					//on met le chp commande à 1,cad on ne peut plus recommander ces articles
@@ -173,6 +178,18 @@ else
 		}
 		
 	}
+		$details = $service->details_commande($commande_number);
+		$a_qui = $details['client'];
+		$libelle_commande = $details['libelle_commande'];
+		$fournisseur = $details['fournisseur'];
+		if($libelle_commande =='')
+		{
+			$libelle_commande = 'Commande '.$fournisseur;
+		}
+		$prix_total = $details['prix_total'];
+		$paiements_ops = new paiementsbis();
+		$module = 'Commandes';
+		$add_paiement = $paiements_ops->add_paiement($a_qui,$commande_number,$module,$libelle_commande,$prix_total);
 	$this->SetMessage($designation);
 	$this->RedirectToAdminTab('commandesfournisseurs', '', 'admin_cf_tab');
 }

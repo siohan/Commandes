@@ -118,7 +118,46 @@ switch($current_version)
 		$dict->ExecuteSQLArray($sqlarray);
 		#
 	}
-   
+	case "0.2.2":
+		// table schema description
+		$flds = "
+			id I(20) AUTO KEY,
+			nom_fournisseur C(255) ,
+			description C(255),
+			actif I(1),
+			ordre I(11)";
+
+
+		// create it. 
+		$sqlarray = $dict->CreateTableSQL( cms_db_prefix()."module_commandes_fournisseurs",
+						   $flds, 
+						   $taboptarray);
+		$dict->ExecuteSQLArray($sqlarray);
+		#
+			$insert_sql = "INSERT INTO ".cms_db_prefix()."module_commandes_fournisseurs (`id`,`nom_fournisseur`, `description`, `actif`, `ordre`) VALUES ('', ?, ?, ?, ?)";
+			$db->execute($insert_sql, array('WACK SPORT', 'Le catalogue Wack', 1, 10));
+			$db->execute($insert_sql, array('BUTTERFLY', 'Le catalogue Butterfly', 1, 20));
+   		//comme on supprime la table client on modifie les autres tables
+
+		$query = "SELECT cl.id, cl.licence FROM ".cms_db_prefix()."module_commandes_clients AS cl, ".cms_db_prefix()."module_commandes_cc AS cc WHERE cl.id = cc.id";
+		$dbresult = $db->Execute($query);
+		if($dbresult && $dbresult->RecordCount()>0)
+		{
+			while($row = $dbresult->FetchRow())
+			{
+				$id = $row['id'];
+				$licence = $row['licence'];
+				$query2 = "UPDATE ".cms_db_prefix()."module_commandes_cc SET client = ? WHERE client = ?";
+				$dbresult2 = $db->Execute($query2, array($licence,$id));
+				
+			}
+		}
+		//on ajoute un champ ds la table commandes_fournisseur
+		$dict = NewDataDictionary( $db );
+		$sqlarray = $dict->AddColumnSQL(cms_db_prefix()."module_commandes_fournisseurs", "commande_number C(15)");
+		$dict->ExecuteSQLArray( $sqlarray );
+		
+		//on ajoute ce parametre dans les tables existantes
  }
 
 

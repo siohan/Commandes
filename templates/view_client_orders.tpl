@@ -1,7 +1,8 @@
-{if $status != 'Reçue'}<div class="pageoptions"><p><span class="pageoptions warning">{$add_edit_cc_item} </span></p></div>{/if}
-<div class="pageoptions"><p class="pageoptions">{$itemcount}&nbsp;{$itemsfound}</p></div>
-<h3>Commande(s) de {$prenom} {$nom} </h3>
+{*{if $status != 'Reçue'}<div class="pageoptions"><p><span class="pageoptions warning">{$add_edit_cc_item} </span></p></div>{/if}*}
+<div class="pageoptions"><p class="pageoptions">{$itemcount}&nbsp;{$itemsfound} &nbsp;{$redirection}</p></div>
+
 {if $itemcount > 0}
+<h3>Commande(s) de {$prenom} {$nom} </h3>
 <table border="0" cellspacing="0" cellpadding="0" class="pagetable">
  <thead>
 	<tr>
@@ -34,5 +35,8 @@
 {/foreach}
  </tbody>
 </table>
+{else}
+<p>Pas encore de commandes, 
+{$redirection} ?</p>
 {/if}
 

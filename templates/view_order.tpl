@@ -18,7 +18,7 @@
  <tbody>
 {foreach from=$items item=entry}
   <tr class="{$entry->rowclass}">
-	<td>{$entry->commande_id}</td>
+	<td>{$entry->commande_number}</td>
 	<td>{$entry->item_id}</td>
 	<td>{$entry->date_created|date_format:"%d-%m-%Y"}</td>
     <td>{$entry->libelle_commande} {$entry->ep_manche_taille} {$entry->couleur}</td>

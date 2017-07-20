@@ -17,12 +17,13 @@ global $themeObject;
 */
 if(isset($params['record_id']) && $params['record_id'] !='')
 {
-	$record_id = $params['record_id'];
+	$commande_number = $params['record_id'];
 }
 if(isset($params['commande_number']) && $params['commande_number'] !='')
 {
 	$commande_number = $params['commande_number'];
-	$query2 =  "SELECT cl.nom, cc.statut_commande,cl.prenom,cc.date_created,cc.fournisseur FROM ".cms_db_prefix()."module_commandes_cc AS cc, ".cms_db_prefix()."module_commandes_clients AS cl WHERE cl.id = cc.client AND cc.commande_number = ?";
+}
+	$query2 =  "SELECT cl.nom, cc.statut_commande,cl.prenom,cc.date_created,cc.fournisseur FROM ".cms_db_prefix()."module_commandes_cc AS cc, ".cms_db_prefix()."module_adherents_adherents AS cl WHERE cl.licence = cc.client AND cc.commande_number = ?";
 	$dbresult2 = $db->Execute($query2, array($commande_number));
 
 
@@ -42,7 +43,7 @@ if(isset($params['commande_number']) && $params['commande_number'] !='')
 			}
 		}
 
-}
+
 
 //echo "le record_id est :".$record_id;
 //on va afficher le nom du oropriétaire de la commande

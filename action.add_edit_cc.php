@@ -55,11 +55,7 @@ if(isset($params['commande_number']) && $params['commande_number'] !="")
 			$libelle_commande = $row['libelle_commande'];
 			$fournisseur = $row['fournisseur'];
 			$prix_total = $row['prix_total'];
-			$statut_commande = $row['statut_commande'];
-			$paiement = $row['paiement'];
-			//echo "le paiement est : ".$paiement;
-			$mode_paiement = $row['mode_paiement'];
-			
+			$statut_commande = $row['statut_commande'];			
 			$remarques = $row['remarques'];	
 			$index = $row['index1'] - 1;
 			
@@ -70,30 +66,6 @@ if(isset($params['commande_number']) && $params['commande_number'] !="")
 else
 {
 	$commande_number = $this->random(15);
-}
-if(isset($paiement))	
-{
-	$key_paiement = array_values($items_paiement);//$index_paiement = $paiement;
-	//var_dump($key_paiement);
-	$key2 = array_search($paiement,$key_paiement);
-	//var_dump($key2);
-}
-else
-{
-	$key2 = 0;
-	$index_paiement = "AUCUN";
-}
-if(isset($mode_paiement))	
-{
-	$key_mode_paiement = array_values($items_mode_paiement);//$index_paiement = $paiement;
-	//var_dump($key_mode_paiement);
-	$key2_mode_paiement = array_search($mode_paiement,$key_mode_paiement);
-	//var_dump($key2_mode_paiement);
-}
-else
-{
-	$key2_mode_paiement = 0;
-	$mode_paiement = "Aucun";
 }
 if(isset($statut_commande))	
 {
@@ -121,7 +93,7 @@ else
 }
 
 	//on fait une requete pour completer l'input dropdown du formulaire
-	$query = "SELECT id as client_id, CONCAT_WS(' ',nom, prenom) AS joueur FROM ".cms_db_prefix()."module_commandes_clients ORDER BY nom ASC, prenom ASC";
+	$query = "SELECT licence as client_id, CONCAT_WS(' ',nom, prenom) AS joueur FROM ".cms_db_prefix()."module_adherents_adherents WHERE actif = 1 ORDER BY nom ASC, prenom ASC";
 	$dbresult = $db->Execute($query);
 
 		if($dbresult && $dbresult->RecordCount() >0)
@@ -150,7 +122,7 @@ else
 	else
 	{
 		$smarty->assign('commande_number',
-				$this->CreateInputText($id, 'commande_number',(isset($commande_number)?$commande_number:""),5,15));
+				$this->CreateInputHidden($id, 'commande_number',(isset($commande_number)?$commande_number:""),5,15));
 		$smarty->assign('nom',
 				$this->CreateInputDropdown($id,'nom',$nom,$selectedindex = $index, $selectedvalue=$nom));
 		$smarty->assign('statut_commande',
@@ -189,10 +161,12 @@ else
 	$smarty->assign('fournisseur',
 			$this->CreateInputDropdown($id,'fournisseur',$liste_fournisseurs, $selectedIndex=$key2_fournisseur,$selectedvalue=$fournisseur));
 	
+	/*
 	$smarty->assign('paiement',
 			$this->CreateInputDropdown($id,'paiement',$items_paiement, $selectedIndex=$key2,$selectedvalue=$index_paiement));
 	$smarty->assign('mode_paiement',
-			$this->CreateInputDropdown($id,'mode_paiement',$items_mode_paiement,$selectedIndex=$key2_mode_paiement,$selectedvalue = $mode_paiement));		
+			$this->CreateInputDropdown($id,'mode_paiement',$items_mode_paiement,$selectedIndex=$key2_mode_paiement,$selectedvalue = $mode_paiement));
+			*/		
 	$smarty->assign('remarques',
 			$this->CreateInputText($id,'remarques',(isset($remarques)?$remarques:''),15,150));			
 		

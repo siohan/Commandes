@@ -19,10 +19,10 @@
 class Commandes extends CMSModule
 {
   
-  const MANAGE_PERM = 'manage_commandes';
+  
   function GetName() { return 'Commandes'; }   
   function GetFriendlyName() { return $this->Lang('friendlyname'); }   
-  function GetVersion() { return '0.2.1'; }  
+  function GetVersion() { return '0.3'; }  
   function GetHelp() { return $this->Lang('help'); }   
   function GetAuthor() { return 'Claude SIOHAN'; } 
   function GetAuthorEmail() { return 'claude.siohan@gmail.com'; }
@@ -35,13 +35,13 @@ class Commandes extends CMSModule
 
   function VisibleToAdminUser()
   {
-    	return 	$this->CheckPermission(self::MANAGE_PERM);
+    	return 	$this->CheckPermission('Use Commandes');
 	
   }
  
   
   public function GetDependencies() {
-        return array('CGExtensions'=>'1.53.15','CGSimpleSmarty'=>'2.1.5','JQueryTools'=>'1.3.9', 'FrontEndUsers'=>'2.3');
+        return array('Adherents'=>'0.1.1','CGExtensions'=>'1.53.15','CGSimpleSmarty'=>'2.1.5','JQueryTools'=>'1.3.9');
     }
 
   public function GetHeaderHTML()

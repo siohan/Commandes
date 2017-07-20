@@ -21,32 +21,6 @@ if ( !defined('CMS_VERSION')) exit;
 $uid = get_userid();
 $db = $gCms->GetDb();
 
-// mysql-specific, but ignored by other database
-$taboptarray = array( 'mysql' => 'ENGINE=MyISAM' );
-
-$dict = NewDataDictionary( $db );
-
-// table schema description
-$flds = "
-	id I(11) AUTO KEY,
-	date_created D,
-	date_maj D,
-	licence I(11),
-	nom C(255),
-	prenom C(255),
-	club C(255),
-	email C(200),
-	tel C(15),
-	portable C(15),
-	account_validation I(1) DEFAULT 0,
-	email_sent I(1) DEFAULT 0";
-			
-// create it. 
-$sqlarray = $dict->CreateTableSQL( cms_db_prefix()."module_commandes_clients",
-				   $flds, 
-				   $taboptarray);
-$dict->ExecuteSQLArray($sqlarray);
-#
 $dict = NewDataDictionary( $db );
 
 // table schema description
@@ -124,6 +98,7 @@ $dict = NewDataDictionary( $db );
 // table schema description
 $flds = "
 	id_CF I(20) AUTO KEY,
+	commande_number C(15),
 	date_created D,
 	fournisseur C(50),
 	statut_CF C(55)";
@@ -153,6 +128,22 @@ $sqlarray = $dict->CreateTableSQL( cms_db_prefix()."module_commandes_cf_items",
 $dict->ExecuteSQLArray($sqlarray);
 #
 #
+$dict = NewDataDictionary( $db );
+
+// table schema description
+$flds = "
+	id I(20) AUTO KEY,
+	nom_fournisseur C(255) ,
+	description C(255),
+	actif I(1),
+	ordre I(11)";
+	
+
+// create it. 
+$sqlarray = $dict->CreateTableSQL( cms_db_prefix()."module_commandes_fournisseurs",
+				   $flds, 
+				   $taboptarray);
+$dict->ExecuteSQLArray($sqlarray);
 #
 #
 $dict = NewDataDictionary( $db );
@@ -402,9 +393,12 @@ $db->execute($insert_sql, array('REVETEMENTS', 'WACK SPORT', 126, 'SINUS ALPHA',
 $db->execute($insert_sql, array('REVETEMENTS', 'WACK SPORT', 124, 'SINUS SOUND', 'TIBHAR', '39.90', 0, '1'));
 
 #
+$insert_sql = "INSERT INTO ".cms_db_prefix()."module_commandes_fournisseurs (`id`,`nom_fournisseur`, `description`, `actif`, `ordre`) VALUES ('', ?, ?, ?, ?)";
+$db->execute($insert_sql, array('WACK SPORT', 'Le catalogue Wack', 1, 10));
+$db->execute($insert_sql, array('BUTTERFLY', 'Le catalogue Butterfly', 1, 20));
 #
 #Indexes
-//on créé un index sur la table div_tours
+//on créé un index sur la table
 $idxoptarray = array('UNIQUE');
 $sqlarray = $dict->CreateIndexSQL(cms_db_prefix().'cf',
 	    cms_db_prefix().'module_commandes_cf_items', 'id_items',$idxoptarray);
@@ -419,6 +413,11 @@ $idxoptarray = array('UNIQUE');
 $sqlarray = $dict->CreateIndexSQL(cms_db_prefix().'items',
 		    cms_db_prefix().'module_commandes_items', 'libelle, fournisseur',$idxoptarray);
 $dict->ExecuteSQLArray($sqlarray);
+#
+	$idxoptarray = array('UNIQUE');
+	$sqlarray = $dict->CreateIndexSQL(cms_db_prefix().'fournisseurs',
+		    cms_db_prefix().'module_commandes_fournisseurs', 'nom_fournisseur',$idxoptarray);
+	$dict->ExecuteSQLArray($sqlarray);
 	#
 #
 	//

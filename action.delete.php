@@ -79,16 +79,7 @@ $designation = '';
 
 				break;
 				
-				case "clients" :
-
-
-					//Now remove the article
-					$query = "DELETE FROM ".cms_db_prefix()."module_commandes_clients WHERE id = ?";
-					$db->Execute($query, array($record_id));
-
-					$this->SetMessage('Client supprimé');
-					$this->RedirectToAdminTab('clients');
-				break;
+			
 				case "item" :
 
 

@@ -33,8 +33,6 @@ $(document).ready(function(){
   <div class="pageoverflow">
 	<p class="pagetext">Statut de la commande</p>
     <p class="pageinput">{$statut_commande} </p>
-	<p class="pagetext">Paiement :</p>
-	<p class="pageinput">{$paiement} </p>
     <p class="pageinput">{$submitfilter}{$hidden|default:''}</p>
   </div>
   {$formend}
@@ -46,13 +44,13 @@ $(document).ready(function(){
  <thead>
 	<tr>
 		<th>Commande N°</th>
-		<th>Nom (club)</th>
+		<th>Nom</th>
 		<th>Date</th>
 		<th>Nb articles</th>
 		<th>prix total</th>
 		<th>Statut</th>
 		<th>Paiement</th>
-		<th>Mode paiement</th>
+		
 		<th colspan="3" class="pageicon {literal}{sorter: false}{/literal}">Actions</th>
 		<th><input type="checkbox" id="selectall" name="selectall"></th>
 	</tr>
@@ -61,13 +59,12 @@ $(document).ready(function(){
 {foreach from=$items item=entry}
   <tr class="{$entry->rowclass}">
 	<td>{$entry->commande_number}({$entry->commande_id}) - {$entry->fournisseur}</td>
-    <td>{$entry->nom} {$entry->prenom}-({$entry->club})</td>
+    <td>{$entry->nom} {$entry->prenom}</td>
     <td>{$entry->date_created|date_format:"d/m/Y"}</td>
 	<td>{$entry->nb_items}</td>
 	<td>{$entry->prix}€</td>
 	<td>{$entry->statut}</td>
-	<td>{$entry->paiement}</td>
-	<td>{$entry->mode_paiement}</td>
+	<td>{if $entry->is_paid == false}<a href="{root_url}/admin/moduleinterface.php?mact=Paiements,m1_,add_edit_reglement,0&amp;m1_record_id={$entry->commande_number}&amp;_sk_={$smarty.cookies._sk_}">{$shopping}</a>{else}{$entry->is_paid}{/if}</td>
 	<td>{$entry->view}</td>
 	<td>{$entry->editlink}</td>
     <td>{$entry->deletelink}</td>
