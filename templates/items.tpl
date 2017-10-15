@@ -1,30 +1,3 @@
-<!--<script type="text/javascript">
-//<![CDATA[
-$(document).ready(function(){
-  $('#selectall').click(function(){
-    var v = $(this).attr('checked');
-    if( v == 'checked' ) {
-      $('.select').attr('checked','checked');
-    } else {
-      $('.select').removeAttr('checked');
-    }
-  });
-  $('.select').click(function(){
-    $('#selectall').removeAttr('checked');
-  });
-  $('#toggle_filter').click(function(){
-    $('#filter_form').dialog({
-      modal: true,
-      width: 'auto',
-    });
-  });
-  {if isset($tablesorter)}
-  if( typeof($.tablesorter) != 'undefined' ) $('#articlelist').tablesorter({ sortList:{$tablesorter} });
-  {/if}
-});
-//]]>
-</script>
--->
 <div class="pageoptions"><p><span class="pageoptions warning">{$add_edit_items} </span></p></div>
 <div class="pageoptions"><p class="pageoptions">{$itemcount}&nbsp;{$itemsfound}</p></div>
 {if isset($formstart) }

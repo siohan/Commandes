@@ -3,6 +3,8 @@ if( !isset($gCms) ) exit;
 $db =& $this->GetDb();
 $record_id = '';
 $edit = 0; //par défaut il s'agit d'un ajout
+$error = 0; //on instancie un compteur d'erreurs
+//debug_display($params, 'Parameters');
 if(isset($params['record_id']) && $params['record_id'] != '')
 {
 	$record_id = $params['record_id'];
@@ -19,7 +21,6 @@ if(isset($params['record_id']) && $params['record_id'] != '')
 		//$commande_number = $row['commande_number'];
 		$date_created = $row['date_created'];
 		$libelle_commande = $row['libelle_commande'];
-		$fournisseur = $row['fournisseur'];
 		$categorie_produit = $row['categorie_produit'];
 		$fournisseur = $row['fournisseur'];
 		$quantite = $row['quantite'];

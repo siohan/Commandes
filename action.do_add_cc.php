@@ -88,13 +88,16 @@ if(isset($params['remarques']) && $params['remarques'] != '')
 	$remarques = $params['remarques'];
 }
 
-if($edit ==0)
+if($edit == 0)
 {
 	//on fait d'abord l'insertion 
 	$user_validation = 1;
-	$query1 = "INSERT INTO ".cms_db_prefix()."module_commandes_cc (id, date_created, date_modified, client, libelle_commande,fournisseur, prix_total, statut_commande, paiement, mode_paiement, remarques, commande_number, user_validation) VALUES ('', ?, ?, ?, ?, ?, ?, ? ,?, ?, ?)";
+	$query1 = "INSERT INTO ".cms_db_prefix()."module_commandes_cc (id, date_created, date_modified, client, libelle_commande,fournisseur, prix_total, statut_commande, remarques, commande_number, user_validation) VALUES ('', ?, ?, ?, ?, ? ,?, ?, ?, ?, ?)";
 	$dbresult1 = $db->Execute($query1, array($date_created,$date_created,$client, $libelle_commande,$fournisseur,$prix_total, $statut_commande, $remarques, $commande_number, $user_validation));
-	$this->RedirectToAdminTab('commandesclients',array("nom"=>$client, "date_created"=>$date_created,"commande_number"=>$commande_number,"fournisseur"=>$fournisseur),'add_edit_cc_item');
+	if($dbresult1)
+	{
+		$this->RedirectToAdminTab('commandesclients',array("nom"=>$client, "date_created"=>$date_created,"commande_number"=>$commande_number,"fournisseur"=>$fournisseur),'add_edit_cc_item');
+	}
 }
 else
 {

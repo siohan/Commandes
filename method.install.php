@@ -37,8 +37,7 @@ $flds = "
 
 // create it. 
 $sqlarray = $dict->CreateTableSQL( cms_db_prefix()."module_commandes_items",
-				   $flds, 
-				   $taboptarray);
+				   $flds);
 $dict->ExecuteSQLArray($sqlarray);
 #
 $dict = NewDataDictionary( $db );
@@ -61,8 +60,7 @@ $flds = "
 
 // create it. 
 $sqlarray = $dict->CreateTableSQL( cms_db_prefix()."module_commandes_cc",
-				   $flds, 
-				   $taboptarray);
+				   $flds);
 $dict->ExecuteSQLArray($sqlarray);				
 #
 #
@@ -88,8 +86,7 @@ $flds = "
 
 // create it. 
 $sqlarray = $dict->CreateTableSQL( cms_db_prefix()."module_commandes_cc_items",
-				   $flds, 
-				   $taboptarray);
+				   $flds);
 $dict->ExecuteSQLArray($sqlarray);
 #
 #
@@ -106,8 +103,7 @@ $flds = "
 
 // create it. 
 $sqlarray = $dict->CreateTableSQL( cms_db_prefix()."module_commandes_cf",
-				   $flds, 
-				   $taboptarray);
+				   $flds);
 $dict->ExecuteSQLArray($sqlarray);
 #
 #
@@ -123,8 +119,7 @@ $flds = "
 
 // create it. 
 $sqlarray = $dict->CreateTableSQL( cms_db_prefix()."module_commandes_cf_items",
-				   $flds, 
-				   $taboptarray);
+				   $flds);
 $dict->ExecuteSQLArray($sqlarray);
 #
 #
@@ -141,8 +136,7 @@ $flds = "
 
 // create it. 
 $sqlarray = $dict->CreateTableSQL( cms_db_prefix()."module_commandes_fournisseurs",
-				   $flds, 
-				   $taboptarray);
+				   $flds);
 $dict->ExecuteSQLArray($sqlarray);
 #
 #
@@ -163,8 +157,7 @@ $flds = "
 
 // create it. 
 $sqlarray = $dict->CreateTableSQL( cms_db_prefix()."module_commandes_stock",
-				   $flds, 
-				   $taboptarray);
+				   $flds);
 $dict->ExecuteSQLArray($sqlarray);
 #
 #

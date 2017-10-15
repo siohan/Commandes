@@ -20,11 +20,8 @@ $db =& $this->GetDb();
 $now = date('Y-m-d');
 $statut_commande = 'En cours de traitement';//valeur par défaut
 
-/*
-$items_statut_commande = array("En cours de traitement"=>"En cours de traitement", "Envoyée"=>"Envoyée", "Refusée"=>"Refusée", "Reçue"=>"Reçue");
-$items_paiement = array("Non payée"=>"Non payée", "Payée"=>"Payée", "Refusée"=>"Refusée", "Reçue"=>"Reçue","Dotations"=>"Dotations");
-$items_mode_paiement = array("Aucun"=>"Aucun","Chèque"=>"Chèque", "Espèces"=>"Espèces", "Autres"=>"Autres");
-*/
+$commandes = new commandes_ops();
+$liste_fournisseurs = $commandes->liste_fournisseurs();
 //s'agit-il d'une modif ou d'une créa ?
 $record_id = '';
 $index = 0;

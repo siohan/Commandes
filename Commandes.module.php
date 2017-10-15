@@ -2,7 +2,7 @@
 
 #-------------------------------------------------------------------------
 # Module : Commandes - 
-# Version : 0.1, Sc
+# Version : 0.3.1, Sc
 # Auteur : Claude SIOHAN
 #-------------------------------------------------------------------------
 /**
@@ -22,7 +22,7 @@ class Commandes extends CMSModule
   
   function GetName() { return 'Commandes'; }   
   function GetFriendlyName() { return $this->Lang('friendlyname'); }   
-  function GetVersion() { return '0.3'; }  
+  function GetVersion() { return '0.3.2'; }  
   function GetHelp() { return $this->Lang('help'); }   
   function GetAuthor() { return 'Claude SIOHAN'; } 
   function GetAuthorEmail() { return 'claude.siohan@gmail.com'; }
@@ -41,13 +41,13 @@ class Commandes extends CMSModule
  
   
   public function GetDependencies() {
-        return array('Adherents'=>'0.1.1','CGExtensions'=>'1.53.15','CGSimpleSmarty'=>'2.1.5','JQueryTools'=>'1.3.9');
+        return array('Adherents'=>'0.2.2','Paiements'=>'0.1.2','CGExtensions'=>'1.56.1','CGSimpleSmarty'=>'2.1.6','JQueryTools'=>'1.4.0.3');
     }
 
   public function GetHeaderHTML()
     {
         $out = parent::GetHeaderHTML();
-        $obj = cms_utils::get_module('JQueryTools','1.2');
+        $obj = cms_utils::get_module('JQueryTools','1.4.0.3');
         if( is_object($obj) ) {
             $tmpl = <<<EOT
 {JQueryTools action='require' lib='tablesorter,jquerytools,cgform'}

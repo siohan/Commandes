@@ -31,6 +31,8 @@ if($dbresult)
 
 //debug_display($params, 'Parameters');
 require_once(dirname(__FILE__).'/include/preferences.php');
+$service = new commandes_ops();
+$liste_fournisseurs = $service->liste_fournisseurs_sans_description();
 $now = date('Y-m-d');
 $statut_commande = 'En cours de traitement';//valeur par défaut
 $mode_paiement = "Aucun";//Statut par défaut

@@ -1,7 +1,7 @@
 <div class="pageoptions"><p><span class="pageoptions warning">{$add} </span></p></div>
 <div class="pageoptions"><p class="pageoptions">{$itemcount}&nbsp;{$itemsfound}</p></div>
 {if $itemcount > 0}
-<table border="0" cellspacing="0" cellpadding="0" class="pagetable">
+<table cellspacing="0" class="pagetable cms_sortable tablesorter" id="articlelist">
  <thead>
 	<tr>
 		<th>Client N°</th>

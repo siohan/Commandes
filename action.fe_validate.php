@@ -36,8 +36,17 @@ if($dbresult)
 	$headers = "From: ".$user_email."\n";
 	$headers .= "Reply-To: ".$user_email."\n";
 	$headers .= "Content-Type: text/html; charset=\"utf-8\"";
-	mail($admin_email, $subject, $body, $headers);
-	
+//	mail($admin_email, $subject, $body, $headers);
+	/**/
+	$cmsmailer = new \cms_mailer();
+        $cmsmailer->reset();
+        $cmsmailer->AddAddress($email);
+        $cmsmailer->SetBody($body);
+        $cmsmailer->SetSubject($this->Lang('lostpassword_emailsubject'));
+        $cmsmailer->IsHTML(true);
+        $cmsmailer->SetPriority(1);
+        $cmsmailer->Send();
+/**/
 }
 
 $this->Redirect($id, 'default', $returnid, array("display"=>"validation_message", "commande_number"=>$commande_number));

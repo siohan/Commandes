@@ -119,6 +119,7 @@ switch($current_version)
 		#
 	}
 	case "0.2.2":
+	{
 		// table schema description
 		$flds = "
 			id I(20) AUTO KEY,
@@ -158,8 +159,15 @@ switch($current_version)
 		$dict->ExecuteSQLArray( $sqlarray );
 		
 		//on ajoute ce parametre dans les tables existantes
- }
-
+ 	}
+	case "0.3" :
+	case "0.3.1" :
+	{
+		//On supprime la table commandes_clients qui n'est plus ds l'install
+		$sqlarray = $dict->DropTableSQL( cms_db_prefix()."module_commandes_clients");
+		$dict->ExecuteSQLArray( $sqlarray );
+	}
+	
 
 // put mention into the admin log
 $this->Audit( 0, 
@@ -167,4 +175,5 @@ $this->Audit( 0,
 	      $this->Lang('upgraded', $this->GetVersion()));
 
 //note: module api handles sending generic event of module upgraded here
+}
 ?>

@@ -72,13 +72,55 @@ class commandes_ops
 		{
 			echo $db->ErrorMsg();
 		}
+		else
+		{return true;}
+		
+	
+	}
+	public static function decremente_stock_commande ($ref_action)
+	{
+		//cette fonction incrémente ou décrémente le stock
+		//on va chercher si le produit existe en stock
+		$db = cmsms()->GetDb();
+		$commandes_ops = new commandes_ops();
+		//on va chercher les infos de la ref-action pour faire l'update
+		$query = "SELECT libelle_commande, quantite, ep_manche_taille, couleur FROM ".cms_db_prefix()."module_commandes_cc_items WHERE commande_number = ?";
+		$dbresult = $db->Execute($query, array($ref_action));
+		if($dbresult && $dbresult->RecordCount()>0)
+		{
+			$error = 0;
+			while($row = $dbresult->FetchRow())
+			{
+				$libelle_commande = $row['libelle_commande'];
+				$quantite = $row['quantite'];
+				$ep_manche_taille = $row['ep_manche_taille'];
+				$couleur = $row['couleur'];
+				
+				$decremente = $commandes_ops->decremente_stock($libelle_commande, $quantite, $ep_manche_taille,$couleur);
+				if(false === $decremente)
+				{
+					$error++;
+				}
+			
+			}
+			if($error>0)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+		
+		//$commandes_ops->refresh_stock();
 		
 	
 	}
 	public static function refresh_stock()
 	{
 		$db = cmsms()->GetDb();
-		$query = "DELETE FROM ".cms_db_prefix()."module_commandes_stock WHERE quantite = 0";
+		$query = "DELETE FROM ".cms_db_prefix()."module_commandes_stock WHERE quantite <= 0";
 		$dbresult = $db->Execute($query);
 	}
 	public static function montant_stock()
@@ -148,11 +190,26 @@ public function send_mail_alerts($email)
 			return $retour;
 		}
 	}
+	function liste_fournisseurs_sans_description()
+	{
+		$db = cmsms()->GetDb();
+		$query = "SELECT nom_fournisseur AS boutique FROM ".cms_db_prefix()."module_commandes_fournisseurs WHERE actif = 1";
+		$dbresult = $db->Execute($query);
+		if($dbresult && $dbresult->RecordCount()>0)
+		{
+			while($row = $dbresult->FetchRow())
+			{
+				$retour[$row['boutique']] = $row['nom_fournisseur'];				
+				
+			}
+			return $retour;
+		}
+	}
 	
 	function get_record_id($licence)
 	{
 		$db = cmsms()->GetDb();
-		$query = "SELECT id FROM ".cms_db_prefix()."module_commandes_clients WHERE licence = ?";
+		$query = "SELECT id FROM ".cms_db_prefix()."module_adherents_adherents WHERE licence = ?";
 		$dbresult = $db->Execute($query, array($licence));
 		$row = $dbresult->FetchRow();
 		$record_id = $row['id'];
