@@ -2,18 +2,17 @@
 
 if( !isset($gCms) ) exit;
 
-	if (!$this->CheckPermission('Use Commandes'))
-  	{
-    		echo $this->ShowErrors($this->Lang('needpermission'));
-		return;
-   
-  	}
+if (!$this->CheckPermission('Use Commandes'))
+{
+	echo $this->ShowErrors($this->Lang('needpermission'));
+	return;  
+}
 
-	if( isset($params['cancel']) )
-  	{
-    		$this->RedirectToAdminTab('commandesfournisseurs');
-    		return;
-  	}
+if( isset($params['cancel']) )
+{
+   	$this->RedirectToAdminTab('commandesfournisseurs');
+   	return;
+}
 //debug_display($params, 'Parameters');
 $designation = '';
 $db =& $this->GetDb();
@@ -120,12 +119,8 @@ else
 					$ep_manche_taille = $row3['ep_manche_taille'];
 					$couleur = $row3['couleur'];
 					$prix_total = $row3['prix_total'];
-					//echo "id_tems -> fk_id = ".$id_items." -> ".$fk_id."<br />";
-					
-					
-					
-					
-					//on change le statut de la commandes clients				
+					//on change le statut de la commandes clients	
+								
 					$query3 = "UPDATE ".cms_db_prefix()."module_commandes_cc SET statut_commande = ? WHERE commande_number = ?";
 					//echo $query3;
 					$dbresult3 = $db->Execute($query3, array($statut_CF,$commande_number));
@@ -135,23 +130,23 @@ else
 						$designation.= "Statut mis à Reçue";
 						//echo $designation."<br />";
 							
-							// un produit similaire est en stock, on incrémente la quantité
-							$en_stock = $service->en_stock($libelle_commande,$ep_manche_taille,$couleur);
-							if($en_stock == "True")
-							{
-								$increment = $service->incremente_stock($libelle_commande,$quantite,$ep_manche_taille,$couleur);
-							}
-							else //produit pas existant en stock, on le crée...
-							{
-								//on incrémente différemment
-								$query5 = "INSERT INTO ".cms_db_prefix()."module_commandes_stock (id, id_items, fk_id, libelle_commande,categorie_produit, fournisseur, quantite, ep_manche_taille, couleur, prix_total) VALUES ('', ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-								$dbresult5 = $db->Execute($query5, array($id_items,$fk_id, $libelle_commande, $categorie_produit, $fournisseur, $quantite, $ep_manche_taille, $couleur, $prix_total));
-								
-							}
-							$designation.=" Stock modifié";
+						// un produit similaire est en stock, on incrémente la quantité
+						$en_stock = $service->en_stock($libelle_commande,$ep_manche_taille,$couleur);
+						if($en_stock == "True")
+						{
+							$increment = $service->incremente_stock($libelle_commande,$quantite,$ep_manche_taille,$couleur);
+						}
+						else //produit pas existant en stock, on le crée...
+						{
+							//on incrémente différemment
+							$query5 = "INSERT INTO ".cms_db_prefix()."module_commandes_stock (id, id_items, fk_id, libelle_commande,categorie_produit, fournisseur, quantite, ep_manche_taille, couleur, prix_total) VALUES ('', ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+							$dbresult5 = $db->Execute($query5, array($id_items,$fk_id, $libelle_commande, $categorie_produit, $fournisseur, $quantite, $ep_manche_taille, $couleur, $prix_total));
 							
-							//On passe un mail à tous les utilisateurs de la commande
-							//on ajoute la commande au module Paiements
+						}
+						$designation.=" Stock modifié";
+						
+						//On passe un mail à tous les utilisateurs de la commande
+						//on ajoute la commande au module Paiements
 						
 							
 							

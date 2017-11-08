@@ -13,8 +13,8 @@ if(isset($params['submit']))
 	$this->SetPreference('admin_email', $params['adminemail']);
 	$this->SetPreference('email_activation_subject', $params['emailactivationsubject']);
 	$this->SetTemplate('newactivationemail_Sample', $params['activation_mail_template']);
-	$this->SetPreference('new_command_subject', $params['newcommandsubject']);
-	$this->SetTemplate('newcommandemail_Sample',$params['newcommand_mail_template']);
+	//$this->SetPreference('new_command_subject', $params['newcommandsubject']);
+//	$this->SetTemplate('newcommandemail_Sample',$params['newcommand_mail_template']);
 	//on redirige !
 	$this->RedirectToAdminTab('notifications');
 }

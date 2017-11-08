@@ -14,6 +14,7 @@ $lang['logout'] = "Je me déconnecte";
 $lang['messages'] = 'messages';
 $lang['missing_parameters'] = 'Paramètre(s) manquant(s)';
 $lang['name'] = 'Nom';
+$lang['new_command_subject'] = 'Nouvelle commande';
 $lang['needpermission'] = 'Vous n\'avez pas la permission d\'accéder';
 $lang['no'] = 'Non';
 $lang['options'] = 'Options';

@@ -29,7 +29,8 @@ switch($display)
 	break;
 	
 	case 'do_add_cc' :
-		
+		$error = 0;
+		$designation = '';
 		if(isset($params['client']) && $params['client'] != '')
 		{
 			$client = $params['client'];

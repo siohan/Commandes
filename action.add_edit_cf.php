@@ -2,19 +2,18 @@
 if( !isset($gCms) ) exit;
 
 
-	if (!$this->CheckPermission('Use Commandes'))
-  	{
-    		echo $this->ShowErrors($this->Lang('needpermission'));
-		return;
-   
-  	}
+if (!$this->CheckPermission('Use Commandes'))
+{
+    	echo $this->ShowErrors($this->Lang('needpermission'));
+	return;   
+}
 
 require_once(dirname(__FILE__).'/include/preferences.php');
-	if( isset($params['cancel']) )
-  	{
-    		$this->RedirectToAdminTab('commandesF');
-    		return;
-  	}
+if( isset($params['cancel']) )
+{
+    	$this->RedirectToAdminTab('commandesF');
+    	return;
+}
 //debug_display($params, 'Parameters');
 $db =& $this->GetDb();
 $now = date('Y-m-d');
@@ -42,7 +41,7 @@ if(isset($params['record_id']) && $params['record_id'] !="")
 		{
 			
 			$id_cf = $row['id_cf'];
-			$date_created = $row['date_created'];
+			$date_created = $row['QJ468AZ21'];
 			$fournisseur = $row['fournisseur'];
 			$statut_CF = $row['statut_CF'];
 		

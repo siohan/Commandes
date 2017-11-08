@@ -3,31 +3,11 @@ if( !isset($gCms) ) exit;
 
 
 $db =& $this->GetDb();
-//on récupère le id de la base Commandes
-//on a l'email
-//on peut récupérer les infos du user
-//on va montrer un lie pour ajouter une nouvelle commande
-//mais surtout les commandes passées s'il y en a
-//echo "on continue";
-//echo $email;
 $id_client = '';
 if(isset($params['client']) && $params['client'] != '')
 {
 	$id_client = $params['client'];
 }
-/*
-else
-{
-	$error++;
-}
-$query = "SELECT licence AS id_client, nom FROM ".cms_db_prefix()."module_commandes_clients WHERE email LIKE ?";
-$dbresult = $db->Execute($query, array($email));
-if($dbresult)
-{
-	$row = $dbresult->FetchRow();
-	$id_client = $row['id_client'];
-}
-*/
 
 //debug_display($params, 'Parameters');
 require_once(dirname(__FILE__).'/include/preferences.php');

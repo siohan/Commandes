@@ -72,19 +72,12 @@ $alert = 0;//pour savoir si certains champs doivent contenir une valeur ou non
 			$error++;
 		}
 		
-		
-		
 		$fournisseur = '';
 		if (isset($params['fournisseur']) && $params['fournisseur'] !='')
 		{
 			$fournisseur = $params['fournisseur'];
 		}
-		/*
-		else
-		{
-			$error++;
-		}
-		*/
+	
 		$quantite = '';
 		if (isset($params['quantite']) && $params['quantite'] !='')
 		{
@@ -96,12 +89,6 @@ $alert = 0;//pour savoir si certains champs doivent contenir une valeur ou non
 		}
 		
 		$libelle_commande = $produits;
-		
-
-		
-		
-	
-		
 		//s'agit-il d'une édition ou d'un ajout ?
 		//$record_id = '';
 		if(isset($params['record_id']) && $params['record_id'] !='')
@@ -110,7 +97,7 @@ $alert = 0;//pour savoir si certains champs doivent contenir une valeur ou non
 			$edit = 1;//c'est un update
 		}
 		
-		echo "le nb erreurs est : ".$error;
+		//echo "le nb erreurs est : ".$error;
 		//on calcule le nb d'erreur
 		if($error>0)
 		{
@@ -129,14 +116,11 @@ $alert = 0;//pour savoir si certains champs doivent contenir une valeur ou non
 				$commande = 0;
 				$query = "INSERT INTO ".cms_db_prefix()."module_commandes_cc_items (id,date_created, date_modified,libelle_commande, categorie_produit, fournisseur, quantite, ep_manche_taille, couleur, prix_total, statut_item, commande, commande_number) VALUES ('',?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				$dbresult = $db->Execute($query, array($aujourdhui, $aujourdhui,$produits,$categorie_produit,$fournisseur, $quantite,$ep_manche_taille, $couleur, $prix_total, $statut_item,$commande,$commande_number));
-
 			}
 			else
 			{
 				$query = "UPDATE ".cms_db_prefix()."module_commandes_cc_items SET libelle_commande = ?, date_modified =?, quantite = ?,ep_manche_taille = ?, couleur = ?, prix_total = ?,statut_item = ? WHERE id = ?";
-				$dbresult = $db->Execute($query, array($produits,$aujourdhui, $quantite,$ep_manche_taille, $couleur, $prix_total,$statut_item,$record_id));
-				
-				
+				$dbresult = $db->Execute($query, array($produits,$aujourdhui, $quantite,$ep_manche_taille, $couleur, $prix_total,$statut_item,$record_id));				
 			}
 			
 			//on modifie aussi le prix total de la commande client

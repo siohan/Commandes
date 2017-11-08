@@ -199,7 +199,7 @@ public function send_mail_alerts($email)
 		{
 			while($row = $dbresult->FetchRow())
 			{
-				$retour[$row['boutique']] = $row['nom_fournisseur'];				
+				$retour[$row['boutique']] = $row['boutique'];				
 				
 			}
 			return $retour;

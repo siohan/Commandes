@@ -22,7 +22,7 @@ class Commandes extends CMSModule
   
   function GetName() { return 'Commandes'; }   
   function GetFriendlyName() { return $this->Lang('friendlyname'); }   
-  function GetVersion() { return '0.3.2'; }  
+  function GetVersion() { return '0.3.3'; }  
   function GetHelp() { return $this->Lang('help'); }   
   function GetAuthor() { return 'Claude SIOHAN'; } 
   function GetAuthorEmail() { return 'claude.siohan@gmail.com'; }
