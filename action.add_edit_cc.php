@@ -63,10 +63,7 @@ if(isset($params['commande_number']) && $params['commande_number'] !="")
 			
 		}
 }
-else
-{
-	$commande_number = $this->random(15);
-}
+
 if(isset($statut_commande))	
 {
 	$key_statut_commande = array_values($items_statut_commande);//$index_paiement = $paiement;
@@ -122,7 +119,7 @@ else
 		if($statut_commande != 'Reçue')
 		{
 			$smarty->assign('statut_commande',
-					$this->CreateInputDropdown($id,'statut_commande',$items_statut_commande,$selectedIndex=$key2_statut_commande,$selectedvalue=$statut_commande));
+					$this->CreateInputDropdown($id,'statut_commande',$items_statut_commande,$selectedindex=$key2_statut_commande,$selectedvalue=$statut_commande));
 			$statut = 0;
 		}
 		elseif($statut_commande == 'Reçue')
@@ -131,10 +128,10 @@ else
 					$this->CreateInputHidden($id,'statut_commande',$statut_commande));
 			$statut = 1;
 		}
-				
+		/*		
 		$smarty->assign('statut_commande',
 				$this->CreateInputDropdown($id,'statut_commande',$items_statut_commande,$selectedIndex=$key2_statut_commande,$selectedvalue=$statut_commande));
-		
+		*/
 	}
 	else
 	{

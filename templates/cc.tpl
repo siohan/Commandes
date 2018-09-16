@@ -24,7 +24,6 @@ $(document).ready(function(){
 });
 //]]>
 </script>
-<div class="pageoptions"><p><span class="pageoptions warning">{$add} </span></p></div>
 <div class="pageoptions"><p class="pageoptions">{$itemcount}&nbsp;{$itemsfound}</p></div>
 {if isset($formstart) }
 <fieldset>
@@ -39,7 +38,7 @@ $(document).ready(function(){
 </fieldset>
 {/if}
 {if $itemcount > 0}
-{$form2start}
+{*$form2start*}
 <table cellpadding="0" class="pagetable cms_sortable tablesorter" id="articlelist">
  <thead>
 	<tr>
@@ -49,34 +48,34 @@ $(document).ready(function(){
 		<th>Nb articles</th>
 		<th>prix total</th>
 		<th>Statut</th>
-		<th>Paiement</th>
-		
+		<th>Paiement</th>		
 		<th colspan="3" class="pageicon {literal}{sorter: false}{/literal}">Actions</th>
-		<th><input type="checkbox" id="selectall" name="selectall"></th>
+		<!--<th><input type="checkbox" id="selectall" name="selectall"></th>-->
 	</tr>
  </thead>
  <tbody>
 {foreach from=$items item=entry}
   <tr class="{$entry->rowclass}">
 	<td>{$entry->commande_number}({$entry->commande_id}) - {$entry->fournisseur}</td>
-    <td>{$entry->nom} {$entry->prenom}</td>
+    <td>{$entry->client}</td>
     <td>{$entry->date_created|date_format:"d/m/Y"}</td>
 	<td>{$entry->nb_items}</td>
-	<td>{$entry->prix}€</td>
-	<td>{$entry->statut}</td>
-	<td>{if $entry->is_paid == false}<a href="{root_url}/admin/moduleinterface.php?mact=Paiements,m1_,add_edit_reglement,0&amp;m1_record_id={$entry->commande_number}&amp;_sk_={$smarty.cookies._sk_}">{$shopping}</a>{else}{$entry->is_paid}{/if}</td>
+	<td>{$entry->prix_total}€</td>
+	<td>{$entry->statut_commande}</td>
+	<td>{if $entry->is_paid == false}<a href="{root_url}/admin/moduleinterface.php?mact=Paiements,m1_,add_edit_reglement,0&amp;m1_record_id={$entry->commande_number}&amp;__c={$smarty.cookies.__c}">{$shopping}</a>{else}{$entry->is_paid}{/if}</td>
 	<td>{$entry->view}</td>
-	<td>{$entry->editlink}</td>
-    <td>{$entry->deletelink}</td>
-	<td><input type="checkbox" name="{$actionid}sel[]" value="{$entry->commande_id}" class="select"></td>
+	<!--<td><input type="checkbox" name="{$actionid}sel[]" value="{$entry->commande_id}" class="select"></td>-->
   </tr>
 {/foreach}
  </tbody>
 </table>
+
 <!-- SELECT DROPDOWN -->
+<!--
 <div class="pageoptions" style="float: right;">
 <br/>{$actiondemasse}{$submit_massaction}
   </div>
 {$form2end}
+-->
 {/if}
 

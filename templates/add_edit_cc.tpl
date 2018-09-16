@@ -14,11 +14,12 @@
 	{$record_id}
 	{$commande_number}
 	{*$nom*}
+	{*$libelle_commande*}
 	<div class="pageoverflow">
 		<p class="pagetext">Date Commande :</p>
 		<p class="pageinput">{$date_created}</p>
 	</div>
-{$libelle_commande}
+
 	
 	
 	

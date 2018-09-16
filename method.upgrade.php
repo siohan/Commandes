@@ -1,7 +1,7 @@
 <?php
 #-------------------------------------------------------------------------
 # Module: Commandes
-# Version: 0.1
+# Version: 0.3.5
 # Method: Upgrade
 #-------------------------------------------------------------------------
 # CMS - CMS Made Simple is (c) 2008 by Ted Kulp (wishy@cmsmadesimple.org)
@@ -168,7 +168,34 @@ switch($current_version)
 		$dict->ExecuteSQLArray( $sqlarray );
 	}
 	
-
+        case "0.3.2" :
+	case "0.3.3" :
+	{
+		$this->SetPreference('new_status_subject','[T2T] Changement de statut de ta commande');
+		# Mails templates
+		$fn = cms_join_path(dirname(__FILE__),'templates','orig_newstatusemailtemplate.tpl');
+		if( file_exists( $fn ) )
+		{
+			$template = file_get_contents( $fn );
+			$this->SetTemplate('newstatusemail_Sample',$template);
+		}
+		$dict = NewDataDictionary( $db );
+		$sqlarray = $dict->AddColumnSQL(cms_db_prefix()."module_commandes_cf_items", "commande_number C(15), client I(11), received I(1) DEFAULT 0");
+		$dict->ExecuteSQLArray( $sqlarray );
+		
+		//on ajoute un champ user_validation ds la table cc_items
+		$sqlarray = $dict->AddColumnSQL(cms_db_prefix()."module_commandes_cc_items", "user_validation I(1) DEFAULT 0");
+		$dict->ExecuteSQLArray( $sqlarray );
+	}
+	case "0.3.4" :
+	{
+		$dict = NewDataDictionary( $db );
+		$fields = "id_CF C(15)";
+		$sqlarray = $dict->AlterColumnSQL(cms_db_prefix()."module_commandes_cf_items", $fields);
+		$dict->ExecuteSQLArray( $sqlarray );
+		//on ajoute un événement
+	//	$this->CreateEvent('CommandesItemAdded');
+	}
 // put mention into the admin log
 $this->Audit( 0, 
 	      $this->Lang('friendlyname'), 

@@ -13,14 +13,8 @@
 	{$edition}
 {$record_id}
 	
-	<div class="pageoverflow">
-	<p class="pagetext">Date Commande :</p>
-	<p class="pageinput">{$date_created}</p>
-	</div>
-	<div class="pageoverflow">
-	<p class="pagetext">Statut de la commande :{cms_help key='help_statut_recue'}</p>
-	<p class="pageinput">{$statut_CF}</p>
-	</div>
+	
+{$date_created}
 	<div class="pageoverflow">
 	<p class="pagetext">fournisseur :</p>
 	<p class="pageinput">{$fournisseur}</p>
@@ -29,14 +23,9 @@
   
 {else}	
 {$edit}{$edition}
-	<div class="pageoverflow">
-		<p class="pagetext">Date Commande :</p>
-		<p class="pageinput">{$date_created}</p>
-	</div>
-	<div class="pageoverflow">
-		<p class="pagetext">Statut de la commande :{cms_help key='help_statut_recue'}</p>
-		<p class="pageinput">{$statut_CF}</p>
-	</div>
+	{$date_created}
+
+
 
 	<div class="pageoverflow">
 		<p class="pagetext">Fournisseur :</p>

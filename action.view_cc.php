@@ -17,51 +17,28 @@ global $themeObject;
 */
 if(isset($params['record_id']) && $params['record_id'] !='')
 {
-	$commande_number = $params['record_id'];
+	$record_id = $params['record_id'];
 }
-if(isset($params['commande_number']) && $params['commande_number'] !='')
+if(isset($params['client']) && $params['client'] !='')
 {
-	$commande_number = $params['commande_number'];
+	$client = $params['client'];
 }
-	$query2 =  "SELECT cl.nom, cc.statut_commande,cl.prenom,cc.date_created,cc.fournisseur FROM ".cms_db_prefix()."module_commandes_cc AS cc, ".cms_db_prefix()."module_adherents_adherents AS cl WHERE cl.licence = cc.client AND cc.commande_number = ?";
-	$dbresult2 = $db->Execute($query2, array($commande_number));
 
 
-		if($dbresult2 && $dbresult2->RecordCount()>0)
-		{
-			while($row2 = $dbresult2->FetchRow())
-			{
-				$statut_commande = $row2['statut_commande'];
-				$nom= $row2['nom'];
-				$fournisseur = $row2['fournisseur'];
-				$prenom= $row2['prenom'];
-				$date_created= $row2['date_created'];
-				$statut_commande = $row2['statut_commande'];
-				$smarty->assign('nom',$nom);
-				$smarty->assign('prenom',$prenom);
-				$smarty->assign('date_created',$date_created);
-			}
-		}
-
-
-
-//echo "le record_id est :".$record_id;
-//on va afficher le nom du oropriétaire de la commande
 $rowclass2 = '';
 
 	
 	
-$smarty->assign('status', $statut_commande);	
-$smarty->assign('add_edit_cc_item',
-		$this->CreateLink($id, 'add_edit_cc_item', $returnid,$contents='Ajouter un article à cette commande', array("commande_number"=>$commande_number,"edit"=>"0","fournisseur"=>$fournisseur)));
+//$smarty->assign('status', $statut_commande);	
+
 
 $result= array ();
-$query1 = "SELECT cc.id,it.id AS item_id, it.fk_id , it.date_created,it.libelle_commande,it.ep_manche_taille, it.couleur, it.categorie_produit, it.fournisseur,it.quantite, it.prix_total, it.statut_item,it.commande,it.commande_number FROM ".cms_db_prefix()."module_commandes_cc as cc, ".cms_db_prefix()."module_commandes_cc_items AS it WHERE cc.commande_number = it.commande_number AND cc.commande_number = ? ";
+$query1 = "SELECT it.id AS item_id, it.fk_id , it.date_created,it.libelle_commande,it.ep_manche_taille, it.couleur, it.categorie_produit, it.fournisseur,it.quantite, it.prix_total, it.statut_item,it.commande,it.commande_number FROM ".cms_db_prefix()."module_commandes_cc_items AS it WHERE  it.commande_number = ? ";
 
 
 	//$query .=" ORDER BY id DESC";
 	//echo $query;
-	$dbresult= $db->Execute($query1,array($commande_number));
+	$dbresult= $db->Execute($query1,array($record_id));
 	
 	//echo $query;
 	$rowarray= array();
@@ -91,14 +68,14 @@ $query1 = "SELECT cc.id,it.id AS item_id, it.fk_id , it.date_created,it.libelle_
 				//$onerow->reduction = $row['reduction'];
 				$onerow->prix_total = $row['prix_total'];
 				$onerow->statut = $row['statut_item'];
-				
+				/*
 				if($commande != '1')
 				{
 					//$onerow->view= $this->createLink($id, 'view_order', $returnid, $themeObject->DisplayImage('icons/system/view.gif', $this->Lang('view_results'), '', '', 'systemicon'),array('active_tab'=>'CC',"record_id"=>$row['fk_id'])) ;
 					$onerow->editlink= $this->CreateLink($id, 'add_edit_cc_item', $returnid, $themeObject->DisplayImage('icons/system/edit.gif', $this->Lang('edit'), '', '', 'systemicon'), array('commande_number'=>$row['commande_number'],'record_id'=>$row['item_id'],"edit"=>"1"));
-					$onerow->deletelink = $this->CreateLink($id, 'delete',$returnid, $themeObject->DisplayImage('icons/system/delete.gif', $this->Lang('delete'), '', '', 'systemicon'), array('record_id'=>$row['item_id'], "bdd"=>"cc_items"));
+					$onerow->deletelink = $this->CreateLink($id, 'delete',$returnid, $themeObject->DisplayImage('icons/system/delete.gif', $this->Lang('delete'), '', '', 'systemicon'), array('record_id'=>$row['item_id'], "bdd"=>"cc_items", "commande_number"=>$row['commande_number']));
 				}
-				
+				*/
 				
 				($rowclass == "row1" ? $rowclass= "row2" : $rowclass= "row1");
 				$rowarray[]= $onerow;

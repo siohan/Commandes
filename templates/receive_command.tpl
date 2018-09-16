@@ -1,9 +1,9 @@
 {*<pre>{$rowarray|var_dump}</pre>*}
-{**}<div class="pageoverflow">
+{**}<p>Cochez les articles dûment reçus</p><div class="pageoverflow">
 {$formstart}
-
 {$record_id}
-<h3>Qté - libellé - commande - prix - adhérent</h3>
+
+<p>Qté - libellé - commande (prix) - client</p>
 
 {foreach from=$rowarray key=key item=entry}
 <div class="pageoverflow">

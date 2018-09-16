@@ -7,6 +7,7 @@
 		<th>Quantité</th>
 		<th>Libellé commande</th>
 		<th>prix total</th>
+		<th>Action(s)</th>
 	</tr>
  </thead>
  <tbody>
@@ -15,6 +16,9 @@
 	<td>{$entry->quantite}</td>
     <td>{$entry->commande}</td>
 	<td>{$entry->prix_total}€</td>
+	<td>{$entry->action}</td>
+	<td>{$entry->delete}</td>
+	<td>{$entry->received}</td>
   </tr>
 {/foreach}
  </tbody>

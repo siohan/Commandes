@@ -1,7 +1,7 @@
 <div class="pageoverflow">
 {$formstart}
 {$record_id}
-{$commande_number}
+{$client}
 {*$categorie_produit*}
 {$fournisseur}
 

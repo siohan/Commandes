@@ -27,21 +27,13 @@ else
 {
 	$edit = 0;//pour savoir si on édite ou on créé, 0 par défaut c'est une créa
 }
-if(isset($params['commande_number']) && $params['commande_number'] != '')
-{
-	$commande_number = $params['commande_number'];
-
-}
-if(isset($params['fournisseur']) && $params['fournisseur'] != '')
-{
-	$fournisseur = $params['fournisseur'];
-
-}
-
+$adh_ops = new adherents_spid;
+$liste_clients = $adh_ops->liste_adherents();
+//var_dump($liste_clients);
 if(isset($params['record_id']) && $params['record_id'] !="")
 {
 		$record_id = $params['record_id'];
-		$edit = 1;//on est bien en trai d'éditer un enregistrement
+		$edit = 1;//on est bien en train d'éditer un enregistrement
 		//ON VA CHERCHER l'enregistrement en question
 		$query = "SELECT it.id AS item_id,items.id AS index1, it.fk_id ,it.commande_number, it.date_created,it.libelle_commande,it.fournisseur,it.couleur, it.ep_manche_taille, it.categorie_produit, it.fournisseur,it.quantite, it.prix_total, it.statut_item FROM ".cms_db_prefix()."module_commandes_cc_items AS it, ".cms_db_prefix()."module_commandes_items AS items  WHERE it.libelle_commande LIKE items.libelle  AND it.id = ?  ORDER BY items.categorie, items.libelle ASC";
 		$dbresult = $db->Execute($query, array($record_id));
@@ -69,8 +61,8 @@ if(isset($params['record_id']) && $params['record_id'] !="")
 }
 	
 	//on fait une requete pour completer l'input dropdown du formulaire
-	$query = "SELECT CONCAT_WS('-', categorie, libelle) AS libelle_form,libelle  FROM ".cms_db_prefix()."module_commandes_items WHERE statut_item = '1' AND fournisseur = ? ORDER BY categorie ASC,fournisseur ASC, libelle ASC";
-	$dbresult = $db->Execute($query, array($fournisseur));
+	$query = "SELECT CONCAT_WS('-',fournisseur, categorie, libelle) AS libelle_form,libelle  FROM ".cms_db_prefix()."module_commandes_items WHERE statut_item = '1' ORDER BY fournisseur ASC, categorie ASC, libelle ASC";
+	$dbresult = $db->Execute($query);
 
 		if($dbresult && $dbresult->RecordCount() >0)
 		{
@@ -102,13 +94,17 @@ if(isset($params['record_id']) && $params['record_id'] !="")
 	{
 		$smarty->assign('record_id',
 				$this->CreateInputHidden($id,'record_id',$item_id));
+		$smarty->assign('client',
+				$this->CreateInputHidden($id,'client',$commande_id));
+
 	}
-	/*
-	$smarty->assign('idepreuve',
-			$this->CreateInputDropdown($id,'idepreuve',$type_compet,$selectedindex = $index, $selectedvalue=$name));
-	*/
-	$smarty->assign('commande_number',
-			$this->CreateInputHidden($id, 'commande_number',(isset($commande_number)?$commande_number:"")));
+	else
+	{
+		$smarty->assign('client',
+				$this->CreateInputDropdown($id,'client',(isset($params['client'])?$params['client']:$liste_clients)));
+	}
+	
+	
 	$smarty->assign('date_created',
 			$this->CreateInputDate($id, 'date_created',(isset($date_created)?$date_created:"")));
 	$smarty->assign('libelle_commande',

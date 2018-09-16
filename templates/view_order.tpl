@@ -12,7 +12,6 @@
 		<th>Fournisseur</th>
 		<th>Quantité</th>
 		<th>Prix total</th>
-		<th colspan="3">Actions</th>
 	</tr>
  </thead>
  <tbody>
@@ -25,9 +24,6 @@
     <td>{$entry->fournisseur}</td>
 	<td>{$entry->quantite}</td>
 	<td>{$entry->prix_total}</td>	
-	<td>{$entry->view}</td>
-	<td>{$entry->editlink}</td>
-    <td>{$entry->deletelink}</td>
   </tr>
 {/foreach}
  </tbody>

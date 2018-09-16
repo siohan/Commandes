@@ -8,6 +8,7 @@ if (!$this->CheckPermission('Use Commandes'))
 require_once(dirname(__FILE__).'/include/preferences.php');
 $db =& $this->GetDb();
 global $themeObject;
+$paiements_ops = new paiementsbis;
 //debug_display($params, 'Parameters');
 /*
 	deux cas : 
@@ -30,8 +31,7 @@ else
 	
 	}// pas de record_id, tu dégages !!
 }
-$smarty->assign('redirection',
-	$this->CreateLink($id, 'add_edit_cc',$returnid, $contents="Nouvelle commande"));
+
 $rowarray= array();
 $rowclass = '';
 $rowclass2 = '';
@@ -54,7 +54,18 @@ $rowclass2 = '';
 			$onerow->libelle_commande = $row['libelle_commande'];
 			$onerow->statut_commande = $row['statut_commande'];
 			$onerow->prix_total = $row['prix_total'];
-			$onerow->paiement = $row['paiement'];
+			$is_paid = $paiements_ops->is_paid($row['commande_number']);
+		
+			if(true === $is_paid)
+			{
+				$onerow->paiement = $themeObject->DisplayImage('icons/system/true.gif', $this->Lang('true'), '', '', 'systemicon');
+			}
+			else
+			{
+					$false = false;
+				$onerow->paiement = $themeObject->DisplayImage('icons/system/false.gif', $this->Lang('false'), '', '', 'systemicon');
+			}
+			//$onerow->paiement = $row['paiement'];
 			$onerow->mode_paiement = $row['mode_paiement'];
 			$onerow->remarques = $row['remarques'];
 			$onerow->view= $this->createLink($id, 'view_cc', $returnid, $themeObject->DisplayImage('icons/system/view.gif', $this->Lang('view_results'), '', '', 'systemicon'),array('active_tab'=>'commandesclients',"record_id"=>$row['commande_number'])) ;

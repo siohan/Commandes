@@ -35,16 +35,15 @@ if(isset($params['record_id']) && $params['record_id'] !="")
 		$record_id = $params['record_id'];
 		$edit = 1;//on est bien en trai d'éditer un enregistrement
 		//ON VA CHERCHER l'enregistrement en question
-		$query = "SELECT id_cf, date_created, fournisseur, statut_CF FROM ".cms_db_prefix()."module_commandes_cf AS cf WHERE  cf.id_cf = ?";
+		$query = "SELECT id_cf, date_created, fournisseur, statut_CF, commande_number FROM ".cms_db_prefix()."module_commandes_cf WHERE  commande_number = ?";
 		$dbresult = $db->Execute($query, array($record_id));
 		while ($dbresult && $row = $dbresult->FetchRow())
 		{
 			
 			$id_cf = $row['id_cf'];
-			$date_created = $row['QJ468AZ21'];
+			$date_created = $row['date_created'];
 			$fournisseur = $row['fournisseur'];
-			$statut_CF = $row['statut_CF'];
-		
+			$statut_CF = $row['statut_CF'];		
 		}
 	}
 if(isset($fournisseur))	
@@ -78,40 +77,24 @@ else
 	if($edit==1)
 	{
 		$smarty->assign('record_id',
-				$this->CreateInputHidden($id,'record_id',$id_cf));
+				$this->CreateInputHidden($id,'record_id',$record_id));
 		
 	}
 	
-	$smarty->assign('edit',$edit);
-	
+	$smarty->assign('edit',$edit);	
 	$smarty->assign('edition',
-			$this->CreateInputHidden($id,'edition',$edit));
-
-	
-
-	
+			$this->CreateInputHidden($id,'edition',$edit));	
 	$smarty->assign('date_created',
-			$this->CreateInputDate($id, 'date_created',(isset($date_created)?$date_created:$now)));
-	
+			$this->CreateInputHidden($id, 'date_created',(isset($date_created)?$date_created:$now)));	
 	$smarty->assign('fournisseur',
-			$this->CreateInputDropdown($id,'fournisseur',$liste_fournisseurs,$selectedIndex=$key2,$selectedvalue=$fournisseur));
-	$smarty->assign('statut_CF',
-			$this->CreateInputDropdown($id,'statut_CF',$liste_statuts_commandes_fournisseurs, $selectedIndex=$key2_statut_CF,$selectedvalue=$statut_CF));
-				
-		
+			$this->CreateInputDropdown($id,'fournisseur',$liste_fournisseurs,$selectedIndex=$key2,$selectedvalue=$fournisseur));		
 	$smarty->assign('submit',
 			$this->CreateInputSubmit($id, 'submit', $this->Lang('submit'), 'class="button"'));
 	$smarty->assign('cancel',
 			$this->CreateInputSubmit($id,'cancel',
 						$this->Lang('cancel')));
-
-
 	$smarty->assign('formend',
 			$this->CreateFormEnd());
-	
-	
-
-
 
 echo $this->ProcessTemplate('add_edit_cf.tpl');
 

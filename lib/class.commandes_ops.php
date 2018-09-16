@@ -23,7 +23,7 @@ class commandes_ops
 		}
 	}
 	
-	
+	//increment le stock pour un article déjà existant en bdd
 	public static function incremente_stock ($libelle_commande, $quantite, $ep_manche_taille,$couleur)
 	{
 		//cette fonction incrémente ou décrémente le stock
@@ -31,27 +31,28 @@ class commandes_ops
 		$db = cmsms()->GetDb();
 		
 		//on fait un update
-		$query3 = "UPDATE ".cms_db_prefix()."module_commandes_stock SET quantite = quantite + ? WHERE libelle_commande = ? AND ep_manche_taille = ? AND couleur = ?";
-		$dbresult3 = $db->Execute($query3, array($quantite,$libelle_commande, $ep_manche_taille, $couleur));
+		$query = "UPDATE ".cms_db_prefix()."module_commandes_stock SET quantite = quantite + ? WHERE libelle_commande = ? AND ep_manche_taille = ? AND couleur = ?";
+		$dbresult = $db->Execute($query, array($quantite,$libelle_commande, $ep_manche_taille, $couleur));
 		
-		if(!$dbresult3)
+		if(!$dbresult)
 		{
 			echo $db->ErrorMsg();
 		}
 		
 	
 	}
-	public static function met_en_stock ($libelle_commande, $quantite, $ep_manche_taille,$couleur)
+	//incrémente le stock avec un nouveau produit non existant en bdd
+	public static function met_en_stock ($libelle_commande, $categorie_produit,$fournisseur, $quantite, $ep_manche_taille,$couleur,$prix_total)
 	{
 		//cette fonction incrémente ou décrémente le stock
 		//on va chercher si le produit existe en stock
 		$db = cmsms()->GetDb();
 		
 		//on fait un update
-		$query3 = "UPDATE ".cms_db_prefix()."module_commandes_stock SET quantite = quantite + ? WHERE libelle_commande = ? AND ep_manche_taille = ? AND couleur = ?";
-		$dbresult3 = $db->Execute($query3, array($quantite,$libelle_commande, $ep_manche_taille, $couleur));
+		$query = "INSERT INTO ".cms_db_prefix()."module_commandes_stock (libelle_commande,categorie_produit, fournisseur, quantite, ep_manche_taille, couleur, prix_total ) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		$dbresult = $db->Execute($query, array($libelle_commande, $categorie_produit, $fournisseur, $quantite,$ep_manche_taille, $couleur, $prix_total));
 		
-		if(!$dbresult3)
+		if(!$dbresult)
 		{
 			echo $db->ErrorMsg();
 		}
@@ -132,38 +133,33 @@ class commandes_ops
 		$montant =$row['montant'];
 		return $montant;
 	}
+	//supprime un article de la table cf_items
+	function delete_item ($record_id)
+	{
+		$db = cmsms()->GetDb();
+		$query = "DELETE FROM ".cms_db_prefix()."module_commandes_cf_items WHERE id_items = ?";
+		$db->Execute($query, array($record_id));
+	}
 /**/	
 public function send_mail_alerts($email)
 	{
-		// See if we have to send something
-		
-
-	
-
-			// Process with the mails
+		// Process with the mails
 			$ping = cms_utils::get_module('Commandes');
-			$cmsmailer = cms_utils::get_module('CMSMailer');
+			$cmsmailer = new \cms_mailer;//cms_utils::get_module('CMSMailer');
 			if (!$cmsmailer) return false;
 
 			$cmsmailer->reset();
 			$cmsmailer->IsHTML(true);
-
+			$cmsmailer->SetFrom($ping->GetPreference('admin_email'));
 			// Get the subject
-			$subject = $ping->GetPreference('email_activation_subject');
+			$subject = $ping->GetPreference('new_status_subject');
 			// The body
-			$body = $ping->GetTemplate('newactivationemail_Sample');
+			$body = $ping->GetTemplate('newstatusemail_Sample');
 			$body = $ping->ProcessTemplateFromData($body);
 			
 			$cmsmailer->SetSubject($subject);
 			$cmsmailer->SetBody($body);
-
-			// Add the addresses
-			// Try to find an e-mail
-			
-				$cmsmailer->AddAddress($email);
-
-			
-
+			$cmsmailer->AddAddress($email);
 			$cmsmailer->Send();
 			$res = true;
 			if ($cmsmailer->IsError())
@@ -219,8 +215,8 @@ public function send_mail_alerts($email)
 	{
 		$db = cmsms()->GetDb();
 		$query = "SELECT count(*) AS nb_commandes  FROM ".cms_db_prefix()."module_commandes_cc WHERE client = ?";
-		$dbresult = $db->Execute($query, array($client_id));
-		$row2 = $dbresult2->FetchRow();
+		$dbresult = $db->Execute($query, array($licence));
+		$row = $dbresult->FetchRow();
 		$nb_commandes = $row['nb_commandes'];
 		return $nb_commandes;
 	}
@@ -236,6 +232,178 @@ public function send_mail_alerts($email)
 		$details['prix_total'] = $row['prix_total'];
 		return $details;
 	}
+	//récupère le détail d'un article commandé depuis son id
+	function details_commande_items($record_id)
+	{
+		$db = cmsms()->GetDb();
+		$query = "SELECT fk_id,libelle_commande,ep_manche_taille,couleur, categorie_produit,quantite, fournisseur,prix_total  FROM ".cms_db_prefix()."module_commandes_cc_items WHERE id = ? AND commande = 2";
+		$dbresult = $db->Execute($query, array($record_id));
+		$row = $dbresult->FetchRow();
+		$details['client'] = $row['fk_id'];
+		$details['libelle_commande'] = $row['libelle_commande'];
+		$details['fournisseur'] = $row['fournisseur'];
+		$details['prix_total'] = $row['prix_total'];
+		$details['ep_manche_taille'] = $row['ep_manche_taille'];
+		$details['couleur'] = $row['couleur'];
+		$details['categorie_produit'] = $row['categorie_produit'];
+		$details['quantite'] = $row['quantite'];
+		return $details;
+	}
+	//récupère le client de l'adhérent par le numéro de commande
+	function customer($commande_number)
+	{
+		$db = cmsms()->GetDb();
+		$query = "SELECT client FROM ".cms_db_prefix()."module_commandes_cc WHERE commande_number = ?";
+		$dbresult = $db->Execute($query, array($commande_number));
+		if($dbresult && $dbresult->RecordCount()>0)
+		{
+			$row = $dbresult->FetchRow();
+			$licence = $row['client'];
+			return $licence;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	function change_statut_cc($statut, $commande_number)
+	{
+		$db = cmsms()->getDb();
+		$query = " UPDATE ".cms_db_prefix()."module_commandes_cc SET statut_commande = ? WHERE commande_number = ?";
+		$dbresult  = $db->Execute($query, array($statut, $commande_number));
+	}
+	//change le statut à "Reçue" (commande = 2) ds la table cc_items pour chq id d'article
+	function change_status_cc_items($record_id)
+	{
+		$db = cmsms()->getDb();
+		$query = " UPDATE ".cms_db_prefix()."module_commandes_cc_items SET commande = '2' WHERE id = ?";
+		$dbresult  = $db->Execute($query, array($record_id));
+	}
+	//change le statut ds la table cc_items pour chaq commande_number
+	function cc_items_status($statut,$record_id)
+	{
+		$db = cmsms()->getDb();
+		$query = " UPDATE ".cms_db_prefix()."module_commandes_cc_items SET commande = ? WHERE commande_number = ?";
+		$dbresult  = $db->Execute($query, array($statut,$record_id));
+	}
+	//change le statut à "Reçue" (received = 1) d'un article ds la table cf_items
+	function change_status_cf_items($record_id)
+	{
+		$db = cmsms()->getDb();
+		$query = " UPDATE ".cms_db_prefix()."module_commandes_cf_items SET received = '1' WHERE id_items = ?";
+		$dbresult  = $db->Execute($query, array($record_id));
+	}
+	//calcule le montant de chq commande client
+	function montant_commande($commande_number)
+	{
+		$db = cmsms()->GetDb();
+		$query = "SELECT SUM(prix_total) AS total FROM ".cms_db_prefix()."module_commandes_cc_items WHERE commande_number = ?";
+		$dbresult = $db->Execute($query, array($commande_number));
+		if($dbresult && $dbresult->RecordCount()>0)
+		{
+			while($row = $dbresult->FetchRow())
+			{
+				$montant= $row['total'];				
+				
+			}
+			return $montant;
+		}
+	}
+	//calcule le nb d'articles de chaque commande client
+	function items_per_commande($commande_number)
+	{
+		$db = cmsms()->GetDb();
+		$query = "SELECT count(quantite) AS qt FROM ".cms_db_prefix()."module_commandes_cc_items WHERE commande_number = ?";
+		$dbresult = $db->Execute($query, array($commande_number));
+		if($dbresult && $dbresult->RecordCount()>0)
+		{
+			while($row = $dbresult->FetchRow())
+			{
+				$quantite= $row['qt'];				
+				
+			}
+			return $quantite;
+		}
+	}
+	//calcule le nb d'articles de chaque commande fournisseur
+	function nb_items_cf($id_CF)
+	{
+		$db = cmsms()->GetDb();
+		$query = "SELECT count(id_items) AS qt FROM ".cms_db_prefix()."module_commandes_cf_items WHERE id_CF = ?";
+		$dbresult = $db->Execute($query, array($id_CF));
+		if($dbresult && $dbresult->RecordCount()>0)
+		{
+			while($row = $dbresult->FetchRow())
+			{
+				$quantite= $row['qt'];				
+				
+			}
+			return $quantite;
+		}
+	}
+	//calcule le montant total de chq commande fournisseur
+	function montant_commande_cf($id_CF)
+	{
+		$db = cmsms()->GetDb();
+		$query = "SELECT SUM(prix_total) AS total FROM ".cms_db_prefix()."module_commandes_cf_items WHERE id_CF = ?";
+		$dbresult = $db->Execute($query, array($id_CF));
+		if($dbresult && $dbresult->RecordCount()>0)
+		{
+			while($row = $dbresult->FetchRow())
+			{
+				$montant= $row['total'];				
+				
+			}
+			return $montant;
+		}
+	}
+	//renvoie vrai s'il manque des articles ds une commande cf
+	function is_missing($commande_number)
+	{
+		$db = cmsms()->GetDb();
+		$query = "SELECT count(id_items) as total FROM ".cms_db_prefix()."module_commandes_cf_items WHERE id_CF = ? AND received = '0'";
+		$dbresult = $db->Execute($query, array($commande_number));
+		if($dbresult && $dbresult->RecordCount()>0)
+		{
+			$row = $dbresult->FetchRow();
+			$total = $row['total'];
+			if($total > 0)
+			{
+				return true; //il manque des articles !!
+			}
+			else
+			{
+				return false;
+			}
+		}
+	}
+	//détermine l'id de l'article manquant d'une commande
+	function missing_items($id_items)
+	{
+		$db = cmsms()->GetDb();
+		$query = "SELECT id_items FROM ".cms_db_prefix()."module_commandes_cf_items WHERE id_items = ? AND received = '0'";
+		$dbresult = $db->Execute($query, array($commande_number));
+		if($dbresult && $dbresult->RecordCount()>0)
+		{
+			while($row = $dbresult->FetchRow())
+			{
+				//on va d'abord changer le stautut de l'item ds la table cc_items (commande = 0)
+				$id_items = $row['id_items'];
+				
+			}
+			
+		}
+	}
+	//ajoute une commande client (table cc)
+	function add_cc($commande_number, $client,$libelle_commande, $fournisseur, $prix_total)
+	{
+		$db = cmsms()->GetDb();
+		$now = date('Y-m-d');
+		$query = "INSERT INTO ".cms_db_prefix()."module_commandes_cc (commande_number, date_created, date_modified, client, libelle_commande, fournisseur, prix_total) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		$db->Execute($query, array($commande_number, $now, $now, $client, $libelle_commande, $fournisseur, $prix_total));
+	}
+
 	
 #
 #End of class

@@ -31,9 +31,9 @@ $(document).ready(function(){
   <legend>Filtres</legend>
   {$formstart}
   <div class="pageoverflow">
-	<p class="pagetext">Fournisseur:</p>
+	<p class="pagetext">Fournisseur:</p>	
     <p class="pageinput">{$fournisseur} </p>
-	<p class="pagetext">Statut de la commande :</p>
+	<p class="pagetext">Statut:</p>
 	<p class="pageinput">{$statut_CF} </p>
     <p class="pageinput">{$submitfilter}{$hidden|default:''}</p>
   </div>
@@ -47,7 +47,9 @@ $(document).ready(function(){
 		<th>Commande N°</th>
 		<th>Date</th>
 		<th>Fournisseur</th>
-		<th>Statut</th>
+		<th>En cours ?</p>
+		<th>Envoyée ?</p>
+		<th>Reçue ?</p>
 		<th>Nb articles</th>
 		<th>Total commande</th>
 		<th colspan="3">Actions</th>
@@ -59,7 +61,9 @@ $(document).ready(function(){
 	<td>{$entry->id_cf}</td>
     <td>{$entry->date_created|date_format:"d/m/Y"}</td>
 	<td>{$entry->fournisseur}</td>
-	<td>{$entry->statut_CF}</td>
+	<td>{$entry->encours}</td>
+	<td>{$entry->envoyee}</td>
+	<td>{$entry->recue}</td>
 	<td>{$entry->nb_items}</td>
 	<td>{$entry->total_commande}</td>
 	<td>{$entry->view}</td>

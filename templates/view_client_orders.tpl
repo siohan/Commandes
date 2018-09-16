@@ -1,4 +1,3 @@
-{*{if $status != 'Reçue'}<div class="pageoptions"><p><span class="pageoptions warning">{$add_edit_cc_item} </span></p></div>{/if}*}
 <div class="pageoptions"><p class="pageoptions">{$itemcount}&nbsp;{$itemsfound} &nbsp;{$redirection}</p></div>
 
 {if $itemcount > 0}

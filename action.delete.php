@@ -1,7 +1,7 @@
 <?php
 if (!isset($gCms)) exit;
 
-debug_display($params, 'Parameters');
+//debug_display($params, 'Parameters');
 
 if (!$this->CheckPermission('Use Commandes'))
 	{
@@ -37,8 +37,8 @@ $designation = '';
 			{
 				case  "cc_items" :
 
-					$query = "DELETE FROM ".cms_db_prefix()."module_commandes_cc_items WHERE commande_number = ?";
-					$dbresult = $db->Execute($query, array($commande_number));
+					$query = "DELETE FROM ".cms_db_prefix()."module_commandes_cc_items WHERE id = ?";
+					$dbresult = $db->Execute($query, array($record_id));
 					
 					if(!$dbresult)
 					{
@@ -49,7 +49,7 @@ $designation = '';
 					{
 						$designation.="Résultat supprimé";
 						$this->SetMessage("$designation");
-						$this->RedirectToAdminTab('cc');
+						$this->Redirect($id,'defaultadmin',$returnid);
 					}			
 
 				break;
@@ -69,7 +69,7 @@ $designation = '';
 						
 						$designation.= "Commande supprimée. ";
 						//on supprime aussi les items de cette commande
-						$query = "DELETE FROM ".cms_db_prefix()."module_commandes_CC_items WHERE commande_number = ?";
+						$query = "DELETE FROM ".cms_db_prefix()."module_commandes_cc_items WHERE commande_number = ?";
 						$dbresult = $db->Execute($query, array($commande_number));
 						$designation.= "Articles de la commande supprimés ";
 					}
@@ -91,7 +91,7 @@ $designation = '';
 					$this->RedirectToAdminTab('articles');
 				break;
 				case "cf" :
-					$query = "DELETE FROM ".cms_db_prefix()."module_commandes_cf WHERE id_CF = ?";
+					$query = "DELETE FROM ".cms_db_prefix()."module_commandes_cf WHERE commande_number = ?";
 					$db->Execute($query, array($record_id));
 					
 					$query = "DELETE FROM ".cms_db_prefix()."module_commandes_cf_items WHERE id_CF = ?";

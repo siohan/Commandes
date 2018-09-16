@@ -23,15 +23,12 @@ $alert = 0;//pour savoir si certains champs doivent contenir une valeur ou non
 	
 		
 		
-		$commande_number = '';
-		if (isset($params['commande_number']) && $params['commande_number'] !='')
+		$client = '';
+		if (isset($params['client']) && $params['client'] !='')
 		{
-			$commande_number = $params['commande_number'];
+			$client = $params['client'];
 		}
-		else
-		{
-			$error++;
-		}
+		
 		
 		$libelle_commande = '';
 		if (isset($params['libelle_commande']) && $params['libelle_commande'] !='')
@@ -89,12 +86,12 @@ $alert = 0;//pour savoir si certains champs doivent contenir une valeur ou non
 		{
 			$fournisseur = $params['fournisseur'];
 		}
-		/*
+		
 		else
 		{
-			$error++;
+			$fournisseur = $row2['fournisseur'];
 		}
-		*/
+		
 		$quantite = '';
 		if (isset($params['quantite']) && $params['quantite'] !='')
 		{
@@ -129,7 +126,7 @@ $alert = 0;//pour savoir si certains champs doivent contenir une valeur ou non
 		if($error>0)
 		{
 			$this->Setmessage('Parametres requis manquants !');
-			$this->Redirect($id, 'add_edit_cc_item',$returnid, array("commande_number"=>$commande_number, "edit"=>$edit));//ToAdminTab('commandesclients');
+			$this->Redirect($id, 'add_edit_cc_item',$returnid, array("client"=>$client, "edit"=>$edit));//ToAdminTab('commandesclients');
 		}
 		else // pas d'erreurs on continue
 		{
@@ -141,8 +138,8 @@ $alert = 0;//pour savoir si certains champs doivent contenir une valeur ou non
 			if($edit == 0)
 			{
 				$commande = 0;
-				$query = "INSERT INTO ".cms_db_prefix()."module_commandes_cc_items (id,date_created, date_modified,libelle_commande, categorie_produit, fournisseur, quantite, ep_manche_taille, couleur, prix_total, statut_item, commande,commande_number) VALUES ('',?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-				$dbresult = $db->Execute($query, array($aujourdhui, $aujourdhui,$libelle_commande,$categorie_produit,$fournisseur, $quantite,$ep_manche_taille, $couleur, $prix_total, $statut_item,$commande, $commande_number));
+				$query = "INSERT INTO ".cms_db_prefix()."module_commandes_cc_items (id,date_created, date_modified,fk_id,libelle_commande, categorie_produit, fournisseur, quantite, ep_manche_taille, couleur, prix_total, statut_item, commande) VALUES ('',?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				$dbresult = $db->Execute($query, array($aujourdhui, $aujourdhui,$client,$libelle_commande,$categorie_produit,$fournisseur, $quantite,$ep_manche_taille, $couleur, $prix_total, $statut_item,$commande));
 
 			}
 			else
@@ -151,24 +148,6 @@ $alert = 0;//pour savoir si certains champs doivent contenir une valeur ou non
 				$dbresult = $db->Execute($query, array($libelle_commande,$aujourdhui, $quantite,$ep_manche_taille, $couleur, $prix_total,$statut_item,$record_id));
 				
 				
-			}
-			
-			//on modifie aussi le prix total de la commande client
-			$query2 = "SELECT SUM(prix_total) AS prix_definitif FROM ".cms_db_prefix()."module_commandes_cc_items WHERE commande_number = ?";
-			$dbresult2 = $db->Execute($query2, array($commande_number));
-			
-			if($dbresult2)
-			{
-				while($dbresult2 && $row = $dbresult2->FetchRow())
-				{
-					$prix_definitif = $row['prix_definitif'];
-					$query3 = "UPDATE ".cms_db_prefix()."module_commandes_cc SET prix_total = ? WHERE commande_number = ?";
-					$dbresult3 = $db->Execute($query3, array($prix_definitif,$commande_number));
-				}
-			}
-			else
-			{
-				//pb avec la requete
 			}
 			
 		}		
@@ -180,6 +159,6 @@ $alert = 0;//pour savoir si certains champs doivent contenir une valeur ou non
 		
 
 $this->SetMessage('Article modifié');
-$this->Redirect($id,'view_cc', $returnid, array("commande_number"=>$commande_number));
+$this->Redirect($id,'defaultadmin', $returnid);
 
 ?>

@@ -2,18 +2,17 @@
 
 if( !isset($gCms) ) exit;
 
-	if (!$this->CheckPermission('Use Commandes'))
-  	{
-    		echo $this->ShowErrors($this->Lang('needpermission'));
-		return;
-   
-  	}
+if (!$this->CheckPermission('Use Commandes'))
+{
+    	echo $this->ShowErrors($this->Lang('needpermission'));
+	return;   
+}
 
-	if( isset($params['cancel']) )
-  	{
-    		$this->RedirectToAdminTab('commandesclients');
-    		return;
-  	}
+if( isset($params['cancel']) )
+{
+	$this->RedirectToAdminTab('commandesclients');
+    	return;
+}
 
 //debug_display($params, 'Parameters');
 $db =& $this->GetDb();
@@ -34,11 +33,6 @@ if(isset($params['commande_number']) && $params['commande_number'] != '')
 {
 	$commande_number = $params['commande_number'];
 }
-else
-{
-	exit;
-}
-
 if(isset($params['date_created']) && $params['date_created'] != '')
 {
 	$date_created = $params['date_created'];
@@ -48,6 +42,7 @@ if(isset($params['record_id']) && $params['record_id'] != '')
 {
 	$record_id = $params['record_id'];
 }
+
 if(isset($params['nom']) && $params['nom'] != '')
 {
 	$client = $params['nom'];
@@ -92,11 +87,11 @@ if($edit == 0)
 {
 	//on fait d'abord l'insertion 
 	$user_validation = 1;
-	$query1 = "INSERT INTO ".cms_db_prefix()."module_commandes_cc (id, date_created, date_modified, client, libelle_commande,fournisseur, prix_total, statut_commande, remarques, commande_number, user_validation) VALUES ('', ?, ?, ?, ?, ? ,?, ?, ?, ?, ?)";
-	$dbresult1 = $db->Execute($query1, array($date_created,$date_created,$client, $libelle_commande,$fournisseur,$prix_total, $statut_commande, $remarques, $commande_number, $user_validation));
+	$query1 = "INSERT INTO ".cms_db_prefix()."module_commandes_cc (id, date_created, date_modified, client, libelle_commande,fournisseur, prix_total, statut_commande, remarques, user_validation) VALUES ('', ?, ?, ?, ? ,?, ?, ?, ?, ?)";
+	$dbresult1 = $db->Execute($query1, array($date_created,$date_created,$client, $libelle_commande,$fournisseur,$prix_total, $statut_commande, $remarques, $user_validation));
 	if($dbresult1)
 	{
-		$this->RedirectToAdminTab('commandesclients',array("nom"=>$client, "date_created"=>$date_created,"commande_number"=>$commande_number,"fournisseur"=>$fournisseur),'add_edit_cc_item');
+		$this->RedirectToAdminTab('commandesclients',array("nom"=>$client, "date_created"=>$date_created,"fournisseur"=>$fournisseur),'add_edit_cc_item');
 	}
 }
 else
@@ -121,56 +116,13 @@ else
 			$couleur = $row4['couleur'];
 			$prix_total = $row4['prix_total'];
 			$commande = $row4['commande'];
-			//$commande_number = $row4['commande_number'];
-			//$fk_id = $row4[''];
-			$en_stock = $service->en_stock($libelle_commande,$ep_manche_taille,$couleur);
-			//var_dump($en_stock);
-		
-				if($statut_commande == "Reçue")
-				{
-			
-					
-					if($en_stock === FALSE)
-					{
-						$query5 = "INSERT INTO ".cms_db_prefix()."module_commandes_stock (id, id_items, fk_id, libelle_commande,categorie_produit, fournisseur, quantite, ep_manche_taille, couleur, prix_total) VALUES ('', ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-						$dbresult5 = $db->Execute($query5, array($id_items,$record_id, $libelle_commande, $categorie_produit, $fournisseur, $quantite, $ep_manche_taille, $couleur, $prix_total));
-					}
-					else //le type d'article est déjà en stock, on incrémente le stock
-					{
-						$increment = $service->incremente_stock($libelle_commande, $quantite, $ep_manche_taille, $couleur);
-					}
-				/*
-					$query3 = "UPDATE ".cms_db_prefix()."module_commandes_cc_items SET commande = '1' WHERE commande_number = ?";
-					$dbresult3 = $db->Execute($query3, array($commande_number));
-				*/
-				}
-			
-			
-			/*
-				if($paiement == 'Payée et déstockée')
-				{
-					
-					//$new_quantite = $qua
-					$service = new commandes_ops();
-					$en_stock = $service->en_stock($libelle_commande,$ep_manche_taille,$couleur);
-					$decrement = $service->decremente_stock($libelle_commande, $quantite, $ep_manche_taille, $couleur);
-					$refresh = $service->refresh_stock();
-
-
-				}
-			*/
 		}
 
 	}
-		//les articles sont en stock
+
 			
 	$query2 = "UPDATE ".cms_db_prefix()."module_commandes_cc SET date_modified = ?, libelle_commande = ?, statut_commande = ?, remarques = ? WHERE commande_number = ?";
 	$dbresult2 = $db->Execute($query2, array($now, $libelle_commande, $statut_commande, $remarques, $commande_number));
-	
-	
-	
-		
-		
 		
 	
 	

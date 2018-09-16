@@ -36,44 +36,30 @@ $db = $this->GetDb();
 // remove the database tables
 $dict = NewDataDictionary( $db );
 
-$sqlarray = $dict->DropTableSQL( cms_db_prefix()."module_commandes_clients" );
+$sqlarray = $dict->DropTableSQL( cms_db_prefix()."module_commandes_fournisseurs" );
 $dict->ExecuteSQLArray($sqlarray);
 
 $sqlarray = $dict->DropTableSQL( cms_db_prefix()."module_commandes_items" );
 $dict->ExecuteSQLArray($sqlarray);
 
-$sqlarray = $dict->DropTableSQL(  cms_db_prefix()."module_commandes_cc" );
+$sqlarray = $dict->DropTableSQL( cms_db_prefix()."module_commandes_cc" );
 $dict->ExecuteSQLArray($sqlarray);
 
-$sqlarray = $dict->DropTableSQL(  cms_db_prefix()."module_commandes_cc_items" );
+$sqlarray = $dict->DropTableSQL( cms_db_prefix()."module_commandes_cc_items" );
 $dict->ExecuteSQLArray($sqlarray);
 
-$sqlarray = $dict->DropTableSQL(  cms_db_prefix()."module_commandes_cf" );
+$sqlarray = $dict->DropTableSQL( cms_db_prefix()."module_commandes_cf" );
 $dict->ExecuteSQLArray($sqlarray);
 
-$sqlarray = $dict->DropTableSQL(  cms_db_prefix()."module_commandes_cf_items" );
+$sqlarray = $dict->DropTableSQL( cms_db_prefix()."module_commandes_cf_items" );
 $dict->ExecuteSQLArray($sqlarray);
 
-$sqlarray = $dict->DropTableSQL(  cms_db_prefix()."module_commandes_stock" );
+$sqlarray = $dict->DropTableSQL( cms_db_prefix()."module_commandes_stock" );
 $dict->ExecuteSQLArray($sqlarray);
-
 
 // remove the permissions
-$this->RemovePermission('Use Commandes');
-/*
-$this->RemovePermission('Ping Set Prefs');
-$this->RemovePermission('Ping Manage user');
-$this->RemovePermission('Ping Delete');
+$this->RemovePermission('Use Commmandes');
 
-// remove the preference
-$this->RemovePreference();
-
-
-// Events
-$this->RemoveEvent( 'OnUserAdded' );
-$this->RemoveEvent( 'OnUserDeleted' );
-
-*/
 try {
     $types = CmsLayoutTemplateType::load_all_by_originator($this->GetName());
     if( is_array($types) && count($types) ) {
