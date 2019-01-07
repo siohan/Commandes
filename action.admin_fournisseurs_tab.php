@@ -10,7 +10,8 @@ if (!$this->CheckPermission('Use Commandes'))
 //require_once(dirname(__FILE__).'/include/preferences.php');
 $service = new commandes_ops();
 $liste_fournisseurs = $service->liste_fournisseurs();
-$liste_fournisseurs = array("TOUS"=>"TOUS")+$liste_fournisseurs;
+array_unshift($liste_fournisseurs,"TOUS");
+//$liste_fournisseurs = array("TOUS"=>"TOUS")+$liste_fournisseurs;
 $db =& $this->GetDb();
 global $themeObject;
 //debug_display($params, 'Parameters');

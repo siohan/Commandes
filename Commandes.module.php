@@ -2,7 +2,7 @@
 
 #-------------------------------------------------------------------------
 # Module : Commandes - 
-# Version : 0.3.5, Sc
+# Version : 0.3.6, Sc
 # Auteur : Claude SIOHAN
 #-------------------------------------------------------------------------
 /**
@@ -22,7 +22,7 @@ class Commandes extends CMSModule
   
   function GetName() { return 'Commandes'; }   
   function GetFriendlyName() { return $this->Lang('friendlyname'); }   
-  function GetVersion() { return '0.3.5'; }  
+  function GetVersion() { return '0.3.6'; }  
   function GetHelp() { return $this->Lang('help'); }   
   function GetAuthor() { return 'Claude SIOHAN'; } 
   function GetAuthorEmail() { return 'claude.siohan@gmail.com'; }
@@ -41,7 +41,7 @@ class Commandes extends CMSModule
  
   
   public function GetDependencies() {
-        return array('Adherents'=>'0.2.8','Paiements'=>'0.1.3','CGExtensions'=>'1.56.1','CGSimpleSmarty'=>'2.1.6','JQueryTools'=>'1.4.0.3');
+        return array('Adherents'=>'0.3','Paiements'=>'0.1.3','CGExtensions'=>'1.56.1','CGSimpleSmarty'=>'2.1.6','JQueryTools'=>'1.4.0.3');
     }
 
   public function GetHeaderHTML()

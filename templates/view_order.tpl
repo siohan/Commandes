@@ -1,6 +1,6 @@
 {if $status != 'Reçue'}<div class="pageoptions"><p><span class="pageoptions warning">{$add_edit_cc_item} </span></p></div>{/if}
 <div class="pageoptions"><p class="pageoptions">{$itemcount}&nbsp;{$itemsfound}</p></div>
-<h3>Commande de {$prenom} {$nom} du {$date_created|date_format:'%d/%m/%Y'}</h3>
+<h3>Commande de {$nom} du {$date_created|date_format:'%d/%m/%Y'}</h3>
 {if $itemcount > 0}
 <table border="0" cellspacing="0" cellpadding="0" class="pagetable">
  <thead>

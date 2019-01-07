@@ -23,13 +23,19 @@ if(isset($params['client']) && $params['client'] !='')
 {
 	$client = $params['client'];
 }
+if(isset($params['genid']) && $params['genid'] !='')
+{
+	$genid = $params['genid'];
+	$adh_ops = new adherents_spid;
+	$nom = $adh_ops->get_name($genid);
+}
 
 
 $rowclass2 = '';
 
 	
 	
-//$smarty->assign('status', $statut_commande);	
+$smarty->assign('nom', $nom);	
 
 
 $result= array ();

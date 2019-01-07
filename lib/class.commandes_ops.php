@@ -3,6 +3,36 @@ class commandes_ops
 {
 	function __construct() {}
 	
+	function details_cc($commande_number)
+	{
+		$db = cmsms()->GetDb();
+		$query = "SELECT it.id AS item_id, it.fk_id , it.date_created,it.libelle_commande,it.ep_manche_taille, it.couleur, it.categorie_produit, it.fournisseur,it.quantite, it.prix_total, it.statut_item,it.commande,it.commande_number FROM ".cms_db_prefix()."module_commandes_cc_items AS it WHERE  it.commande_number = ? ";
+		$dbresult= $db->Execute($query,array($commande_number));
+		if($dbresult && $dbresult->recordCount()>0)
+		{
+			$details_cc = array();
+			while($row = $dbresult->FetchRow())
+			{
+				$item_id= $row['item_id'];
+				$id_commandes = $row['fk_id'];
+				$commande = $row['commande']; //gère si l'item doit être modifiable ou non
+				$commande_id= $row['fk_id'];
+				$commande_number= $row['commande_number'];
+				$date_created = $row['date_created'];
+				$libelle_commande = $row['libelle_commande'];
+				$categorie_produit = $row['categorie_produit'];
+				$fournisseur = $row['fournisseur'];
+				//$onerow->prix_unitaire = $row['prix_unitaire'];
+				$quantite = $row['quantite'];
+				$ep_manche_taille = $row['ep_manche_taille'];
+				$couleur = $row['couleur'];
+				$reduction = $row['reduction'];
+				$prix_total = $row['prix_total'];
+				$statut = $row['statut_item'];
+			}
+			return $details_cc;
+		}
+	}	
 	public static function en_stock($libelle_commande,$ep_manche_taille,$couleur)
 	{
 		//on va chercher si le produit existe en stock
@@ -150,7 +180,7 @@ public function send_mail_alerts($email)
 
 			$cmsmailer->reset();
 			$cmsmailer->IsHTML(true);
-			$cmsmailer->SetFrom($ping->GetPreference('admin_email'));
+		//	$cmsmailer->SetFrom($ping->GetPreference('admin_email'));
 			// Get the subject
 			$subject = $ping->GetPreference('new_status_subject');
 			// The body

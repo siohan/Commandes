@@ -138,8 +138,9 @@ $alert = 0;//pour savoir si certains champs doivent contenir une valeur ou non
 			if($edit == 0)
 			{
 				$commande = 0;
-				$query = "INSERT INTO ".cms_db_prefix()."module_commandes_cc_items (id,date_created, date_modified,fk_id,libelle_commande, categorie_produit, fournisseur, quantite, ep_manche_taille, couleur, prix_total, statut_item, commande) VALUES ('',?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-				$dbresult = $db->Execute($query, array($aujourdhui, $aujourdhui,$client,$libelle_commande,$categorie_produit,$fournisseur, $quantite,$ep_manche_taille, $couleur, $prix_total, $statut_item,$commande));
+				$user_validation = 1;
+				$query = "INSERT INTO ".cms_db_prefix()."module_commandes_cc_items (id,date_created, date_modified,fk_id,libelle_commande, categorie_produit, fournisseur, quantite, ep_manche_taille, couleur, prix_total, statut_item, commande, user_validation) VALUES ('',?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				$dbresult = $db->Execute($query, array($aujourdhui, $aujourdhui,$client,$libelle_commande,$categorie_produit,$fournisseur, $quantite,$ep_manche_taille, $couleur, $prix_total, $statut_item,$commande, $user_validation));
 
 			}
 			else

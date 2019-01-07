@@ -47,6 +47,7 @@ $designation = '';
 					}
 					else
 					{
+						//on envoie un message à l'utilisateur ?
 						$designation.="Résultat supprimé";
 						$this->SetMessage("$designation");
 						$this->Redirect($id,'defaultadmin',$returnid);

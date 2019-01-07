@@ -43,7 +43,7 @@ $smarty->assign('submitfilter',
 $smarty->assign('formend',$this->CreateFormEnd());
 $result= array();
 $parms = array();
-$query = "SELECT date_created,client, libelle_commande, statut_commande,commande_number, fournisseur, prix_total, paiement FROM ".cms_db_prefix()."module_commandes_cc";
+$query = "SELECT date_created,client,genid, libelle_commande, statut_commande,commande_number, fournisseur, prix_total, paiement FROM ".cms_db_prefix()."module_commandes_cc";
 $query.= " ORDER BY date_created DESC";
 $dbresult= $db->Execute($query);
 
@@ -65,7 +65,7 @@ $dbresult= $db->Execute($query);
 				//$id_commandes = $row['commande_id'];
 				$statut_commande = $row['statut_commande'];
 				$commande_number = $row['commande_number'];
-				$onerow->client = $adh_ops->get_name($row['client']);
+				$onerow->client = $adh_ops->get_name($row['genid']);
 				$onerow->date_created = $row['date_created'];
 				$onerow->libelle_commande = $row['libelle_commande'];				
 				$onerow->commande_number = $row['commande_number'];
@@ -86,7 +86,7 @@ $dbresult= $db->Execute($query);
 						$false = false;
 						$onerow->is_paid = $false;//$this->CreateLink($id, 'add_edit_reglement', $returnid, $shopping, array('record_id'=>$row['commande_number']));//$false;//$themeObject->DisplayImage('icons/system/false.gif', $this->Lang('false'), '', '', 'systemicon');
 					}
-					$onerow->view= $this->createLink($id, 'view_cc', $returnid, $themeObject->DisplayImage('icons/system/view.gif', $this->Lang('view_results'), '', '', 'systemicon'),array('active_tab'=>'commandesclients',"record_id"=>$row['commande_number'])) ;
+					$onerow->view= $this->createLink($id, 'view_cc', $returnid, $themeObject->DisplayImage('icons/system/view.gif', $this->Lang('view_results'), '', '', 'systemicon'),array('active_tab'=>'commandesclients',"record_id"=>$row['commande_number'], "genid"=>$row['genid'])) ;
 				}
 				else
 				{

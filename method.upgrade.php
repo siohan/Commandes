@@ -196,6 +196,69 @@ switch($current_version)
 		//on ajoute un événement
 	//	$this->CreateEvent('CommandesItemAdded');
 	}
+	case "0.3.5" :
+	{
+		
+		//on créé un nouveau champ genid I(11) pour la table adhérents
+		$dict = NewDataDictionary( $db );
+		$flds = "genid I(11)";
+		$sqlarray = $dict->AddColumnSQL( cms_db_prefix()."module_commandes_cc", $flds);
+		$dict->ExecuteSQLArray($sqlarray);
+		
+		//on remplace les clients par le genid
+		$query = "SELECT adh.genid, cont.client FROM ".cms_db_prefix()."module_adherents_adherents AS adh, ".cms_db_prefix()."module_commandes_cc AS cont WHERE adh.licence = cont.client";
+		$dbresult = $db->Execute($query);
+		if($dbresult)
+		{
+			while($row = $dbresult->FetchRow())
+			{
+				$genid = $row['genid'];
+				$query2 = "UPDATE ".cms_db_prefix()."module_commandes_cc SET genid = ? WHERE client = ?";
+				$dbresult2 = $db->Execute($query2, array($genid, $row['client']));
+			
+			}
+		}
+		//on créé un nouveau champ genid I(11) pour la table commandes_cc_items
+		$dict = NewDataDictionary( $db );
+		$flds = "genid I(11)";
+		$sqlarray = $dict->AddColumnSQL( cms_db_prefix()."module_commandes_cc_items", $flds);
+		$dict->ExecuteSQLArray($sqlarray);
+		
+		
+		//on remplace les fk_id par le genid
+		$query = "SELECT adh.genid, cont.fk_id FROM ".cms_db_prefix()."module_adherents_adherents AS adh, ".cms_db_prefix()."module_commandes_cc_items AS cont WHERE adh.licence = cont.fk_id";
+		$dbresult = $db->Execute($query);
+		if($dbresult)
+		{
+			while($row = $dbresult->FetchRow())
+			{
+				$genid = $row['genid'];
+				$query2 = "UPDATE ".cms_db_prefix()."module_commandes_cc_items SET genid = ? WHERE fk_id = ?";
+				$dbresult2 = $db->Execute($query2, array($genid, $row['fk_id']));
+			
+			}
+		}
+		
+		//on créé un nouveau champ genid I(11) pour la table commandes_cf_items
+		$dict = NewDataDictionary( $db );
+		$flds = "genid I(11)";
+		$sqlarray = $dict->AddColumnSQL( cms_db_prefix()."module_commandes_cf_items", $flds);
+		$dict->ExecuteSQLArray($sqlarray);
+		
+		//on remplace les fk_id par le genid
+		$query = "SELECT adh.genid, cont.client FROM ".cms_db_prefix()."module_adherents_adherents AS adh, ".cms_db_prefix()."module_commandes_cf_items AS cont WHERE adh.licence = cont.client";
+		$dbresult = $db->Execute($query);
+		if($dbresult)
+		{
+			while($row = $dbresult->FetchRow())
+			{
+				$genid = $row['genid'];
+				$query2 = "UPDATE ".cms_db_prefix()."module_commandes_cf_items SET genid = ? WHERE client = ?";
+				$dbresult2 = $db->Execute($query2, array($genid, $row['client']));
+			
+			}
+		}
+	}
 // put mention into the admin log
 $this->Audit( 0, 
 	      $this->Lang('friendlyname'), 

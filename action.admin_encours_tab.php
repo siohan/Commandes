@@ -41,7 +41,7 @@ $smarty->assign('submitfilter',
 $smarty->assign('formend',$this->CreateFormEnd());
 $result= array();
 $parms = array();
-$query = "SELECT it.id AS item_id, it.fk_id , it.date_created,it.libelle_commande,it.ep_manche_taille, it.couleur, it.categorie_produit, it.fournisseur,it.quantite, it.prix_total, it.statut_item,it.commande,it.commande_number FROM ".cms_db_prefix()."module_commandes_cc_items AS it WHERE it.commande <= '1'";
+$query = "SELECT it.id AS item_id, it.fk_id, it.genid , it.date_created,it.libelle_commande,it.ep_manche_taille, it.couleur, it.categorie_produit, it.fournisseur,it.quantite, it.prix_total, it.statut_item,it.commande,it.commande_number FROM ".cms_db_prefix()."module_commandes_cc_items AS it WHERE it.commande <= '1' AND it.user_validation = '1'";
 
 if( isset($params['submitfilter'] ))
 {
@@ -87,7 +87,7 @@ else
 				//$id_commandes = $row['commande_id'];
 				$statut = $row['commande'];
 				$commande_number = $row['commande_number'];
-				$onerow->client = $adh_ops->get_name($row['fk_id']);
+				$onerow->client = $adh_ops->get_name($row['genid']);
 				$onerow->date_created = $row['date_created'];
 				$onerow->libelle_commande = $row['libelle_commande'];
 				$onerow->categorie_produit = $row['categorie_produit'];
